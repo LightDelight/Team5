@@ -28,7 +28,7 @@ class MOVEREXAMPLETEST_API ULogic_CarryInteract_Combine
 public:
   ULogic_CarryInteract_Combine();
 
-  virtual void InitializeLogic() override;
+  virtual void CacheRecipes() override;
 
   virtual bool OnModuleInteract_Implementation(
       AActor *Interactor, AActor *TargetActor,

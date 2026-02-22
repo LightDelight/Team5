@@ -8,6 +8,7 @@
 #include "LKH2/Carry/Component/CarryComponent.h"
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
 #include "LKH2/Carry/Interface/CarryInterface.h"
+#include "LKH2/Item/ContainerItemBase.h"
 #include "LKH2/Item/ItemBase.h"
 #include "LKH2/Item/ItemData.h"
 #include "LKH2/Item/ItemStateComponent.h"
@@ -20,8 +21,8 @@ ULogic_CarryInteract_Combine::ULogic_CarryInteract_Combine() {
   StoredItemKey = FGameplayTag::EmptyTag;
 }
 
-void ULogic_CarryInteract_Combine::InitializeLogic() {
-  Super::InitializeLogic();
+void ULogic_CarryInteract_Combine::CacheRecipes() {
+  Super::CacheRecipes();
 
   CachedRecipes.Empty();
 
@@ -96,6 +97,10 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
   if (StoredActor == nullptr) {
     // 워크스테이션이 비어있음 -> 거치 수행
     if (PlayerActor != nullptr) {
+      // ContainerItemBase(접시 등)는 수납 대상에서 제외
+      if (Cast<AContainerItemBase>(PlayerActor)) {
+        return false;
+      }
       if (TargetActor->HasAuthority()) {
         CarrierComp->ForceDrop();
 
