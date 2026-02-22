@@ -19,6 +19,7 @@ public class MoverExampleTest : ModuleRules
 			, "Niagara"
 			, "PhysicsCore"
 			, "GameplayTags"
+			, "NetCore"
 			}
 		);
 
