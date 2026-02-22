@@ -9,9 +9,9 @@ URecipeLogicModuleBase::URecipeLogicModuleBase() {
 
 void URecipeLogicModuleBase::PostLoad() {
   Super::PostLoad();
-  InitializeLogic();
+  CacheRecipes();
 }
-void URecipeLogicModuleBase::InitializeLogic() {
+void URecipeLogicModuleBase::CacheRecipes() {
   // 자식 모듈들이 이 함수를 오버라이드하여 RecipeBook들을 순회하고 단일 레시피
   // 복사 캐싱을 조립한 뒤 부모의 SortRecipes 템플릿 함수를 호출해야 합니다.
 }
@@ -21,6 +21,6 @@ void URecipeLogicModuleBase::PostEditChangeProperty(
     FPropertyChangedEvent &PropertyChangedEvent) {
   Super::PostEditChangeProperty(PropertyChangedEvent);
 #if WITH_EDITOR
-  InitializeLogic(); // 수정한 즉시 다시 캐싱 및 정렬됨
+  CacheRecipes(); // 수정한 즉시 다시 캐싱 및 정렬됨
 #endif
 }

@@ -33,9 +33,9 @@ protected:
   // 1. 게임 빌드 또는 에디터 로드 시 메모리에 올라올 때 단 1회 실행!
   virtual void PostLoad() override;
 
-  // 파생 클래스들이 런타임에 안전하게 캐싱을 수행할 수 있도록 지연 초기화 함수
-  // 제공
-  virtual void InitializeLogic();
+  // 파생 클래스들이 레시피 데이터를 안전하게 캐싱할 수 있도록 제공하는 함수.
+  // PostLoad 및 PostEditChangeProperty에서 자동 호출됩니다.
+  virtual void CacheRecipes();
 
   // 2. 에디터에서 기획자가 레시피 배열이나 숫자를 수정했을 때 즉시 실행!
   virtual void
