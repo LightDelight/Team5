@@ -209,12 +209,13 @@ AActor *UCarryComponent::GetCarriedActor() const { return CarriedActor; }
 
 void UCarryComponent::ForceDrop() {
   if (CarriedActor) {
-    if (CarriedActor->Implements<UCarryInterface>()) {
+    AActor* ActorToDrop = CarriedActor;
+    CarriedActor = nullptr; // 재귀 방지: 먼저 참조를 해제
+    if (ActorToDrop->Implements<UCarryInterface>()) {
       // Multicast RPC를 중복해서 부르지 않고 로컬하게 상호작용 처리
-      ICarryInterface::Execute_OnCarryInteract(CarriedActor, GetOwner(),
+      ICarryInterface::Execute_OnCarryInteract(ActorToDrop, GetOwner(),
                                                ECarryInteractionType::Interact);
     }
-    CarriedActor = nullptr;
   }
 }
 

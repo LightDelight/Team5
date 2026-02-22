@@ -1,17 +1,43 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "LKH2/Item/ContainerItemBase.h"
 #include "GameFramework/Actor.h"
 #include "LKH2/Carry/Component/CarryComponent.h"
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
 #include "LKH2/Carry/Component/CarryableComponent.h"
 #include "LKH2/Logic/InstigatorContextInterface.h"
+#include "LKH2/Logic/LogicModuleBase.h"
+#include "LKH2/WorkStation/WorkstationData.h"
 
 AContainerItemBase::AContainerItemBase() {
   InteractComponent = CreateDefaultSubobject<UCarryInteractComponent>(
       TEXT("InteractComponent"));
   // ItemBase의 RootComponent(보통 VisualMesh나 Collision)에 부착
   InteractComponent->SetupAttachment(RootComponent);
+}
+
+void AContainerItemBase::BeginPlay() {
+  Super::BeginPlay();
+
+  // 모든 로직 모듈에 런타임 초기화 기회 제공
+  if (WorkstationData) {
+    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+      if (Module) {
+        Module->InitializeLogic(this);
+      }
+    }
+  }
+}
+
+void AContainerItemBase::OnConstruction(const FTransform &Transform) {
+  Super::OnConstruction(Transform);
+
+  // 모든 로직 모듈에 에디터 미리보기 기회 제공
+  if (WorkstationData) {
+    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+      if (Module) {
+        Module->OnConstructionLogic(this);
+      }
+    }
+  }
 }
 
 bool AContainerItemBase::OnCarryInteract_Implementation(
@@ -22,7 +48,10 @@ bool AContainerItemBase::OnCarryInteract_Implementation(
     UCarryComponent *InstigatorCarryComp =
         IInstigatorContextInterface::Execute_GetCarryComponent(Interactor);
     if (InstigatorCarryComp) {
-      bIsHoldingItem = (InstigatorCarryComp->GetCarriedActor() != nullptr);
+      AActor *HeldActor = InstigatorCarryComp->GetCarriedActor();
+      // 자기 자신을 들고 있는 경우(내려놓기)는 워크스테이션 로직이 아닌
+      // 일반 아이템 Fallback 경로로 분기해야 함
+      bIsHoldingItem = (HeldActor != nullptr && HeldActor != this);
     }
   }
 

@@ -25,6 +25,10 @@ public:
   virtual bool OnCarryInteract_Implementation(
       AActor *Interactor, ECarryInteractionType InteractionType) override;
 
+  // 모듈 생명주기 연결
+  virtual void BeginPlay() override;
+  virtual void OnConstruction(const FTransform &Transform) override;
+
   // ILogicContextInterface 구현
   virtual UCarryableComponent *GetCarryableComponent() const override;
   virtual UCarryInteractComponent *GetCarryInteractComponent() const override;
