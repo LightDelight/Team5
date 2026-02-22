@@ -30,6 +30,8 @@ public:
 protected:
   virtual void BeginPlay() override;
   virtual void OnConstruction(const FTransform &Transform) override;
+  virtual void GetLifetimeReplicatedProps(
+      TArray<FLifetimeProperty> &OutLifetimeProps) const override;
 
 protected:
   /** 고정형 루트로 사용할 메쉬 컴포넌트 (충돌 비활성화) */
@@ -43,8 +45,13 @@ protected:
   TObjectPtr<UBoxComponent> BoxCollision;
 
   /** 이 워크스테이션을 정의하는 데이터 에셋 */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Data")
+  UPROPERTY(ReplicatedUsing = OnRep_WorkstationData, EditAnywhere,
+            BlueprintReadOnly, Category = "Workstation|Data")
   TObjectPtr<UWorkstationData> WorkstationData;
+
+  /** 클라이언트에서 WorkstationData 리플리츀이트 시 메쉬 및 로직 모듈 초기화 */
+  UFUNCTION()
+  void OnRep_WorkstationData();
 
   /** 인터랙션 위임 컴포넌트 */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
@@ -57,4 +64,20 @@ protected:
   virtual bool OnCarryInteract_Implementation(
       AActor *Interactor, ECarryInteractionType InteractionType) override;
   virtual void SetOutlineEnabled_Implementation(bool bEnabled) override;
+
+  // ── 그리드 스냅 (에디터 전용) ──
+
+  /** 에디터에서 배치/이동 시 그리드 셀 중심에 자동 스냅 */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Grid")
+  bool bSnapToGrid = true;
+
+  /** 스냅에 사용할 셀 크기 (GridManagerComponent의 CellSize와 동일하게 설정) */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Grid",
+            meta = (EditCondition = "bSnapToGrid", ClampMin = "10.0"))
+  float SnapCellSize = 200.0f;
+
+  /** 스냅에 사용할 그리드 원점 (GridManagerComponent의 GridOrigin과 동일하게 설정) */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Grid",
+            meta = (EditCondition = "bSnapToGrid"))
+  FVector SnapGridOrigin = FVector::ZeroVector;
 };

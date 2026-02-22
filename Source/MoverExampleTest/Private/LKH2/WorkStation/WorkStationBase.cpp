@@ -4,7 +4,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
+#include "LKH2/Logic/LogicModuleBase.h"
 #include "LKH2/WorkStation/WorkstationData.h"
+#include "Net/UnrealNetwork.h"
 
 AWorkStationBase::AWorkStationBase() {
   PrimaryActorTick.bCanEverTick = false;
@@ -37,13 +39,70 @@ AWorkStationBase::AWorkStationBase() {
   InteractComponent->SetupAttachment(RootMesh);
 }
 
-void AWorkStationBase::BeginPlay() { Super::BeginPlay(); }
+void AWorkStationBase::GetLifetimeReplicatedProps(
+    TArray<FLifetimeProperty> &OutLifetimeProps) const {
+  Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+  DOREPLIFETIME(AWorkStationBase, WorkstationData);
+}
+
+void AWorkStationBase::OnRep_WorkstationData() {
+  // 클라이언트에서 WorkstationData가 리플리케이트되면 메쉬 적용
+  if (WorkstationData && WorkstationData->WorkstationMesh) {
+    RootMesh->SetStaticMesh(WorkstationData->WorkstationMesh);
+  }
+
+  // 로직 모듈 초기화 (Display 액터 등)
+  if (WorkstationData) {
+    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+      if (Module) {
+        Module->InitializeLogic(this);
+      }
+    }
+  }
+}
+
+void AWorkStationBase::BeginPlay() {
+  Super::BeginPlay();
+
+  // 모든 로직 모듈에 런타임 초기화 기회 제공
+  if (WorkstationData) {
+    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+      if (Module) {
+        Module->InitializeLogic(this);
+      }
+    }
+  }
+}
 
 void AWorkStationBase::OnConstruction(const FTransform &Transform) {
   Super::OnConstruction(Transform);
 
+  // 그리드 스냅: 에디터에서 배치/이동 시 셀 중심에 자동 정렬
+  if (bSnapToGrid && SnapCellSize > 0.0f) {
+    FVector Loc = GetActorLocation();
+    FVector Relative = Loc - SnapGridOrigin;
+
+    // GridManager와 동일한 좌표 변환: Floor → 셀 중심 계산
+    int32 GridX = FMath::FloorToInt32(Relative.X / SnapCellSize);
+    int32 GridY = FMath::FloorToInt32(Relative.Y / SnapCellSize);
+
+    float SnappedX = SnapGridOrigin.X + (GridX + 0.5f) * SnapCellSize;
+    float SnappedY = SnapGridOrigin.Y + (GridY + 0.5f) * SnapCellSize;
+
+    SetActorLocation(FVector(SnappedX, SnappedY, Loc.Z));
+  }
+
   if (WorkstationData && WorkstationData->WorkstationMesh) {
     RootMesh->SetStaticMesh(WorkstationData->WorkstationMesh);
+  }
+
+  // 모든 로직 모듈에 에디터 미리보기 기회 제공
+  if (WorkstationData) {
+    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+      if (Module) {
+        Module->OnConstructionLogic(this);
+      }
+    }
   }
 }
 

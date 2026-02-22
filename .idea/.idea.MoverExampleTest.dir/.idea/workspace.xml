@@ -8,17 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/indexLayout.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGM.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_StationSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_StationSpawner.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicBlackboardTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicBlackboardTag.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_CuttingBoard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_CuttingBoard.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Resources/checksum" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Resources/checksum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/RiderLink.uplugin" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/RiderLink.uplugin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/RD.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/RD.Build.cs" afterDir="false" />
@@ -429,37 +425,21 @@
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.Build.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/MoverExampleTest.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/MoverExampleTest.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/CarryComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/CarryInteractComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/CarryInteractLogicInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/CarryableComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/CarryableInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/CarryableLogicInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/ItemBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/ItemData.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/ItemSmoothingComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/ItemStateComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/LogicModuleBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic_CarryInteract_Common.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic_Carryable_Common.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryInteractComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryInteractComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Combine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Combine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ContainerItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ContainerItemBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Recipe/RecipeLogicModuleBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Recipe/RecipeLogicModuleBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkStationBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkStationBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStationBase.cpp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkstationData.cpp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/MyMoverTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/MyMoverTest.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/CarryComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/CarryInteractComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/CarryInteractLogicInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/CarryableComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/CarryableInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/CarryableLogicInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/ItemBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/ItemData.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/ItemSmoothingComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/ItemStateComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/LogicModuleBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic_CarryInteract_Common.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic_Carryable_Common.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Combine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Combine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ContainerItemBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ContainerItemBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicModuleBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Recipe/RecipeLogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Recipe/RecipeLogicModuleBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkStationBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkStationBase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStationBase.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkstationData.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/MyMoverTest.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/MyMoverTest.h" afterDir="false" />
@@ -475,7 +455,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "LightDelight"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/LightDelight/Team5.git",
+    "accountId": "2f3dc1a0-1c7e-43c4-8537-0e7b3d69a197"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/core.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/dist_sink.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/Core/Public/Algo/Reverse.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectPtr.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
@@ -484,6 +480,7 @@
     <commands />
     <urls />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
@@ -600,16 +597,39 @@
       <option name="presentableId" value="Default" />
       <updated>1771696170435</updated>
       <workItem from="1771696171888" duration="294000" />
-      <workItem from="1771696966483" duration="49360000" />
+      <workItem from="1771696966483" duration="59271000" />
     </task>
+    <task id="LOCAL-00001" summary="ss">
+      <option name="closed" value="true" />
+      <created>1771781031876</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1771781031876</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="ss" />
+    <option name="LAST_COMMIT_MESSAGE" value="ss" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
