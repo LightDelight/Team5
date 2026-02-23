@@ -1,15 +1,29 @@
 #pragma once
 
-#if defined UE_BUILD_DEVELOPMENT && UE_BUILD_DEVELOPMENT == 1
-#	define MY_PRINT(Msg) if(GEngine) GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Green,Msg);\
-					  else UE_LOG(LogTemp,Log,TEXT("GEngine is nullptr"));;
+#ifdef PRINT
+#	error MY_PRINT already defined
+#else
+#	if UE_BUILD_DEVELOPMENT
+#		define PRINT(...) check(GEngine); GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Green,FString::Printf(__VA_ARGS__));
+#	else 
+#		define PRINT(...)
+#	endif
 #endif
-//error should occur when shipping build. im retaining this to check flag...
+
+#ifdef PRINT_FUNCTION_NAME
+#	error PRINT_FUNCATION_NAME already defined
+#else
+#	if UE_BUILD_DEVELOPMENT
+#		define PRINT_FUNCATION_NAME check(GEngine); GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Orange,FString::Printf(TEXT("%hs"),__FUNCTION__);
+#	else 
+#		define PRINT_FUNCATION_NAME
+#	endif
+#endif
 
 #ifdef LOG_FUNCTION_NAME
 #	error LOG_FUNCTION_NAME already defined
 #else
-#	if defined UE_BUILD_DEVELOPMENT && UE_BUILD_DEVELOPMENT == 1
+#	if UE_BUILD_DEVELOPMENT
 #		define LOG_FUNCTION_NAME UE_LOG(LogTemp,Log,TEXT("%hs"),__FUNCTION__);
 #	else
 #		define LOG_FUNCTION_NAME
@@ -19,7 +33,7 @@
 #ifdef LOG_TEMP
 #	error LOG_TEMP already defined
 #else
-#	if defined UE_BUILD_DEVELOPMENT && UE_BUILD_DEVELOPMENT == 1
+#	if UE_BUILD_DEVELOPMENT
 #		define LOG_TEMP(...) UE_LOG(LogTemp,Log,__VA_ARGS__);
 #	else
 #		define LOG_TEMP(...)
@@ -31,5 +45,5 @@
 //DEFINE_LOG_CATEGORY(LogOnlineSubsystem)
 
 /**
- * 
+ *
  */

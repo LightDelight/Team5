@@ -2,8 +2,6 @@
 
 #include "OnlineGameInstanceSubsystem.h"
 
-static const FName KEY_ROOM_NAME{ TEXT("KEY_ROOM_NAME") };
-
 
 bool UOnlineGameInstanceSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -25,9 +23,12 @@ void UOnlineGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collecti
 	SessionInterface = OnlineSubsystem->GetSessionInterface();
 	check(SessionInterface != nullptr);
 
+	// this later be changed deledate handling. this is just for basic test purpose. 
+	// addhandle before call and remove after call. 
+	// removal is caller's responsibility. i don't know how to handle this automatically
 	SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnCreateSessionComplete);
 	SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnDestorySessionComplete);
-	SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnFindSessionComplete);
+	//SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnFindSessionComplete);
 	SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnJoinSessionComplete);
 	SessionInterface->OnUpdateSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnUpdateSessionComplete);
 
@@ -58,7 +59,7 @@ bool UOnlineGameInstanceSubsystem::CreateSession(const FString& RoomName, int32 
 		check(false);
 		return false;
 	}
-	else {
+	else { // hardcoded settings, for testing.
 		FOnlineSessionSettings SessionSettings;
 		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") {
 			SessionSettings.bIsLANMatch = true;
@@ -92,18 +93,15 @@ bool UOnlineGameInstanceSubsystem::DestroySession(FName SessionName) const
 bool UOnlineGameInstanceSubsystem::FindSessions()
 {
 	LOG_FUNCTION_NAME;
-	SessionSearch = MakeShareable(new FOnlineSessionSearch());
-	check(SessionSearch != nullptr);
 	SessionSearch->MaxSearchResults = 3; // magic number for testing
 	SessionSearch->QuerySettings.Set(FName(TEXT("IT IS NOT WORK WITH NULL SUBSYS")), true, EOnlineComparisonOp::Equals);
-	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	SessionInterface->FindSessions(0, SessionSearch);
 	return false;
 }
 
 bool UOnlineGameInstanceSubsystem::JoinSession(uint32 Index) const
 {
 	check(SessionInterface.IsValid());
-	check(SessionSearch.IsValid());
 	if (SessionSearch->SearchResults.Num() > static_cast<int32>(Index)) {
 		if (SessionInterface->GetNamedSession(NAME_GameSession)) {
 			SessionInterface->DestroySession(NAME_GameSession);
@@ -119,7 +117,8 @@ void UOnlineGameInstanceSubsystem::OnCreateSessionComplete(FName SessionName, bo
 {
 	LOG_FUNCTION_NAME;
 	check(GetWorld() != nullptr);
-	GetWorld()->ServerTravel("/Game/ThirdPerson/PhysicsActorTest/PhysicsActorTest?listen");// hardcoded map name here edit as your will
+	if (!GetWorld()) return;
+	GetWorld()->ServerTravel("/Game/ThirdPerson/PhysicsActorTest/PhysicsActorTest?listen");
 }
 
 void UOnlineGameInstanceSubsystem::OnDestorySessionComplete(FName SessionName, bool bWasSuccessful)
@@ -130,7 +129,7 @@ void UOnlineGameInstanceSubsystem::OnDestorySessionComplete(FName SessionName, b
 void UOnlineGameInstanceSubsystem::OnFindSessionComplete(bool bWasSuccessful)
 {
 	LOG_FUNCTION_NAME;
-	check(bWasSuccessful && SessionSearch.IsValid());
+	check(bWasSuccessful);
 	int i = 0;
 	FString RoomName = "";
 	LOG_TEMP(TEXT("FOUND %d Sessions"), SessionSearch->SearchResults.Num());
@@ -145,15 +144,16 @@ void UOnlineGameInstanceSubsystem::OnFindSessionComplete(bool bWasSuccessful)
 			SearchResult.PingInMs,
 			*SearchResult.Session.OwningUserId->ToString()
 		);
-		MY_PRINT(FString::Printf(TEXT("%d: <%s> %d/%d %3dms %s"),
+		PRINT(TEXT("%d: <%s> %d/%d %3dms %s"),
 			i - 1,
 			*RoomName,
 			SearchResult.Session.NumOpenPublicConnections,
 			SearchResult.Session.SessionSettings.NumPublicConnections,
 			SearchResult.PingInMs,
 			*SearchResult.Session.OwningUserId->ToString()
-		)
 		);
+
+
 	}
 	/**
 	 * OnlineSubsystemNull NumOpenPublicConnections working ...
@@ -162,7 +162,7 @@ void UOnlineGameInstanceSubsystem::OnFindSessionComplete(bool bWasSuccessful)
 	 *
 	 * @TODO
 	 * low priority feature for now.
-	 * stop overconnectiong in AGameSession Server.
+	 * stop overconnectiong in AGameSession Server or gamemode.
 	 */
 
 }
@@ -171,7 +171,6 @@ void UOnlineGameInstanceSubsystem::OnJoinSessionComplete(FName SessionName, EOnJ
 {
 	LOG_FUNCTION_NAME;
 	check(SessionInterface.IsValid());
-	SessionSearch.Reset();
 
 	FString Address;
 
@@ -183,8 +182,6 @@ void UOnlineGameInstanceSubsystem::OnJoinSessionComplete(FName SessionName, EOnJ
 		PC->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 		LOG_TEMP(TEXT("JoinComplete"));
 	}
-
-
 }
 
 void UOnlineGameInstanceSubsystem::OnUpdateSessionComplete(FName SessionName, bool bWasSuccesful)

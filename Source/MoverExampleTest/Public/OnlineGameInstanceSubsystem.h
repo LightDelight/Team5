@@ -15,6 +15,8 @@
  *  This GameInstanceSubsystem control session related jobs.
  */
 
+static const FName KEY_ROOM_NAME{ TEXT("KEY_ROOM_NAME") };
+
 UCLASS()
 class MOVEREXAMPLETEST_API UOnlineGameInstanceSubsystem : public UGameInstanceSubsystem
 {
@@ -23,6 +25,7 @@ class MOVEREXAMPLETEST_API UOnlineGameInstanceSubsystem : public UGameInstanceSu
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+
 
 public:
 	/**
@@ -34,6 +37,10 @@ public:
 	bool DestroySession(FName SessionName) const;
 	bool FindSessions();
 	bool JoinSession(uint32 Index) const;
+	IOnlineSessionPtr GetSessionInterface() { return SessionInterface; }
+	const FOnlineSessionSearch* GetSessionSearch() { return &SessionSearch.Get(); }
+
+
 
 private:
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
@@ -49,5 +56,8 @@ private:
 
 private:
 	IOnlineSessionPtr SessionInterface = nullptr;
-	TSharedPtr<FOnlineSessionSearch> SessionSearch;
+	const TSharedRef<FOnlineSessionSearch> SessionSearch = MakeShared<FOnlineSessionSearch>();
+
+	FDelegateHandle OnFindSessionsHandle;
+
 };
