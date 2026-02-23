@@ -20,6 +20,14 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation")
   TObjectPtr<UStaticMesh> WorkstationMesh;
 
+  /** Box 콜리전 크기 (Half-Extent) */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Collision")
+  FVector BoxExtent = FVector(50.0f, 50.0f, 50.0f);
+
+  /** 루트(RootMesh) 기준 BoxCollision의 상대 위치 오프셋 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Collision")
+  FVector BoxRelativeLocation = FVector::ZeroVector;
+
   UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite,
             Category = "Workstation|Modules")
   TArray<TObjectPtr<class ULogicModuleBase>> LogicModules;

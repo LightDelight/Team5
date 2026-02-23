@@ -51,6 +51,12 @@ void AWorkStationBase::OnRep_WorkstationData() {
     RootMesh->SetStaticMesh(WorkstationData->WorkstationMesh);
   }
 
+  // 박스 콜리전 크기 및 상대 좌표 적용
+  if (WorkstationData && BoxCollision) {
+    BoxCollision->SetBoxExtent(WorkstationData->BoxExtent);
+    BoxCollision->SetRelativeLocation(WorkstationData->BoxRelativeLocation);
+  }
+
   // 로직 모듈 초기화 (Display 액터 등)
   if (WorkstationData) {
     for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
@@ -94,6 +100,12 @@ void AWorkStationBase::OnConstruction(const FTransform &Transform) {
 
   if (WorkstationData && WorkstationData->WorkstationMesh) {
     RootMesh->SetStaticMesh(WorkstationData->WorkstationMesh);
+  }
+
+  // 박스 콜리전 크기 및 상대 좌표 적용
+  if (WorkstationData && BoxCollision) {
+    BoxCollision->SetBoxExtent(WorkstationData->BoxExtent);
+    BoxCollision->SetRelativeLocation(WorkstationData->BoxRelativeLocation);
   }
 
   // 모든 로직 모듈에 에디터 미리보기 기회 제공

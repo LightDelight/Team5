@@ -106,6 +106,10 @@ void AItemBase::SetItemDataAndApply(UItemData *InData) {
     if (SphereCollision) {
       SphereCollision->SetMassOverrideInKg(NAME_None, ItemData->ItemWeight,
                                            true);
+      SphereCollision->SetSphereRadius(ItemData->SphereRadius);
+    }
+    if (VisualMesh) {
+      VisualMesh->SetRelativeLocation(ItemData->MeshRelativeLocation);
     }
   }
 }
@@ -115,17 +119,20 @@ void AItemBase::OnConstruction(const FTransform &Transform) {
 
   if (ItemData) {
     // 메쉬 적용 (VisualMesh)
-    if (ItemData->ItemMesh) {
+    if (ItemData->ItemMesh && VisualMesh) {
       VisualMesh->SetStaticMesh(ItemData->ItemMesh);
-      // 참고: SphereCollision의 크기는 여기서 메쉬에 맞춰 자동으로 조정되지
-      // 않으므로, 필요하다면 메쉬 bounds를 기반으로 SphereRadius를 조정하는
-      // 로직을 추가할 수 있습니다.
     }
 
-    // 무게(질량) 적용
+    // 무게(질량) 및 콜리전 크기 적용
     if (SphereCollision) {
       SphereCollision->SetMassOverrideInKg(NAME_None, ItemData->ItemWeight,
                                            true);
+      SphereCollision->SetSphereRadius(ItemData->SphereRadius);
+    }
+
+    // 메쉬 상대 좌표 적용
+    if (VisualMesh) {
+      VisualMesh->SetRelativeLocation(ItemData->MeshRelativeLocation);
     }
   }
 }
