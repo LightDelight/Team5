@@ -1,80 +1,176 @@
-# 🏗️ 소프트웨어 아키텍처 원칙 (Architecture Principles)
+# **🏗️ 소프트웨어 아키텍처 원칙 (Architecture Principles)**
 
 본 프로젝트는 의존성을 최소화하고 확장성을 극대화하기 위해 다형성(Polymorphism)과 데이터 주도(Data-Driven) 설계를 결합하여 다음과 같은 엄격한 책임 분리 대원칙을 따릅니다:
 
-## 1. Component는 규칙(Rules)과 상태(State)를 맡는다.
-*   **역할**: 데이터 컨테이너 및 인터페이스 수신부.
-*   **설명**: 컴포넌트(`UCarryComponent`, `UCarryableComponent`, `UItemStateComponent`, 데이터 구조체 등)는 "현재 상태가 어떠한가?" 혹은 "어떤 로직 모듈들을 가지고 있는가?"와 같은 **규칙**과 **상태 데이터**만 정의합니다. 
-*   **제한**: 컴포넌트 내부에는 상태를 능동적으로 전이하거나 물리적인 액션(Impulse, Attach/Detach 등)을 직접 가하는 하드코딩된 **행동(Behavior)** 코드가 존재해서는 안 됩니다. 외부(Logic)에 의한 변경을 방어하고 감지하는 수동적인 역할(OnRep 등)을 주로 수행합니다.
+## **1. Component는 상태(State)와 명세(Specification)를 맡는다.**
 
-## 2. Logic은 행동(Behavior)을 맡는다.
-*   **역할**: 능동적 상태 전이, 물리 제어, 결과 판정.
-*   **설명**: 모든 `ULogicModuleBase` 파생 모듈(`Logic_Carryable_Common`, `Logic_CarryInteract_Combine` 등)은 실제 오브젝트가 무엇을 어떻게 "할 것"인지 결정하는 유일한 **실행 주체(Doer)**입니다.
-*   **동작**: Base나 Component가 위임(Dispatch)한 인터페이스 메시지를 받아 책임을 연쇄적으로(Chain of Responsibility) 확인한 뒤, 상호작용 검증이 완료되면 비로소 대상의 상태 컴포넌트 및 물리를 직접 조작합니다(예: 클라이언트 예측 로직 수행, Throw 이벤트에서 AddImpulse 호출 등).
+* **역할**: 데이터 컨테이너, 인터페이스 수신부, 수동적 반응자.  
+* **설명**: 컴포넌트(UCarryComponent, UCarryableComponent, UItemStateComponent, 데이터 구조체 등)는 "현재 상태가 어떠한가?" 혹은 "어떤 로직 모듈들을 가지고 있는가?"와 같은 **현재 상태(State)**와 객체의 **고유 속성/명세(Spec)**만을 정의합니다.  
+* **제한**: 컴포넌트 내부에는 "이 상태일 때 저렇게 한다"는 조건 판정(규칙)이나, 능동적으로 물리적 액션(Impulse, Attach/Detach 등)을 가하는 **행동(Behavior)** 코드가 존재해서는 안 됩니다. 외부(Logic, Manager)가 API를 통해 변수를 바꿔주면 그에 맞춰 시각적/물리적 세팅을 갱신하는 수동적인 **반응(Reaction / OnRep)**만을 수행합니다.
 
-## 3. Base는 연결(Connection)과 고유 책임만을 맡는다.
-*   **역할**: 설계 기반(Foundation), 컴포넌트 조립 뼈대, 엔진 상호작용 브리지.
-*   **설명**: `AItemBase`, `AWorkStationBase` 등 기본 액터 클래스들은 스스로 복잡한 상태 처리나 물리 제어를 일절 수행하지 않습니다. 분리하기에는 너무 작고 결합도가 높은 규칙이거나, 언리얼 엔진 액터 클래스 단에서만 가질 수 있는 고유한 규칙(예: `GetLifetimeReplicatedProps`를 통한 멤버 리플리케이션 선언, 기본 콜리전/메시 구조 조립, 순수한 인터페이스 호출 전달) 만을 허용합니다.
+## **2. Logic은 순수한 판단(Pure Judgment)과 표준 호출(Standard Invocation)만을 맡는다.**
 
----
+* **역할**: 조건 판정(Rule Enforcement), 데이터 라우팅(Data Routing), 획일화된 명령 하달.  
+* **설명**: 모든 ULogicModuleBase 파생 모듈은 **상황을 판단**하고 **어떤 데이터를 사용할지 결정**하는 유일한 뇌(Brain)입니다. 하지만 결코 스스로 손발을 움직이지 않습니다.  
+* **제한 (가장 중요)**: 로직 모듈 내부에는 대상의 상태를 구체적으로 변경하는 물리적 제어 코드(SetActorLocation, AttachTo 등)가 **단 한 줄도 존재해서는 안 됩니다.**  
+* **동작**: Base나 Component가 위임한 메시지를 받아 규칙(Rules)과 조건을 판정하며, 검증이 완료되면 "이미 완벽하게 규격화된 Manager나 Component의 API에, 자신이 판정한 변수(Data)를 끼워 넣어 호출(Call)하는 것"으로 역할을 마칩니다.
 
-## 🧩 주요 시스템 세부 구조 및 역할 (System Breakdown)
+## **3. Manager (Subsystem)는 '예외 없는 실행 환경(Exception-Free Environment)'을 제공한다.**
 
-### 📦 Components (상태 및 데이터 홀더)
+* **역할**: 스폰/파괴 중앙 통제, 범용 물리 처리, 상태 계승의 단일 창구.  
+* **설명**: UItemManagerSubsystem 같은 매니저 클래스는 로직이 구체적인 물리 구현을 몰라도 되도록 완벽하게 래핑된 범용 API를 제공합니다.  
+* **동작**: 로직이 "A를 B로 바꿔라"라고 변수만 던져주면, Manager는 멀티플레이 권한 체크, 위치 보정, 부착 등 모든 엔진 네이티브 물리 처리를 대행합니다. 로직이 예외를 만들 필요가 없도록, 유연한 파라미터 환경을 미리 조성해 두는 것이 핵심입니다.
 
-*   **`UItemStateComponent`**: 아이템의 현재 상태(`EItemState`: Placed, Carried, Stored 등)를 관리합니다. *RepNotify*를 통해 서버에서 변경된 상태를 클라이언트로 복제하여 시각적 처리 및 물리 설정을 동기화하는 핵심 축입니다.
-*   **`UCarryComponent`**: 플레이어(Interactor)에 부착되어 들기/내려놓기/던지기 입력 버퍼링을 처리하고, 캐스팅 대신 인터페이스를 통해 대상에게 메시지를 전달(Dispatch)하는 역할을 합니다.
-*   **`UCarryableComponent`**: 대상 아이템에 부착되어 해당 아이템이 들릴 수 있는 객체임을 나타내며, 상호작용 메시지를 받아 자신의 `ItemData`에 등록된 `LogicModule`들에게 전달합니다. 추가로, 여러 플레이어가 동시에 집으려 할 때 발생하는 **경쟁 상태(Race Condition)**를 판별하고 방어하는 1차 관문 역할을 합니다.
-*   **`UCarryInteractComponent`**: 워크스테이션(작업대 등)에 부착되어 상호작용(예: 조합, 거치) 메시지를 수신하며, 내장된 `WorkstationData`의 로직 모듈 배열을 순회해 책임을 위임합니다. 자체적으로 **`FLogicBlackboard`**를 호스팅합니다.
+## **4. Base는 연결(Connection)과 고유 책임만을 맡는다.**
 
-### 🔌 Interfaces (통신 규약 및 의존성 분리)
+* **역할**: 설계 기반(Foundation), 컴포넌트 조립 뼈대, 엔진 상호작용 브리지.  
+* **설명**: AItemBase, AWorkStationBase 등 기본 액터 클래스들은 스스로 복잡한 상태 처리나 물리 제어를 일절 수행하지 않습니다. 분리하기에는 너무 작고 결합도가 높은 규칙이거나, 언리얼 엔진 액터 클래스 단에서만 가질 수 있는 고유한 규칙(예: GetLifetimeReplicatedProps를 통한 멤버 리플리케이션 선언, 기본 콜리전/메시 구조 조립, 순수한 인터페이스 호출 전달) 만을 허용합니다.
 
-*   **`ICarryInterface`** (`OnCarryInteract`): 베이스 클래스와 컴포넌트 간의 주된 상호작용 진입점입니다. `ECarryInteractionType`(Interact, Throw)을 매개변수로 받아 의도를 명확히 전달합니다.
-*   **`ICarryLogicInterface`** (`OnModuleInteract`): 로직 모듈들이 실제 상호작용을 처리하는 진입점입니다. 컴포넌트들은 이 인터페이스를 통해 모듈들에게 "이 행동을 처리할 수 있는가?" (Chain of Responsibility)를 묻습니다.
-*   **`IInstigatorContextInterface`**: 상호작용 주체(플레이어)로부터 컨텍스트(예: "현재 양손이 비어있는가?", "현재 들고 있는 아이템 컴포넌트는 무엇인가?")를 안전하게 질의하기 위한 인터페이스입니다. 이를 통해 아이템이 플레이어 클래스에 직접 의존하는 것을 방지합니다.
+## **🧩 주요 시스템 세부 구조 및 역할 (System Breakdown)**
 
-### 🧠 Logic Modules (실행 주체)
+### **📦 Components (상태 및 데이터 홀더)**
 
-*   **`Logic_Carryable_Common`**: 일반적인 아이템의 줍기, 내려놓기, 던지기를 담당합니다. 
-    *   *줍기*: `IInstigatorContextInterface`를 통해 플레이어 손이 빈 것을 확인한 뒤 아이템 상태를 `Carried`로 변경하고 캐릭터에 Attach 합니다.
-    *   *던지기/내려놓기*: 아이템 상태를 `Placed` 로 변경하고 Detach 후 `AddImpulse` 와 물리 시뮬레이션을 활성화합니다.
-*   **`Logic_CarryInteract_Common`**: 워크스테이션에 아이템을 올려두거나(거치), 다시 플레이어가 집어가는 행위를 담당합니다. 대상 아이템 상태를 `Stored`(물리 비활성화, 부착 유지)로 변경하며, 유령 현상(Phantom Snapping) 방지를 위해 지연 평가를 수행합니다.
-*   **`Logic_CarryInteract_Combine`**: 작업대에 놓인 아이템과 플레이어가 들고 있는 아이템을 조합하여 새로운 아이템을 스폰하는 로직입니다.
+* **UItemStateComponent**: 아이템의 현재 상태(EItemState: Placed, Carried, Stored 등)를 관리합니다. *RepNotify*를 통해 서버에서 변경된 상태를 클라이언트로 복제하여 시각적 처리 및 물리 설정을 동기화하는 핵심 축입니다.  
+* **UCarryComponent**: 플레이어(Interactor)에 부착되어 들기/내려놓기/던지기 입력 버퍼링을 처리하고, 캐스팅 대신 인터페이스를 통해 대상에게 메시지를 전달(Dispatch)하는 역할을 합니다.  
+* **UCarryableComponent**: 대상 아이템에 부착되어 해당 아이템이 들릴 수 있는 객체임을 나타내며, 상호작용 메시지를 받아 자신의 ItemData에 등록된 LogicModule들에게 전달합니다.  
+* **UCarryInteractComponent**: 워크스테이션(작업대 등)에 부착되어 상호작용(예: 조합, 거치) 메시지를 수신하며, 내장된 WorkstationData의 로직 모듈 배열을 순회해 책임을 위임합니다. 자체적으로 **FLogicBlackboard**를 호스팅합니다.
 
-### 🗄️ Data Assets (데이터 주도 설계)
+### **🔌 Interfaces (통신 규약 및 의존성 분리)**
+
+* **ICarryInterface** (OnCarryInteract): 베이스 클래스와 컴포넌트 간의 주된 상호작용 진입점입니다. ECarryInteractionType(Interact, Throw)을 매개변수로 받아 의도를 명확히 전달합니다.  
+* **ICarryLogicInterface** (OnModuleInteract): 로직 모듈들이 실제 상호작용을 처리하는 진입점입니다. 컴포넌트들은 이 인터페이스를 통해 모듈들에게 "이 행동을 처리할 수 있는가?" (Chain of Responsibility)를 묻습니다.  
+* **IInteractionContextInterface**: 상호작용 대상(작업대, 접시 등)으로부터 통합된 컨텍스트(수납된 아이템 등)를 질의하여 대상 액터의 종류에 구애받지 않게 하는 통합 중재자 인터페이스입니다.  
+* **IInstigatorContextInterface**: 상호작용 주체(플레이어)로부터 컨텍스트(예: "현재 양손이 비어있는가?")를 질의하기 위한 인터페이스입니다. 아이템이 플레이어 클래스에 직접 의존하는 것을 방지합니다.
+
+### **🧠 Logic Modules (판단 및 실행 주체)**
+
+* **Logic_Carryable_Common**: 일반적인 아이템의 줍기, 내려놓기, 던지기 조건을 판단하고, Manager/Component의 API에 변수를 넣어 호출합니다.  
+* **Logic_CarryInteract_Common**: 워크스테이션에 아이템을 올려두거나(거치), 다시 플레이어가 집어가는 행위를 담당합니다. 대상 아이템 상태를 Stored(물리 비활성화, 부착 유지)로 변경하며, 유령 현상(Phantom Snapping) 방지를 위해 지연 평가를 수행합니다.  
+* **Logic_CarryInteract_Combine**: 작업대에 놓인 아이템과 플레이어가 들고 있는 아이템이 레시피에 맞는지 판단하고, 성공 시 새로운 결과물 변수를 담아 Manager에게 교체(Replace) 명령을 하달합니다.
+
+### **🗄️ Data Assets (데이터 주도 설계)**
 
 기능 확장을 위해 클래스 상속(Subclassing)을 최소화하고 데이터 에셋 중심의 확장을 지향합니다.
-*   **`UItemData`**: 각 아이템이 어떤 논리적 특성(LogicModules)을 가질지 정의하는 데이터 컨테이너입니다.
-*   **`UWorkstationData`**: 각 워크스테이션이 처리가능한 로직 모듈들을 담는 데이터 컨테이너입니다.
 
-### 📋 Logic Blackboard (상태 공유 공간)
+* **UItemData**: 각 아이템이 어떤 논리적 특성(LogicModules)을 가질지 정의하는 데이터 컨테이너입니다.  
+* **UWorkstationData**: 각 워크스테이션이 처리가능한 로직 모듈들을 담는 데이터 컨테이너입니다.
 
-*   **`FLogicBlackboard`**: 워크스테이션이(`UCarryInteractComponent`) 갖는 일종의 메모리(Memory) 공간입니다. 
-*   모듈 간(예: `Common` 로직 모듈이 아이템을 거치하면, 나중에 `Combine` 모듈이 이를 읽어 조합에 사용)에 데이터를 주고받기 위해 고안된 구조체로, `GameplayTag`를 키로 하여 액터를 저장합니다. 멀티플레이어 환경에서 안전하게 복제(Replicated)되어 상태 일관성을 보장합니다.
+### **📋 Logic Blackboard (상태 공유 공간)**
 
----
+* **FLogicBlackboard**: 워크스테이션이(UCarryInteractComponent) 갖는 일종의 메모리(Memory) 공간입니다.  
+* 모듈 간(예: Common 로직 모듈이 아이템을 거치하면, 나중에 Combine 모듈이 이를 읽어 조합에 사용)에 데이터를 주고받기 위해 고안된 구조체로, GameplayTag를 키로 하여 액터를 저장합니다. 멀티플레이어 환경에서 안전하게 복제(Replicated)되어 상태 일관성을 보장합니다.
 
-## 🛠️ 핵심 구현 상세 및 설계 이유 (Implementation Details & Rationale)
+## **🛠️ 핵심 구현 상세 및 설계 이유 (Implementation Details & Rationale)**
 
 본 프로젝트는 단순한 스파게티 코드를 피하기 위해 특정 패턴과 엔진의 고급 기능을 적극 활용하여 구조화 되었습니다.
 
-### 1. FastArraySerializer를 활용한 Blackboard 네트워크 동기화
-*   **구현 방법**: `FLogicBlackboard`는 단순 `TArray`가 아닌 언리얼 엔진의 `FFastArraySerializer`를 상속(`FFastArraySerializerItem` 구조체와 함께 사용) 받아 구현되었습니다.
-*   **도입 이유**: 
-    1.  일반적인 `TArray` 리플리케이션은 배열 내 항목 하나만 변경되어도 배열 전체를 다시 직렬화(Serialize)하여 전송하므로 네트워크 대역폭 낭비가 큽니다.
-    2.  `FFastArraySerializer`는 추가(Add), 삭제(Remove), 변경(Modify)된 구체적인 **델타(Delta) 업데이트만 서버에서 클라이언트로 전송**하므로 트래픽 최적화에 탁월합니다.
-    3.  워크스테이션에 여러 아이템이 거치되고 조합되는 과정에서 빈번하게 일어나는 배열 변경을 가장 우아하고 안전하게 동기화하기 위한 선택입니다.
+### **1. FastArraySerializer를 활용한 Blackboard 네트워크 동기화**
 
-### 2. Template 매핑을 활용한 RecipeLogicModule 설계
-*   **구현 방법**: `URecipeLogicModuleBase`를 비롯한 레시피 시스템은 C++의 템플릿(Template) 방식을 사용하여 다양한 구조체(`FRecipeUIData`를 상속/포함하는 임의의 레시피 데이터 타입)를 동적으로 처리하도록 설계되었습니다.
-*   **도입 이유**: 
-    1.  레시피는 '조합(Combine)', '분해(Deconstruct)', '요리(Cook)' 등 모듈의 목적에 따라 각기 다른 데이터 필드(Prioritiy, Input, Output 등)를 요구합니다. 
-    2.  단일 구조체나 UObject 상속으로 모든 레시피 데이터를 묶으면 오버헤드가 커지거나 다운캐스팅(Downcasting) 지옥에 빠지게 됩니다. 
-    3.  템플릿을 사용하여 로직 모듈이 자신이 다룰 **구체적인 레시피 구조체 타입(T)**을 컴파일 타임에 결정하도록 함으로써, 유연한 확장을 보장하면서도 타입 안정성(Type Safety)을 유지했습니다.
+* **구현 방법**: FLogicBlackboard는 단순 TArray가 아닌 언리얼 엔진의 FFastArraySerializer를 상속(FFastArraySerializerItem 구조체와 함께 사용) 받아 구현되었습니다.  
+* **도입 이유**:  
+  1. 일반적인 TArray 리플리케이션은 배열 내 항목 하나만 변경되어도 배열 전체를 다시 직렬화(Serialize)하여 전송하므로 네트워크 대역폭 낭비가 큽니다.  
+  2. FFastArraySerializer는 추가(Add), 삭제(Remove), 변경(Modify)된 구체적인 **델타(Delta) 업데이트만 서버에서 클라이언트로 전송**하므로 트래픽 최적화에 탁월합니다.  
+  3. 워크스테이션에 여러 아이템이 거치되고 조합되는 과정에서 빈번하게 일어나는 배열 변경을 가장 우아하고 안전하게 동기화하기 위한 선택입니다.
 
-### 3. 지연 평가(Lazy Validating)를 통한 유령 동기화(Phantom Snapping) 해결
-*   **구현 방법**: 컴포넌트나 로직 매 틱마다 상태를 갱신하는 대신, `Logic_CarryInteract_Common` 등이 블랙보드 캐시를 "사용하려고 시도할 때(OnModuleInteract 시점)" 유효성을 1회 검증합니다.
-*   **도입 이유**: 
-    1.  누군가가 워크스테이션에 거치된 아이템을 직접(`CarryableComponent`를 통해) 낚아채갈 경우, 워크스테이션의 블랙보드는 아이템이 사라졌다는 사실을 즉각 알 방법이 없습니다(상호 의존성을 없앴기 때문).
-    2.  `IsValid(Item)` 체크와 더불어 `TargetActor->IsAttachedTo(Workstation)` 체크를 수행하여, 만약 아이템이 물리적으로 분리되었다면 즉각 블랙보드 슬롯을 초기화합니다.
-    3.  상태 감시(Polling) 비용을 아끼고, "필요할 때만 묻는다"는 의존성 역전 원칙을 지키기 위한 최적화입니다.
+### **2. Template 매핑을 활용한 RecipeLogicModule 설계**
+
+* **구현 방법**: URecipeLogicModuleBase를 비롯한 레시피 시스템은 C++의 템플릿(Template) 방식을 사용하여 다양한 구조체(FRecipeUIData를 상속/포함하는 임의의 레시피 데이터 타입)를 동적으로 처리하도록 설계되었습니다.  
+* **도입 이유**:  
+  1. 레시피는 '조합(Combine)', '분해(Deconstruct)', '요리(Cook)' 등 모듈의 목적에 따라 각기 다른 데이터 필드(Priority, Input, Output 등)를 요구합니다.  
+  2. 단일 구조체나 UObject 상속으로 모든 레시피 데이터를 묶으면 오버헤드가 커지거나 다운캐스팅(Downcasting) 지옥에 빠지게 됩니다.  
+  3. 템플릿을 사용하여 로직 모듈이 자신이 다룰 **구체적인 레시피 구조체 타입(T)**을 컴파일 타임에 결정하도록 함으로써, 유연한 확장을 보장하면서도 타입 안정성(Type Safety)을 유지했습니다.
+
+### **3. 지연 평가(Lazy Validating)를 통한 유령 동기화(Phantom Snapping) 해결**
+
+* **구현 방법**: 컴포넌트나 로직 매 틱마다 상태를 갱신하는 대신, Logic_CarryInteract_Common 등이 블랙보드 캐시를 "사용하려고 시도할 때(OnModuleInteract 시점)" 유효성을 1회 검증합니다.  
+* **도입 이유**:  
+  1. 누군가가 워크스테이션에 거치된 아이템을 직접(CarryableComponent를 통해) 낚아채갈 경우, 워크스테이션의 블랙보드는 아이템이 사라졌다는 사실을 즉각 알 방법이 없습니다(상호 의존성을 없앴기 때문).  
+  2. IsValid(Item) 체크와 더불어 TargetActor->IsAttachedTo(Workstation) 체크를 수행하여, 만약 아이템이 물리적으로 분리되었다면 즉각 블랙보드 슬롯을 초기화합니다.  
+  3. 상태 감시(Polling) 비용을 아끼고, "필요할 때만 묻는다"는 의존성 역전 원칙을 지키기 위한 최적화입니다.
+
+## **🎯 설계 철학 심화 (Advanced Design Philosophy)**
+
+### **4. Preset과 투트랙 (Preset & Two-Track Module Strategy)**
+
+* **원칙**: 데이터 에셋(UItemData, UWorkstationData)에 등록하는 로직 모듈을 **Preset 모듈**과 **Custom 모듈**의 두 트랙으로 분리하여 관리합니다.  
+* **Preset 모듈 (표준 트랙)**:  
+  * 줍기/놓기(Logic_Carryable_Common), 거치(Logic_CarryInteract_Common) 등 **대다수 오브젝트가 공유하는 표준 행동**을 캡슐화한 모듈입니다.  
+  * Preset 모듈은 범용적이며 재사용 가능해야 합니다. 특정 오브젝트에만 해당하는 분기가 내부에 존재해서는 안 됩니다.  
+  * 새로운 아이템이나 워크스테이션을 추가할 때 Preset 모듈만 데이터 에셋에 등록하면 기본 동작이 즉시 완성되므로, **기능 확장의 기본 단위(Building Block)**로 기능합니다.  
+* **Custom 모듈 (커스텀 트랙)**:  
+  * 특정 오브젝트에만 필요한 고유 행동(예: 특수 조합 레시피, 고유한 상호작용 연출)을 담당하는 모듈입니다.  
+  * Custom 모듈은 Preset 모듈이 제공하는 표준 흐름 위에 **추가(Additive)**로 얹어지며, Preset 모듈의 동작을 변경하거나 우회해서는 안 됩니다.  
+  * **Chain of Responsibility** 순서에서 Custom 모듈이 먼저 평가되어, 해당 모듈이 처리할 수 있으면 즉시 처리하고, 처리할 수 없으면 다음 Preset 모듈로 자연스럽게 넘어갑니다.  
+* **투트랙 분리의 효과**:  
+  * **표준화**: 기본 동작이 Preset으로 통일되므로 오브젝트마다 미묘하게 다른 "방언(Dialect)"이 생기는 것을 방지합니다.  
+  * **확장 용이성**: 새로운 고유 기능은 Custom 모듈만 추가하면 되므로, 기존 Preset 코드를 수정할 필요가 없습니다(Open-Closed Principle).  
+  * **디버깅 명확성**: 문제가 표준 동작에서 발생하면 Preset 모듈을, 특수 동작에서 발생하면 Custom 모듈을 살피면 되므로 원인 범위가 즉시 좁혀집니다.
+
+### **5. 사전 로직과 사후 로직 (Pre-Logic & Post-Logic)**
+
+* **원칙**: 하나의 상호작용은 반드시 **사전 로직(Pre-Logic) → 핵심 실행(Core Execution) → 사후 로직(Post-Logic)**의 3단계 흐름을 따릅니다.  
+* **사전 로직 (Pre-Logic)**:  
+  * 행동을 실행하기 **전에** 수행하는 검증·준비 단계입니다.  
+  * "플레이어 손이 비어있는가?", "워크스테이션에 빈 슬롯이 있는가?", "쿨다운이 끝났는가?" 등의 **Validation(유효성 검증)**과 **Guard Clause(조기 반환 조건)** 체크가 해당합니다.  
+  * 사전 로직에서 조건이 불충분하면 핵심 실행으로 진입하지 않고 **즉시 반환**하여 부작용(Side Effect)을 원천 차단합니다.  
+* **핵심 실행 (Core Execution)**:  
+  * 사전 로직을 모두 통과한 경우에만 도달하는 **실제 행동** 단계입니다.  
+  * 아이템 Attach, 상태 전이, 블랙보드 갱신 등 **되돌리기 어려운 부작용**이 여기서 발생합니다. (Manager 호출 등을 통해 이루어짐)  
+* **사후 로직 (Post-Logic)**:  
+  * 핵심 실행 이후 수행하는 정리·후처리 단계입니다.  
+  * 이펙트 재생, UI 갱신 알림, 로그 기록, 아이템 스폰 후 위치 보정 등 **핵심 기능과 무관하지만 필요한 부가 작업**이 해당합니다.  
+  * 사후 로직의 실패가 핵심 실행의 성공 여부에 영향을 주어서는 안 됩니다.  
+* **설계 목적**: 이 3단계 분리를 통해 "어디서 무엇이 검증되고, 어디서 실행되며, 어디서 정리되는가"가 코드 구조에서 명확히 드러나 디버깅과 유지보수가 용이해집니다.  
+* **중앙집권형·계층형 구조를 통한 파편화 방지**:  
+  * 사전/사후 로직의 단계를 각 로직 모듈이 개별적으로 구현하도록 방치하면, 검증 코드가 여러 곳에 **파편화(Fragmentation)**되어 누락·불일치가 발생합니다.  
+  * 이를 방지하기 위해 **중앙집권형(Centralized)** 접근을 사용합니다: 공통 사전 검증(예: 권한 체크, 유효성 체크)은 컴포넌트의 Dispatch 단계 또는 Base 로직 모듈(ULogicModuleBase)의 템플릿 메서드에서 **단 한 번** 수행합니다. 개별 모듈은 이미 검증을 통과한 컨텍스트만 받습니다.  
+  * 사후 로직도 마찬가지로 **계층형(Hierarchical)** 구조를 따릅니다: 모듈별 후처리 → 컴포넌트 레벨 후처리 → 시스템 레벨 후처리가 계층적으로 체이닝되어, 각 단계의 책임이 명확히 분리됩니다.  
+  * 결과적으로 "이 검증은 어디서 하는가?"라는 질문에 대해 항상 **단일 답변(Single Source)**이 존재하게 됩니다.
+
+### **6. 예외 없는 환경 조성 (Exception-Free Environment)**
+
+* **원칙**: 시스템 설계 시 **예외(Exception)가 발생할 수 없는 구조**를 만드는 것을 최우선으로 합니다. 에러를 "잡는" 코드를 작성하기보다, 에러가 "일어날 수 없도록" 환경 자체를 조성합니다.  
+* **적용**:  
+  1. **열거형(Enum) 기반 상태 관리**: 문자열이나 매직 넘버 대신 EItemState, ECarryInteractionType 등의 열거형으로 유효한 상태 집합을 컴파일 타임에 제한합니다. 정의되지 않은 상태는 표현 자체가 불가능합니다.  
+  2. **인터페이스 계약(Interface Contract)**: ICarryInterface, ICarryLogicInterface 등을 통해 호출자와 수신자 간의 계약을 명시합니다. 계약을 만족하지 않는 객체는 컴파일 단계에서 걸러집니다.  
+  3. **Preset에 의한 상태 원자성**: 위 4번 원칙(Preset)으로 인해 개별 프로퍼티가 불일치하는 "반만 적용된" 상태는 존재할 수 없습니다.  
+  4. **Chain of Responsibility에서의 Fallthrough 방어**: 로직 모듈 체인을 순회한 후 어떤 모듈도 요청을 처리하지 않으면 조용히 무시하는 것이 아니라 명시적으로 실패를 반환하여 호출자가 인지하도록 합니다.  
+* **핵심 사상**: "방어적 프로그래밍(Defensive Programming)"이 아닌 **"방어가 필요 없는 프로그래밍(Offensive Programming)"**을 목표로 합니다. 유효하지 않은 상태 자체를 **표현 불가능(Unrepresentable)**하게 만든다면, 이를 방어하는 코드도 필요 없습니다.
+
+### **7. 로직에서는 오직 판단과 호출만 (Logic = Judgment + Dispatch Only)**
+
+* **원칙**: 로직 모듈(ULogicModuleBase 파생 클래스)은 **판단(Judgment)**과 **호출(Dispatch)** 이 두 가지 행위만 수행합니다. 세부적인 "방법(How)"은 로직이 결정하지 않습니다.  
+* **판단(Judgment)**:  
+  * "이 상호작용을 수락할 것인가?" — 사전 로직(Pre-Logic)의 조건 평가입니다.  
+  * "어떤 레시피가 매칭되는가?" — 데이터 에셋 대조입니다.  
+  * 로직 모듈은 판단의 **기준(Criteria)**만을 코드로 표현하고, 판단에 필요한 **데이터(Data)**는 전적으로 Component·DataAsset·Interface에서 가져옵니다.  
+* **호출(Dispatch)**:  
+  * 판단이 완료된 후 수행할 행동을 **직접 구현하지 않고**, 이미 존재하는 컴포넌트나 매니저(Manager)의 범용 API를 **호출**합니다.  
+  * 예: ItemManager->ReplaceItem(...) 와 같이 세부 물리/스폰 처리는 해당 모듈에 위임하고, 로직은 "무엇을(What)" "언제(When)" 호출할지만 결정합니다.  
+* **금지 사항**:  
+  * 로직 내부에서 물리 프로퍼티를 직접 조작(SetActorLocation, AttachToComponent 등)하거나, 위젯을 직접 생성하거나, 사운드를 직접 재생하는 등의 **세부 구현(Implementation Detail)** 코드를 작성하는 것은 금지됩니다.  
+  * 이를 위반하면 로직이 특정 엔진 기능에 강결합되어 테스트·확장·교체가 불가능해집니다.  
+* **효과**: 로직 모듈의 코드는 마치 **의사결정 플로우차트**처럼 읽히게 되어, 비즈니스 규칙의 파악과 변경이 매우 용이해집니다.
+
+### **8. 예외를 만들 경우 기술 부채 격리 (Technical Debt Isolation for Exceptions)**
+
+* **원칙**: 현실적으로 위 원칙들을 100% 준수하기 어려운 상황이 발생할 수 있습니다. 이 경우 예외를 허용하되, 반드시 **기술 부채(Technical Debt)를 격리**하여 전파를 차단해야 합니다.  
+* **격리 전략**:  
+  1. **Hack 서브시스템 활용**: 원칙을 어기는 하드코딩이나 1회성 기획 예외 처리는 UGameHackSubsystem과 같이 격리된 공간에 모아둡니다.  
+  2. **명시적 마킹**: 예외 코드에는 // TECH_DEBT: 프리픽스 주석과 함께 ①왜 예외가 필요한지, ②해결 시 어떤 방향으로 리팩터링해야 하는지를 반드시 기록합니다.  
+  3. **전파 방지**: 예외 코드가 다른 모듈에 직접 노출되어서는 안 됩니다. 다른 모듈이 예외 코드의 존재를 알거나 의존하게 되면, 하나의 예외가 시스템 전체로 **전염(Contagion)**됩니다. 반드시 인터페이스 경계 뒤에 숨겨야 합니다.  
+  4. **수명 제한**: 예외는 영구적으로 용인되지 않습니다. 생성 시점에 리팩터링 일정 또는 제거 조건을 명시하여, 기술 부채가 누적되는 것을 방지합니다.  
+* **비유**: 예외 코드는 **격리 병동**에 넣는 것입니다. 환자(기술 부채)가 존재하는 것은 현실이나, 다른 건강한 시스템으로 감염이 퍼지지 않도록 철저히 격리합니다.
+
+### **9. 시각적 디버깅 (Visual Debugging)**
+
+* **원칙**: 멀티플레이어·물리·상태 머신이 결합된 환경에서는 로그만으로 문제를 진단하기 어렵습니다. 에러 상황을 **게임 월드 안에서 즉시 눈으로 확인**할 수 있도록, 시각적 디버깅을 1급 시민(First-class Citizen)으로 취급합니다.  
+* **핵심 매커니즘: 에러 아이템 스폰**:  
+  * 로직 모듈 체인에서 예상치 못한 실패가 발생하거나, 레시피 매칭이 불가능하거나, 상태 전이가 유효하지 않은 경우 — 시스템은 조용히 실패하는 대신 **에러 아이템(Error Item)**을 월드에 스폰합니다.  
+  * 에러 아이템은 시각적으로 명확히 구별되는 전용 메시/머티리얼(예: 빨간 경고 아이콘, "ERROR" 텍스트가 새겨진 오브젝트)을 사용하여, 플레이 중에도 "여기서 무언가 잘못되었다"는 사실을 **즉각적으로 인지**할 수 있게 합니다.  
+  * 에러 아이템에는 실패 원인 정보(어떤 모듈에서 실패했는가, 어떤 조건이 불충분했는가)를 메타데이터로 담아, 에러 아이템을 검사하면 디버깅에 필요한 컨텍스트를 바로 얻을 수 있도록 합니다.  
+* **기존 디버그 도구와의 병행**:  
+  * DrawDebugSphere, DrawDebugLine 등으로 콜리전 범위·상호작용 반경을 시각화하고, GEngine->AddOnScreenDebugMessage로 현재 상태를 오버레이하는 등의 보조적 시각 디버깅도 활용합니다.  
+  * 그러나 핵심은 에러 아이템입니다: 로그를 열어보지 않아도, 게임을 플레이하는 것만으로 문제가 **물리적 오브젝트**로 세상에 나타나기 때문에 놓칠 수가 없습니다.  
+* **조건부 컴파일**: 에러 아이템 스폰 및 시각적 디버깅 코드는 #if !UE_BUILD_SHIPPING 또는 프로젝트 커스텀 매크로(#if ENABLE_VISUAL_DEBUG)로 감싸서, 쉬핑 빌드에서는 일체의 오버헤드 없이 완전히 제거되도록 합니다.  
+* **설계 목적**: "재현 → 로그 분석 → 추측"의 고비용 사이클 대신, **플레이 중 에러 아이템 발견 → 즉시 원인 파악**이라는 저비용 워크플로우를 구축합니다. 에러가 "보이지 않으면 존재하지 않는 것처럼 넘어가는" 문제를 원천 차단합니다.
