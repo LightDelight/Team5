@@ -19,7 +19,7 @@ void AContainerItemBase::BeginPlay() {
 
   // 모든 로직 모듈에 런타임 초기화 기회 제공
   if (WorkstationData) {
-    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+    for (ULogicModuleBase *Module : WorkstationData->GetAllModules()) {
       if (Module) {
         Module->InitializeLogic(this);
       }
@@ -32,7 +32,7 @@ void AContainerItemBase::OnConstruction(const FTransform &Transform) {
 
   // 모든 로직 모듈에 에디터 미리보기 기회 제공
   if (WorkstationData) {
-    for (ULogicModuleBase *Module : WorkstationData->LogicModules) {
+    for (ULogicModuleBase *Module : WorkstationData->GetAllModules()) {
       if (Module) {
         Module->OnConstructionLogic(this);
       }

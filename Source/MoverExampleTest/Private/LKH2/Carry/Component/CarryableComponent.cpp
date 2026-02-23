@@ -21,8 +21,8 @@ bool UCarryableComponent::OnCarryInteract(
   if (GetOwner()) {
     if (AItemBase *Item = Cast<AItemBase>(GetOwner())) {
       if (UItemData *ItemData = Item->GetItemData()) {
-        const TArray<TObjectPtr<ULogicModuleBase>> &Modules =
-            ItemData->LogicModules;
+        const TArray<ULogicModuleBase *> Modules =
+            ItemData->GetAllModules();
 
         // 책임 연쇄 패턴(Chain of Responsibility)으로 순회
         for (ULogicModuleBase *Module : Modules) {

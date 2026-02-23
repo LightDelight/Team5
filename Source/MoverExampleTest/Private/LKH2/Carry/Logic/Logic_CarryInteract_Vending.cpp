@@ -13,6 +13,7 @@
 #include "LKH2/Logic/InstigatorContextInterface.h"
 #include "LKH2/Logic/LogicBlackboard.h"
 #include "LKH2/Logic/LogicContextInterface.h"
+#include "LKH2/Manager/ItemManagerSubsystem.h"
 
 bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
     AActor *Interactor, AActor *TargetActor,
@@ -42,19 +43,18 @@ bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
   if (!World)
     return false;
 
+  UItemManagerSubsystem *ItemMgr = World->GetSubsystem<UItemManagerSubsystem>();
+  if (!ItemMgr)
+    return false;
+
   // CarrierComp 위치에 스폰 (바로 손에 쥐어질 것이므로)
   FTransform SpawnTransform = CarrierComp->GetComponentTransform();
 
   AItemBase *NewItem =
-      World->SpawnActorDeferred<AItemBase>(VendingItemClass, SpawnTransform);
+      ItemMgr->SpawnItemFromData(VendingItemData, SpawnTransform,
+                                 VendingItemClass);
   if (!NewItem)
     return false;
-
-  // 아이템 데이터 적용
-  NewItem->SetItemDataAndApply(VendingItemData);
-
-  // 스폰 확정
-  NewItem->FinishSpawning(SpawnTransform);
 
   // ForceEquip → OnCarryInteract → Logic_Carryable_Common 픽업 경로가
   // 물리 비활성화 + Carried 상태 + CarrierComp 부착을 자동 처리
@@ -95,15 +95,17 @@ void ULogic_CarryInteract_Vending::InitializeLogic(AActor *OwnerActor) {
   if (!World)
     return;
 
-  FTransform DisplayTransform = SnapComp->GetComponentTransform();
-
-  AItemBase *DisplayItem = World->SpawnActorDeferred<AItemBase>(
-      VendingItemClass, DisplayTransform);
-  if (!DisplayItem)
+  UItemManagerSubsystem *ItemMgr = World->GetSubsystem<UItemManagerSubsystem>();
+  if (!ItemMgr)
     return;
 
-  // 데이터 적용 (메쉬 등 시각 요소 세팅)
-  DisplayItem->SetItemDataAndApply(VendingItemData);
+  FTransform DisplayTransform = SnapComp->GetComponentTransform();
+
+  AItemBase *DisplayItem =
+      ItemMgr->SpawnItemFromData(VendingItemData, DisplayTransform,
+                                 VendingItemClass);
+  if (!DisplayItem)
+    return;
 
   // 물리/충돌 완전 비활성화 (순수 시각용)
   if (UPrimitiveComponent *RootPrim =
@@ -117,9 +119,6 @@ void ULogic_CarryInteract_Vending::InitializeLogic(AActor *OwnerActor) {
           DisplayItem->FindComponentByClass<UItemStateComponent>()) {
     StateComp->SetItemState(EItemState::Stored);
   }
-
-  // 스폰 확정 후 CarryInteractComponent에 부착
-  DisplayItem->FinishSpawning(DisplayTransform);
   DisplayItem->AttachToComponent(
       SnapComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 

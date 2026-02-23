@@ -27,7 +27,7 @@ bool UCarryInteractComponent::OnInteract(
   // Actor로부터 메시지 전달 시 WorkstationData가 가진 로직 호출
   if (Data && Interactor) {
     // 로직 모듈 배열을 순회하며 하나씩 실행 (책임 연쇄 패턴)
-    for (ULogicModuleBase *Module : Data->LogicModules) {
+    for (ULogicModuleBase *Module : Data->GetAllModules()) {
       if (Module && Module->Implements<UCarryLogicInterface>()) {
         if (ICarryLogicInterface::Execute_OnModuleInteract(
                 Module, Interactor, GetOwner(), InteractionType)) {

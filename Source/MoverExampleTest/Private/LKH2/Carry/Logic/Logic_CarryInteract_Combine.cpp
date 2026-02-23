@@ -15,6 +15,7 @@
 #include "LKH2/Logic/InstigatorContextInterface.h"
 #include "LKH2/Logic/LogicBlackboard.h"
 #include "LKH2/Logic/LogicContextInterface.h"
+#include "LKH2/Manager/ItemManagerSubsystem.h"
 #include "LKH2/Recipe/CombineRecipeBook.h"
 
 ULogic_CarryInteract_Combine::ULogic_CarryInteract_Combine() {
@@ -160,32 +161,25 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
             CarrierComp->ForceDrop(); // 손에서 내려놓기 처리
 
             UWorld *World = TargetActor->GetWorld();
-            if (World) {
+            UItemManagerSubsystem *ItemMgr =
+                World ? World->GetSubsystem<UItemManagerSubsystem>()
+                      : nullptr;
+
+            if (World && ItemMgr) {
               FTransform SpawnTransform =
                   SnapComp ? SnapComp->GetComponentTransform()
                            : TargetActor->GetActorTransform();
 
-              // 결과 아이템 클래스 결정 (로직 모듈에 지정된 클래스 우선, 없으면
-              // 재료 아이템 클래스 재사용)
-              UClass *ClassToSpawn =
-                  BaseItemClassToSpawn
-                      ? BaseItemClassToSpawn.Get()
-                      : (PlayerItem ? PlayerItem->GetClass()
-                                    : AItemBase::StaticClass());
+              // 기존 아이템 대상 파괴 (ItemManager 추적)
+              ItemMgr->DestroyItem(PlayerItem);
+              ItemMgr->DestroyItem(StoredItem);
 
-              // 기존 아이템 대상 파괴
-              PlayerItem->Destroy();
-              StoredItem->Destroy();
+              // 결과 아이템 스폰 (ItemManager 파이프라인)
+              AItemBase *NewItem = ItemMgr->SpawnItemFromData(
+                  FoundRecipe->ResultItemData, SpawnTransform,
+                  BaseItemClassToSpawn);
 
-              // 결과 아이템 스폰 (지연)
-              AItemBase *NewItem = World->SpawnActorDeferred<AItemBase>(
-                  ClassToSpawn, SpawnTransform);
               if (NewItem) {
-                // 새로운 아이템 데이터 갱신
-                if (FoundRecipe->ResultItemData) {
-                  NewItem->SetItemDataAndApply(FoundRecipe->ResultItemData);
-                }
-
                 // 서버 사이드 물리 끄기 및 콜리전 해제 (초기화)
                 if (UPrimitiveComponent *RootPrim = Cast<UPrimitiveComponent>(
                         NewItem->GetRootComponent())) {
@@ -197,9 +191,6 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
                         NewItem->FindComponentByClass<UItemStateComponent>()) {
                   StateComp->SetItemState(EItemState::Stored);
                 }
-
-                // 속성 세팅 후 스폰 완료 (클라이언트 초기 리플리케이션 확정)
-                NewItem->FinishSpawning(SpawnTransform);
 
                 // 스폰이 완료된 이후에 부착을 진행해야 부착 상태가 유실되지
                 // 않음

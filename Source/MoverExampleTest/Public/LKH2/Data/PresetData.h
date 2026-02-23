@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "GameplayTagContainer.h"
+#include "LKH2/Data/ItemStatValue.h"
 #include "PresetData.generated.h"
 
 class ULogicModuleBase;
@@ -20,7 +22,7 @@ enum class EPresetDataType : uint8 {
 /**
  * 데이터 에셋(ItemData/WorkstationData)의 기본 모듈 구성을 정의하는 프리셋.
  * 어떤 종류의 데이터인지(Item/Workstation)와
- * 기본적으로 포함할 로직 모듈 클래스 목록을 설정합니다.
+ * 기본적으로 포함할 로직 모듈 클래스 목록, 그리고 기본 Stats를 설정합니다.
  */
 UCLASS(BlueprintType)
 class MOVEREXAMPLETEST_API UPresetData : public UPrimaryDataAsset {
@@ -34,4 +36,8 @@ public:
   /** 기본적으로 포함할 로직 모듈 클래스 목록 */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Preset|Modules")
   TArray<TSubclassOf<ULogicModuleBase>> DefaultModuleClasses;
+
+  /** 프리셋의 기본 Stats (Data에 적용 시 복사됨) */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Preset|Stats")
+  TMap<FGameplayTag, FItemStatValue> DefaultStats;
 };
