@@ -18,9 +18,8 @@ void UItemManagerSubsystem::Initialize(FSubsystemCollectionBase &Collection) {
 
 void UItemManagerSubsystem::Deinitialize() {
   // 정리: 활성 아이템 추적 초기화
-  ActiveItems.Empty();
+  ActiveItemsMap.Empty();
   ItemDataRegistry.Empty();
-  ItemClassRegistry.Empty();
 
   Super::Deinitialize();
 }
@@ -36,25 +35,26 @@ void UItemManagerSubsystem::LoadRegistry(UItemRegistryData *RegistryData) {
     DefaultItemClass = RegistryData->DefaultItemClass;
   }
 
-  // 항목 일괄 등록
-  for (const FItemRegistryEntry &Entry : RegistryData->Entries) {
-    if (Entry.ItemTag.IsValid() && Entry.ItemData) {
-      RegisterItemData(Entry.ItemTag, Entry.ItemData, Entry.ItemClass);
+  // 에러 클래스 및 플래그 갱신
+  bUseErrorClassForMissingClass = RegistryData->bUseErrorClassForMissingClass;
+  if (RegistryData->ErrorItemClass) {
+    ErrorItemClass = RegistryData->ErrorItemClass;
+  }
+
+  // 항목 일괄 등록 (데이터 자가 식별 구조)
+  for (UItemData *Data : RegistryData->ItemDatas) {
+    if (Data && Data->ItemTag.IsValid()) {
+      RegisterItemData(Data->ItemTag, Data);
     }
   }
 }
 
 void UItemManagerSubsystem::RegisterItemData(
-    FGameplayTag ItemTag, UItemData *Data, TSubclassOf<AItemBase> ItemClass) {
+    FGameplayTag ItemTag, UItemData *Data) {
   if (!ItemTag.IsValid() || !Data)
     return;
 
   ItemDataRegistry.Add(ItemTag, Data);
-
-  // 클래스가 지정된 경우에만 등록 (미지정 시 DefaultItemClass 폴백)
-  if (ItemClass) {
-    ItemClassRegistry.Add(Data, ItemClass);
-  }
 }
 
 UItemData *UItemManagerSubsystem::FindItemData(FGameplayTag ItemTag) const {
@@ -66,66 +66,81 @@ UItemData *UItemManagerSubsystem::FindItemData(FGameplayTag ItemTag) const {
 
 // ─── 스폰 API ───
 
-AItemBase *UItemManagerSubsystem::SpawnItem(FGameplayTag ItemTag,
-                                            const FTransform &Transform) {
+FGuid UItemManagerSubsystem::SpawnItem(FGameplayTag ItemTag,
+                                       const FTransform &Transform) {
   UItemData *Data = FindItemData(ItemTag);
   if (!Data) {
     UE_LOG(LogTemp, Warning,
            TEXT("ItemManagerSubsystem::SpawnItem - Tag '%s'에 해당하는 "
                 "ItemData가 레지스트리에 없습니다."),
            *ItemTag.ToString());
-    return nullptr;
+    return FGuid();
   }
   return SpawnItemFromData(Data, Transform);
 }
 
-AItemBase *UItemManagerSubsystem::SpawnItemFromData(
+FGuid UItemManagerSubsystem::SpawnItemFromData(
     UItemData *Data, const FTransform &Transform,
     TSubclassOf<AItemBase> ClassOverride) {
   UWorld *World = GetWorld();
   if (!World || !Data)
-    return nullptr;
+    return FGuid();
 
   UClass *SpawnClass = ResolveSpawnClass(Data, ClassOverride);
   if (!SpawnClass)
-    return nullptr;
+    return FGuid();
 
   // 표준 스폰 파이프라인: Deferred → DataApply → FinishSpawning
   AItemBase *NewItem =
       World->SpawnActorDeferred<AItemBase>(SpawnClass, Transform);
   if (!NewItem)
-    return nullptr;
+    return FGuid();
+
+  // 인스턴스 ID 발급 및 설정
+  FGuid NewInstanceId = FGuid::NewGuid();
+  NewItem->SetInstanceId(NewInstanceId);
 
   NewItem->SetItemDataAndApply(Data);
   NewItem->FinishSpawning(Transform);
 
   // 활성 아이템 추적 등록
   CleanupStaleEntries();
-  ActiveItems.Add(NewItem);
+  ActiveItemsMap.Add(NewInstanceId, NewItem);
 
-  return NewItem;
+  return NewInstanceId;
+}
+
+// ─── 조회 API ───
+
+AItemBase *UItemManagerSubsystem::GetItemActor(const FGuid &InstanceId) const {
+  if (!InstanceId.IsValid())
+    return nullptr;
+
+  if (const TWeakObjectPtr<AItemBase> *WeakItem = ActiveItemsMap.Find(InstanceId)) {
+    return WeakItem->Get();
+  }
+  return nullptr;
 }
 
 // ─── 파괴 ───
 
-void UItemManagerSubsystem::DestroyItem(AItemBase *Item) {
+void UItemManagerSubsystem::DestroyItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
   if (!Item)
     return;
 
   // 추적 목록에서 제거
-  ActiveItems.RemoveAll(
-      [Item](const TWeakObjectPtr<AItemBase> &WeakItem) {
-        return !WeakItem.IsValid() || WeakItem.Get() == Item;
-      });
+  ActiveItemsMap.Remove(InstanceId);
 
   Item->Destroy();
 }
 
 // ─── 상태 전이 API ───
 
-void UItemManagerSubsystem::StoreItem(AItemBase *Item,
+void UItemManagerSubsystem::StoreItem(const FGuid &InstanceId,
                                       USceneComponent *AttachTarget,
                                       UCarryComponent *Carrier) {
+  AItemBase *Item = GetItemActor(InstanceId);
   if (!Item || !AttachTarget)
     return;
 
@@ -146,8 +161,9 @@ void UItemManagerSubsystem::StoreItem(AItemBase *Item,
       FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
-void UItemManagerSubsystem::RetrieveItem(AItemBase *Item,
+void UItemManagerSubsystem::RetrieveItem(const FGuid &InstanceId,
                                          UCarryComponent *Carrier) {
+  AItemBase *Item = GetItemActor(InstanceId);
   if (!Item || !Carrier)
     return;
 
@@ -160,12 +176,15 @@ void UItemManagerSubsystem::RetrieveItem(AItemBase *Item,
     StateComp->SetItemState(EItemState::Carried);
   }
 
-  // 3. Carrier에 장착
+  // 3. Carrier에 장착 (피지컬 + 포인터)
+  Item->AttachToComponent(
+      Carrier, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
   Carrier->ForceEquip(Item);
 }
 
-void UItemManagerSubsystem::PickUpItem(AItemBase *Item,
+void UItemManagerSubsystem::PickUpItem(const FGuid &InstanceId,
                                        USceneComponent *AttachTarget) {
+  AItemBase *Item = GetItemActor(InstanceId);
   if (!Item || !AttachTarget)
     return;
 
@@ -181,9 +200,10 @@ void UItemManagerSubsystem::PickUpItem(AItemBase *Item,
       FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
-void UItemManagerSubsystem::DropItem(AItemBase *Item,
+void UItemManagerSubsystem::DropItem(const FGuid &InstanceId,
                                      const FVector &Impulse,
                                      UCarryComponent *Carrier) {
+  AItemBase *Item = GetItemActor(InstanceId);
   if (!Item)
     return;
 
@@ -221,24 +241,27 @@ void UItemManagerSubsystem::DropItem(AItemBase *Item,
 
 UClass *UItemManagerSubsystem::ResolveSpawnClass(
     UItemData *Data, TSubclassOf<AItemBase> ClassOverride) const {
-  // 우선순위: Override > Registry > Default
+  // 우선순위: Override > Data's EffectiveClass > ErrorClass(if true) > Default
   if (ClassOverride) {
     return ClassOverride.Get();
   }
 
-  if (const TSubclassOf<AItemBase> *Found = ItemClassRegistry.Find(Data)) {
-    if (*Found) {
-      return Found->Get();
-    }
+  if (TSubclassOf<AItemBase> EffectiveClass = Data->GetEffectiveItemClass()) {
+    return EffectiveClass.Get();
+  }
+
+  if (bUseErrorClassForMissingClass && ErrorItemClass) {
+    return ErrorItemClass.Get();
   }
 
   return DefaultItemClass.Get();
 }
 
 void UItemManagerSubsystem::CleanupStaleEntries() {
-  ActiveItems.RemoveAll(
-      [](const TWeakObjectPtr<AItemBase> &WeakItem) {
-        return !WeakItem.IsValid();
-      });
+  for (auto It = ActiveItemsMap.CreateIterator(); It; ++It) {
+    if (!It.Value().IsValid()) {
+      It.RemoveCurrent();
+    }
+  }
 }
 

@@ -12,9 +12,10 @@
 #include "LKH2/Logic/LogicContextInterface.h"
 #include "LKH2/Manager/ItemManagerSubsystem.h"
 
-bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
-    AActor *Interactor, AActor *TargetActor,
-    ECarryInteractionType InteractionType) {
+bool ULogic_CarryInteract_Trash::PerformInteraction(const FCarryContext &Context) {
+  AActor *TargetActor = GetOwner();
+  AActor *Interactor = Context.Interactor;
+
   if (!Interactor || !TargetActor)
     return false;
 
@@ -47,9 +48,9 @@ bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
       return true;
 
     // 컨테이너의 블랙보드에서 거치된 아이템들을 모두 찾아 파괴
-    if (ILogicContextInterface *Context =
+    if (ILogicContextInterface *LogicCtx =
             Cast<ILogicContextInterface>(ContainerItem)) {
-      FLogicBlackboard *Blackboard = Context->GetLogicBlackboard();
+      FLogicBlackboard *Blackboard = LogicCtx->GetLogicBlackboard();
       if (Blackboard) {
         bool bRemovedAny = false;
         for (FLogicBlackboardObjectEntry &Entry :
@@ -58,7 +59,7 @@ bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
           if (StoredItem) {
             // Manager API로 파괴
             if (ItemMgr) {
-              ItemMgr->DestroyItem(StoredItem);
+              ItemMgr->DestroyItem(StoredItem->GetInstanceId());
             }
             Entry.ObjectValue = nullptr;
             Blackboard->ObjectBlackboard.MarkItemDirty(Entry);
@@ -80,7 +81,7 @@ bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
     AItemBase *Item = Cast<AItemBase>(PlayerActor);
     if (Item && ItemMgr) {
       // Manager API로 파괴
-      ItemMgr->DestroyItem(Item);
+      ItemMgr->DestroyItem(Item->GetInstanceId());
     }
     return true;
   }

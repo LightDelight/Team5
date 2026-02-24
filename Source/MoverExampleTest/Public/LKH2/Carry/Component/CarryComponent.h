@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "LKH2/Carry/Interface/CarryInterface.h"
 #include "CarryComponent.generated.h"
 
 
@@ -73,6 +74,10 @@ private:
   void UpdateTargetCarryable();
   void SetTarget(AActor *NewTarget);
   void ProcessInputBuffer(AActor *Target);
+
+  /** 상호작용 상황(Context)을 생성합니다. */
+  FCarryContext CreateCarryContext(AActor *Target,
+                                   ECarryInteractionType Type) const;
 
   UPROPERTY()
   TArray<AActor *> OverlappingActors;

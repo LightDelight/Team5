@@ -37,32 +37,9 @@ void UCarryComponent::GetLifetimeReplicatedProps(
 }
 
 void UCarryComponent::OnRep_CarriedActor(AActor *OldCarriedActor) {
-  // 이전 아이템 탈착 (워크스테이션 배치를 방해하지 않도록, 여전히 내 캐릭터에
-  // 붙어있을 때만 탈착) 물리/충돌 관리는 온전히 ItemStateComponent 혹은 해당
-  // 로직 모듈에게 위임합니다.
-  if (OldCarriedActor && OldCarriedActor != CarriedActor) {
-    if (OldCarriedActor->GetAttachParentActor() == GetOwner()) {
-      OldCarriedActor->DetachFromActor(
-          FDetachmentTransformRules::KeepWorldTransform);
-    }
-  }
-
-  // 새로 들게 된 아이템 강제 부착 및 물리 끄기
-  // (서버의 지연된 ReplicatedMovement 패킷이 클라이언트 예측을 덮어써서 물리
-  // 버그로 인해 손에서 떨어지는 현상 원천 차단)
-  if (CarriedActor) {
-    if (UPrimitiveComponent *RootPrim =
-            Cast<UPrimitiveComponent>(CarriedActor->GetRootComponent())) {
-      RootPrim->SetSimulatePhysics(false);
-      RootPrim->SetCollisionProfileName(TEXT("NoCollision"));
-      RootPrim->SetPhysicsLinearVelocity(FVector::ZeroVector);
-      RootPrim->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
-    }
-
-    // 강제로 플레이어의 CarryComponent(손)에 명시적 스냅 부착
-    CarriedActor->AttachToComponent(
-        this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-  }
+  // // 원칙 준수: 부착(Attach) 및 물리/충돌 설정은 Manager와 ItemStateComponent에서 담당합니다.
+  // 이 컴포넌트는 오직 '무엇을 들고 있는가'라는 포인터 상태만 리플리케이션을 통해 동기화합니다.
+  // 클라이언트의 시각적 부착은 엔진의 AttachmentReplication을 통해 자동으로 수행됩니다.
 }
 
 void UCarryComponent::BeginPlay() {
@@ -227,23 +204,40 @@ void UCarryComponent::ForceEquip(AActor *ItemToEquip) {
   }
 }
 
+FCarryContext UCarryComponent::CreateCarryContext(AActor *Target,
+                                                   ECarryInteractionType Type) const {
+  FCarryContext Context(Cast<AActor>(GetOwner()), Type);
+  Context.TargetActor = Target;
+  
+  // 손 상태 컨텍스트 채우기
+  Context.bIsHandOccupied = (CarriedActor != nullptr);
+  Context.InHandActor = CarriedActor;
+
+  // 플레이어의 시야 방향이나 던지기 속도 등을 여기서 계산하여 컨텍스트에 담을 수 있음
+  if (Type == ECarryInteractionType::Throw) {
+    Context.Velocity = GetOwner()->GetActorForwardVector() * 1500.0f; // 기본값
+  }
+
+  return Context;
+}
+
 void UCarryComponent::ProcessInputBuffer(AActor *Target) {
   if (bWantsPickupOrDrop) {
     if (CarriedActor) {
       if (Target && Target->Implements<UCarryInterface>()) {
         ICarryInterface::Execute_OnCarryInteract(
-            Target, GetOwner(), ECarryInteractionType::Interact);
+            Target, CreateCarryContext(Target, ECarryInteractionType::Interact));
       } else {
         ICarryInterface::Execute_OnCarryInteract(
-            CarriedActor, GetOwner(), ECarryInteractionType::Interact);
+            CarriedActor, CreateCarryContext(nullptr, ECarryInteractionType::Interact));
         AActor *OldItem = CarriedActor;
         CarriedActor = nullptr;
         OnRep_CarriedActor(OldItem);
       }
     } else {
       if (Target && Target->Implements<UCarryInterface>()) {
-        bool bSuccess = ICarryInterface::Execute_OnCarryInteract(
-            Target, GetOwner(), ECarryInteractionType::Interact);
+        FCarryContext Context = CreateCarryContext(Target, ECarryInteractionType::Interact);
+        bool bSuccess = ICarryInterface::Execute_OnCarryInteract(Target, Context);
 
         if (bSuccess && Cast<AItemBase>(Target) != nullptr) {
           AActor *OldItem = CarriedActor;
@@ -262,8 +256,8 @@ void UCarryComponent::ProcessInputBuffer(AActor *Target) {
   if (bWantsThrow && CarriedActor) {
     if (CarriedActor->Implements<UCarryInterface>()) {
       // 던지기 처리 (로직 모듈에 위임)
-      ICarryInterface::Execute_OnCarryInteract(CarriedActor, GetOwner(),
-                                               ECarryInteractionType::Throw);
+      ICarryInterface::Execute_OnCarryInteract(
+          CarriedActor, CreateCarryContext(nullptr, ECarryInteractionType::Throw));
     }
     AActor *OldItem = CarriedActor;
     CarriedActor = nullptr;

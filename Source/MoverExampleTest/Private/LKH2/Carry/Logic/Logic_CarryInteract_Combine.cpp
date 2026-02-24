@@ -30,13 +30,14 @@ ULogic_CarryInteract_Combine::GetRequiredStatTags() const {
   return Tags;
 }
 
-void ULogic_CarryInteract_Combine::InitializeLogic(AActor *OwnerActor) {
-  if (!OwnerActor)
+void ULogic_CarryInteract_Combine::InitializeLogic(AActor *InOwnerActor) {
+  Super::InitializeLogic(InOwnerActor);
+  if (!InOwnerActor)
     return;
 
   // Stats에서 레시피 책 배열 조회
   ILogicContextInterface *Context =
-      Cast<ILogicContextInterface>(OwnerActor);
+      Cast<ILogicContextInterface>(InOwnerActor);
   if (!Context)
     return;
 
@@ -69,19 +70,31 @@ void ULogic_CarryInteract_Combine::CacheRecipes() {
   // PostLoad/PostEditChangeProperty 시에는 빈 상태로 대기
 }
 
-bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
-    AActor *Interactor, AActor *TargetActor,
-    ECarryInteractionType InteractionType) {
+bool ULogic_CarryInteract_Combine::PerformInteraction(const FCarryContext &Context) {
+  AActor *TargetActor = GetOwner();
+  AActor *Interactor = Context.Interactor;
+
   if (!TargetActor || !Interactor)
     return false;
 
-  FLogicBlackboard *Blackboard = nullptr;
-  if (ILogicContextInterface *Context =
-          Cast<ILogicContextInterface>(TargetActor)) {
-    Blackboard = Context->GetLogicBlackboard();
+  // [Type Filtering] 일반 상호작용(Interact)이 아닌 경우(예: Throw, Drop)는
+  // 로직 모듈이 반응하지 않도록 차단합니다.
+  if (Context.InteractionType != ECarryInteractionType::Interact) {
+    return false;
   }
 
-  if (!Blackboard || !StoredItemKey.IsValid())
+  FLogicBlackboard *Blackboard = nullptr;
+  FGameplayTag ActualStoredItemKey = StoredItemKey;
+
+  if (ILogicContextInterface *LogicCtx =
+          Cast<ILogicContextInterface>(TargetActor)) {
+    Blackboard = LogicCtx->GetLogicBlackboard();
+    if (StoredItemKey.IsValid()) {
+      ActualStoredItemKey = LogicCtx->ResolveKey(StoredItemKey);
+    }
+  }
+
+  if (!Blackboard || !ActualStoredItemKey.IsValid())
     return false;
 
   UCarryComponent *CarrierComp = nullptr;
@@ -97,13 +110,12 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
   AItemBase *PlayerItem = Cast<AItemBase>(PlayerActor);
 
   AActor *StoredActor =
-      Cast<AActor>(Blackboard->ObjectBlackboard.GetObject(StoredItemKey));
+      Cast<AActor>(Blackboard->ObjectBlackboard.GetObject(ActualStoredItemKey));
 
-  // 유효성 검사: 누군가 직접 줍기 상호작용으로 아이템을 떼어갔다면 블랙보드
-  // 클리어
+  // 유효성 검사: 누군가 직접 줍기 상호작용으로 아이템을 떼어갔다면 블랙보드 클리어
   if (StoredActor && StoredActor->GetAttachParentActor() != TargetActor) {
     if (TargetActor->HasAuthority()) {
-      Blackboard->ObjectBlackboard.SetObject(StoredItemKey, nullptr);
+      Blackboard->ObjectBlackboard.SetObject(ActualStoredItemKey, nullptr);
     }
     StoredActor = nullptr;
   }
@@ -112,9 +124,9 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
 
   // SnapComp / AttachTarget 결정
   UCarryInteractComponent *SnapComp = nullptr;
-  if (ILogicContextInterface *Context =
+  if (ILogicContextInterface *LogicCtx =
           Cast<ILogicContextInterface>(TargetActor)) {
-    SnapComp = Context->GetCarryInteractComponent();
+    SnapComp = LogicCtx->GetCarryInteractComponent();
   } else {
     SnapComp = TargetActor->FindComponentByClass<UCarryInteractComponent>();
   }
@@ -137,11 +149,11 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
       }
       if (ItemMgr && AttachTarget) {
         // Manager API로 거치 수행 (클라이언트 예측 포함)
-        ItemMgr->StoreItem(PlayerItem, AttachTarget, CarrierComp);
+        ItemMgr->StoreItem(PlayerItem->GetInstanceId(), AttachTarget, CarrierComp);
 
-        // 블루프린트나 서버 측 로직을 위한 블랙보드 상태 업데이트는 서버 전용
+        // 블랙보드 상태 업데이트는 서버 전용
         if (TargetActor->HasAuthority()) {
-          Blackboard->ObjectBlackboard.SetObject(StoredItemKey, PlayerActor);
+          Blackboard->ObjectBlackboard.SetObject(ActualStoredItemKey, PlayerActor);
         }
       }
       return true;
@@ -152,11 +164,11 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
       // 플레이어 손이 비어있음 -> 회수 수행
       if (ItemMgr && StoredItem) {
         // Manager API로 회수 수행 (클라이언트 예측 포함)
-        ItemMgr->RetrieveItem(StoredItem, CarrierComp);
+        ItemMgr->RetrieveItem(StoredItem->GetInstanceId(), CarrierComp);
 
-        // 블루프린트나 서버 측 로직을 위한 블랙보드 상태 업데이트는 서버 전용
+        // 블랙보드 상태 업데이트는 서버 전용
         if (TargetActor->HasAuthority()) {
-          Blackboard->ObjectBlackboard.SetObject(StoredItemKey, nullptr);
+          Blackboard->ObjectBlackboard.SetObject(ActualStoredItemKey, nullptr);
         }
       }
       return true;
@@ -167,15 +179,10 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
 
       if (PlayerData && StoredData) {
         const FCombineRecipe *FoundRecipe = nullptr;
-        if (TryFindRecipe(StoredData, PlayerData, FoundRecipe) &&
+        if (TryFindRecipe(StoredData->ItemTag, PlayerData->ItemTag, FoundRecipe) &&
             FoundRecipe != nullptr) {
-          // 레시피 매칭 성공 — 클래스는 ResultItemData에서 가져옴
-          TSubclassOf<AItemBase> ResultClass =
-              FoundRecipe->ResultItemData
-                  ? FoundRecipe->ResultItemData->GetEffectiveItemClass()
-                  : nullptr;
-
-          if (TargetActor->HasAuthority() && ItemMgr && ResultClass) {
+          // 레시피 매칭 성공
+          if (TargetActor->HasAuthority() && ItemMgr) {
             CarrierComp->ForceDrop(); // 손에서 내려놓기 처리
 
             FTransform SpawnTransform =
@@ -183,19 +190,20 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
                          : TargetActor->GetActorTransform();
 
             // 기존 아이템 파괴 (ItemManager 추적)
-            ItemMgr->DestroyItem(PlayerItem);
-            ItemMgr->DestroyItem(StoredItem);
+            ItemMgr->DestroyItem(PlayerItem->GetInstanceId());
+            ItemMgr->DestroyItem(StoredItem->GetInstanceId());
 
-            // 결과 아이템 스폰 (ItemManager 파이프라인)
-            AItemBase *NewItem = ItemMgr->SpawnItemFromData(
-                FoundRecipe->ResultItemData, SpawnTransform, ResultClass);
+            // 결과 아이템 태그 기반 스폰 (ItemManager 파이프라인)
+            FGuid NewInstanceId =
+                ItemMgr->SpawnItem(FoundRecipe->ResultItemTag, SpawnTransform);
+            AItemBase *NewItem = ItemMgr->GetItemActor(NewInstanceId);
 
             if (NewItem && AttachTarget) {
               // Manager API로 결과 아이템 거치
-              ItemMgr->StoreItem(NewItem, AttachTarget);
+              ItemMgr->StoreItem(NewInstanceId, AttachTarget);
 
               // 블랙보드에 신규 거치 아이템 등록
-              Blackboard->ObjectBlackboard.SetObject(StoredItemKey, NewItem);
+              Blackboard->ObjectBlackboard.SetObject(ActualStoredItemKey, NewItem);
             }
           }
           return true;
@@ -208,20 +216,21 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
 }
 
 bool ULogic_CarryInteract_Combine::TryFindRecipe(
-    UItemData *InItemA, UItemData *InItemB,
+    FGameplayTag InTagA, FGameplayTag InTagB,
     const FCombineRecipe *&OutRecipe) const {
   for (const FCombineRecipe &Recipe : CachedRecipes) {
-    if (!Recipe.MaterialA || !Recipe.MaterialB || !Recipe.ResultItemData)
+    if (!Recipe.MaterialA.IsValid() || !Recipe.MaterialB.IsValid() ||
+        !Recipe.ResultItemTag.IsValid())
       continue;
 
     // 1. 매칭: 재료 A = 거치아이템, 재료 B = 플레이어아이템
-    if (Recipe.MaterialA == InItemA && Recipe.MaterialB == InItemB) {
+    if (Recipe.MaterialA == InTagA && Recipe.MaterialB == InTagB) {
       OutRecipe = &Recipe;
       return true;
     }
 
     // 2. 순서 무관 매칭
-    if (Recipe.MaterialA == InItemB && Recipe.MaterialB == InItemA) {
+    if (Recipe.MaterialA == InTagB && Recipe.MaterialB == InTagA) {
       OutRecipe = &Recipe;
       return true;
     }

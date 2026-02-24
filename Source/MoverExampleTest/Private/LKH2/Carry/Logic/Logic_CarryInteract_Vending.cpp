@@ -17,34 +17,16 @@
 TArray<FGameplayTag>
 ULogic_CarryInteract_Vending::GetRequiredStatTags() const {
   TArray<FGameplayTag> Tags;
-  if (VendingItemDataTag.IsValid())
-    Tags.Add(VendingItemDataTag);
+  if (VendingItemTag.IsValid())
+    Tags.Add(VendingItemTag);
   return Tags;
 }
 
-bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
-    AActor *Interactor, AActor *TargetActor,
-    ECarryInteractionType InteractionType) {
+bool ULogic_CarryInteract_Vending::PreInteractCheck(const FCarryContext &Context) {
+  AActor *Interactor = Context.Interactor;
+  AActor *TargetActor = GetOwner();
+
   if (!Interactor || !TargetActor)
-    return false;
-
-  // Stats에서 ItemData 조회
-  ILogicContextInterface *Context =
-      Cast<ILogicContextInterface>(TargetActor);
-  if (!Context)
-    return false;
-
-  const FItemStatValue *DataStat = Context->FindStat(VendingItemDataTag);
-  UItemData *VendingItemData =
-      DataStat ? Cast<UItemData>(DataStat->ObjectValue.Get()) : nullptr;
-
-  if (!VendingItemData)
-    return false;
-
-  // 스폰 클래스는 ItemData의 VisualPreset에서 가져옴
-  TSubclassOf<AItemBase> VendingItemClass =
-      VendingItemData->GetEffectiveItemClass();
-  if (!VendingItemClass)
     return false;
 
   // 1. 플레이어의 CarryComponent 획득
@@ -61,6 +43,29 @@ bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
   if (CarrierComp->GetCarriedActor() != nullptr)
     return false;
 
+  return true;
+}
+
+bool ULogic_CarryInteract_Vending::PerformInteraction(const FCarryContext &Context) {
+  AActor *Interactor = Context.Interactor;
+  AActor *TargetActor = GetOwner();
+
+  // Stats에서 ItemData 조회
+  ILogicContextInterface *LogicCtx =
+      Cast<ILogicContextInterface>(TargetActor);
+  if (!LogicCtx)
+    return false;
+
+  const FItemStatValue *DataStat = LogicCtx->FindStat(VendingItemTag);
+  FGameplayTag ItemTag =
+      DataStat ? DataStat->TagValue : FGameplayTag::EmptyTag;
+
+  if (!ItemTag.IsValid())
+    return false;
+
+  UCarryComponent *CarrierComp =
+      IInstigatorContextInterface::Execute_GetCarryComponent(Interactor);
+
   // 3. 아이템 스폰 및 지급 (서버 전용)
   if (!TargetActor->HasAuthority())
     return true;
@@ -76,47 +81,43 @@ bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
   // CarrierComp 위치에 스폰 (바로 손에 쥐어질 것이므로)
   FTransform SpawnTransform = CarrierComp->GetComponentTransform();
 
-  AItemBase *NewItem =
-      ItemMgr->SpawnItemFromData(VendingItemData, SpawnTransform,
-                                 VendingItemClass);
-  if (!NewItem)
-    return false;
+  FGuid NewInstanceId = ItemMgr->SpawnItem(ItemTag, SpawnTransform);
 
-  CarrierComp->ForceEquip(NewItem);
+  // RetrieveItem을 사용해 상태 전이(Carried)와 장착을 동시에 처리
+  ItemMgr->RetrieveItem(NewInstanceId, CarrierComp);
 
   return true;
 }
 
-void ULogic_CarryInteract_Vending::InitializeLogic(AActor *OwnerActor) {
-  if (!OwnerActor || !DisplayActorKey.IsValid())
+void ULogic_CarryInteract_Vending::InitializeLogic(AActor *InOwnerActor) {
+  Super::InitializeLogic(InOwnerActor);
+  if (!InOwnerActor || !DisplayActorKey.IsValid())
     return;
 
   ILogicContextInterface *Context =
-      Cast<ILogicContextInterface>(OwnerActor);
+      Cast<ILogicContextInterface>(InOwnerActor);
   if (!Context)
     return;
 
   // Stats에서 데이터 조회
-  const FItemStatValue *DataStat = Context->FindStat(VendingItemDataTag);
-  UItemData *VendingItemData =
-      DataStat ? Cast<UItemData>(DataStat->ObjectValue.Get()) : nullptr;
+  const FItemStatValue *DataStat = Context->FindStat(VendingItemTag);
+  FGameplayTag ItemTag =
+      DataStat ? DataStat->TagValue : FGameplayTag::EmptyTag;
 
-  if (!VendingItemData)
-    return;
-
-  // 스폰 클래스는 ItemData의 VisualPreset에서 가져옴
-  TSubclassOf<AItemBase> VendingItemClass =
-      VendingItemData->GetEffectiveItemClass();
-  if (!VendingItemClass)
+  if (!ItemTag.IsValid())
     return;
 
   FLogicBlackboard *Blackboard = Context->GetLogicBlackboard();
   if (!Blackboard)
     return;
 
+  FGameplayTag ActualDisplayKey = Context->ResolveKey(DisplayActorKey);
+  if (!ActualDisplayKey.IsValid())
+    return;
+
   // 이미 Display가 존재하고 유효한지 확인
   AActor *ExistingDisplay =
-      Cast<AActor>(Blackboard->ObjectBlackboard.GetObject(DisplayActorKey));
+      Cast<AActor>(Blackboard->ObjectBlackboard.GetObject(ActualDisplayKey));
   if (ExistingDisplay && IsValid(ExistingDisplay))
     return;
 
@@ -138,15 +139,14 @@ void ULogic_CarryInteract_Vending::InitializeLogic(AActor *OwnerActor) {
 
   FTransform DisplayTransform = SnapComp->GetComponentTransform();
 
-  AItemBase *DisplayItem =
-      ItemMgr->SpawnItemFromData(VendingItemData, DisplayTransform,
-                                 VendingItemClass);
+  FGuid DisplayInstanceId = ItemMgr->SpawnItem(ItemTag, DisplayTransform);
+  AItemBase *DisplayItem = ItemMgr->GetItemActor(DisplayInstanceId);
   if (!DisplayItem)
     return;
 
   // Manager API로 Display 아이템을 Stored 상태로 거치
-  ItemMgr->StoreItem(DisplayItem, SnapComp);
+  ItemMgr->StoreItem(DisplayInstanceId, SnapComp);
 
   // 블랙보드에 Display 액터 등록
-  Blackboard->ObjectBlackboard.SetObject(DisplayActorKey, DisplayItem);
+  Blackboard->ObjectBlackboard.SetObject(ActualDisplayKey, DisplayItem);
 }

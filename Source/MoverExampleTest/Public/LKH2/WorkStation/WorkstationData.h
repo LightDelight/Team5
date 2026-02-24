@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
+#include "LKH2/Data/LogicEntityDataBase.h"
 #include "GameplayTagContainer.h"
 #include "LKH2/Data/ItemStatValue.h"
 #include "WorkstationData.generated.h"
@@ -21,24 +21,11 @@ class AWorkStationBase;
  *   Track 2 — Custom (AdditionalModules, bUseCustomVisuals → Custom* 필드)
  */
 UCLASS(BlueprintType)
-class MOVEREXAMPLETEST_API UWorkstationData : public UPrimaryDataAsset {
+class MOVEREXAMPLETEST_API UWorkstationData : public ULogicEntityDataBase {
   GENERATED_BODY()
 
 public:
-  // ─── 투 트랙: 로직 ───
-
-  /** [Track 1] 로직 프리셋 (모듈 + Stats) */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Preset")
-  TObjectPtr<UPresetData> Preset;
-
-  /** [Track 2] 추가 로직 모듈 (에디터에서 개별 편집 가능) */
-  UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite,
-            Category = "Workstation|Modules")
-  TArray<TObjectPtr<ULogicModuleBase>> AdditionalModules;
-
-  /** GameplayTag 기반 설정값 */
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Stats")
-  TMap<FGameplayTag, FItemStatValue> ItemStats;
+  // ─── 투 트랙: 로직 (부모 클래스에서 상속받음: EntityStats) ───
 
   // ─── Preset 미리보기 (읽기 전용) ───
 
@@ -52,13 +39,13 @@ public:
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
             Category = "Workstation|Preset",
             meta = (DisplayName = "[Preset] 기본 Stats"))
-  TMap<FGameplayTag, FItemStatValue> PresetStats;
+  TMap<FGameplayTag, FItemStatValue> WorkstationPresetStats;
 
   /** [읽기 전용] 모듈들이 요구하는 필수 Stats 태그 */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
             Category = "Workstation|Preset",
             meta = (DisplayName = "[필수 태그] 모듈 요구사항"))
-  TArray<FGameplayTag> PresetRequiredTags;
+  TArray<FGameplayTag> WorkstationRequiredTags;
 
   // ─── 투 트랙: 비주얼 ───
 
@@ -124,17 +111,9 @@ public:
   FVector GetEffectiveInteractRelativeLocation() const;
 
   /**
-   * Preset 모듈 + AdditionalModules를 합산한 전체 모듈 배열을 반환합니다.
+   * 전체 모듈 배열 반환 (부모 클래스 메서드 재정의 X, 부모 기능 사용)
    */
-  UFUNCTION(BlueprintCallable, Category = "Workstation|Modules")
-  TArray<ULogicModuleBase *> GetAllModules() const;
 
-#if WITH_EDITOR
-  virtual void PostEditChangeProperty(
-      FPropertyChangedEvent &PropertyChangedEvent) override;
-#endif
-  virtual void PostLoad() override;
-
-private:
-  void RefreshPresetPreview();
+protected:
+  virtual void RefreshPresetPreview() override;
 };

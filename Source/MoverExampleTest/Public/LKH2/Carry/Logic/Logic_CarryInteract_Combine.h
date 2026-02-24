@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "LKH2/Carry/Logic/Interface/CarryLogicInterface.h"
+#include "LKH2/Logic/LogicInteractionInterface.h"
 #include "LKH2/Recipe/CombineRecipeBook.h"
 #include "LKH2/Recipe/RecipeLogicModuleBase.h"
 #include "Logic_CarryInteract_Combine.generated.h"
@@ -25,8 +25,7 @@ class UCarryComponent;
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew)
 class MOVEREXAMPLETEST_API ULogic_CarryInteract_Combine
-    : public URecipeLogicModuleBase,
-      public ICarryLogicInterface {
+    : public URecipeLogicModuleBase {
   GENERATED_BODY()
 
 public:
@@ -34,20 +33,21 @@ public:
 
   virtual void CacheRecipes() override;
 
-  virtual bool OnModuleInteract_Implementation(
-      AActor *Interactor, AActor *TargetActor,
-      ECarryInteractionType InteractionType) override;
-
   /** BeginPlay 시 Stats에서 레시피 책을 캐싱 */
-  virtual void InitializeLogic(AActor *OwnerActor) override;
+  virtual void InitializeLogic(AActor *InOwnerActor) override;
 
   /** 필수 Stats 태그 선언 */
   virtual TArray<FGameplayTag> GetRequiredStatTags() const override;
 
 protected:
+  /** [Core-Logic] 실제 조합 로직 수행 */
+  virtual bool PerformInteraction(const FCarryContext &Context) override;
+
   // ─── 필요 태그 선언 ───
 
-  /** 이 로직이 블랙보드에 아이템을 거치할 때 사용할 GameplayTag 키 */
+  /** 이 로직이 블랙보드에 아이템을 거치할 때 사용할 GameplayTag 키.
+   *  Stats(WorkstationStats 등)에 동일한 태그를 키로 하고, Tag 타입의 값을 설정하면
+   *  해당 값을 실제 블랙보드 키로 우선 사용합니다. (Key Aliasing) */
   UPROPERTY(EditAnywhere, BlueprintReadWrite,
             Category = "Combine|Blackboard")
   FGameplayTag StoredItemKey;
@@ -60,6 +60,6 @@ protected:
 private:
   TArray<FCombineRecipe> CachedRecipes;
 
-  bool TryFindRecipe(UItemData *InItemA, UItemData *InItemB,
+  bool TryFindRecipe(FGameplayTag InTagA, FGameplayTag InTagB,
                      const FCombineRecipe *&OutRecipe) const;
 };

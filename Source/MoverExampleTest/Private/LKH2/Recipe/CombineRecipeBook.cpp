@@ -8,14 +8,14 @@ TArray<FRecipeUIData> UCombineRecipeBook::GetAllRecipesForUI() const {
   for (const FCombineRecipe &Recipe : Recipes) {
     FRecipeUIData NewUIData;
 
-    if (Recipe.MaterialA) {
+    if (Recipe.MaterialA.IsValid()) {
       NewUIData.Inputs.Add(Recipe.MaterialA);
     }
-    if (Recipe.MaterialB) {
+    if (Recipe.MaterialB.IsValid()) {
       NewUIData.Inputs.Add(Recipe.MaterialB);
     }
 
-    NewUIData.Output = Recipe.ResultItemData;
+    NewUIData.Output = Recipe.ResultItemTag;
 
     UIList.Add(NewUIData);
   }

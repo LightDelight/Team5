@@ -12,6 +12,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 class UWorkstationData;
 class UCarryInteractComponent;
+class ULogicContextComponent;
 
 UCLASS()
 class MOVEREXAMPLETEST_API AWorkStationBase : public AActor,
@@ -22,11 +23,19 @@ class MOVEREXAMPLETEST_API AWorkStationBase : public AActor,
 public:
   AWorkStationBase();
 
+  /** 데이터 에셋을 설정하고 외형/상호작용 설정을 즉시 적용합니다. */
+  UFUNCTION(BlueprintCallable, Category = "Workstation|Data")
+  void SetWorkstationDataAndApply(UWorkstationData *InData);
+
   // ILogicContextInterface 구현
   virtual UCarryableComponent *GetCarryableComponent() const override;
   virtual UCarryInteractComponent *GetCarryInteractComponent() const override;
   virtual FLogicBlackboard *GetLogicBlackboard() override;
   virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
+  virtual void SetStat(const FGameplayTag &Tag,
+                       const FItemStatValue &Value) override;
+  virtual FGameplayTag ResolveKey(const FGameplayTag &Key) const override;
+  virtual TArray<ULogicModuleBase *> GetLogicModules() const override;
 
 protected:
   virtual void BeginPlay() override;
@@ -54,16 +63,19 @@ protected:
   UFUNCTION()
   void OnRep_WorkstationData();
 
-  /** 인터랙션 위임 컴포넌트 */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
             Category = "Workstation|Components")
   TObjectPtr<UCarryInteractComponent> InteractComponent;
 
+  /** 런타임 상태 데이터를 통합 관리하는 컴포넌트 */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Components")
+  TObjectPtr<ULogicContextComponent> BlackboardComponent;
+
   // ICarryInterface 구현
   // 고정형이므로 들거나 던져지지는 않지만, 인터랙션(OnCarryInteract) 및
   // 아웃라인(SetOutlineEnabled)로직에 사용
-  virtual bool OnCarryInteract_Implementation(
-      AActor *Interactor, ECarryInteractionType InteractionType) override;
+  virtual bool OnCarryInteract_Implementation(const FCarryContext &Context) override;
   virtual void SetOutlineEnabled_Implementation(bool bEnabled) override;
 
   // ── 그리드 스냅 (에디터 전용) ──

@@ -8,17 +8,52 @@
 #include "LKH2/Item/ItemData.h"
 #include "LKH2/Item/ItemSmoothingComponent.h"
 #include "LKH2/Item/ItemStateComponent.h"
+#include "LKH2/Logic/LogicContextComponent.h"
 #include "LKH2/Logic/InstigatorContextInterface.h"
+#include "LKH2/Logic/LogicBlackboard.h"
+#include "LKH2/Logic/LogicModuleBase.h"
 #include "Net/UnrealNetwork.h"
 
 void AItemBase::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty> &OutLifetimeProps) const {
   Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+  DOREPLIFETIME(AItemBase, InstanceId);
   DOREPLIFETIME_CONDITION_NOTIFY(AItemBase, ItemData, COND_None,
                                  REPNOTIFY_Always);
 }
 
-void AItemBase::OnRep_ItemData() { SetItemDataAndApply(ItemData); }
+void AItemBase::OnRep_ItemData() {
+  SetItemDataAndApply(ItemData);
+  if (BlackboardComponent) {
+    BlackboardComponent->InitializeLogic(ItemData, this);
+  }
+}
+
+UCarryableComponent *AItemBase::GetCarryableComponent() const {
+  return CarryComponent;
+}
+
+UCarryInteractComponent *AItemBase::GetCarryInteractComponent() const {
+  return nullptr;
+}
+
+FLogicBlackboard *AItemBase::GetLogicBlackboard() {
+  return BlackboardComponent ? BlackboardComponent->GetBlackboard() : nullptr;
+}
+
+const FItemStatValue *AItemBase::FindStat(const FGameplayTag &Tag) const {
+  return BlackboardComponent ? BlackboardComponent->FindStat(Tag) : nullptr;
+}
+
+void AItemBase::SetStat(const FGameplayTag &Tag, const FItemStatValue &Value) {
+  if (BlackboardComponent) {
+    BlackboardComponent->SetStat(Tag, Value);
+  }
+}
+
+FGameplayTag AItemBase::ResolveKey(const FGameplayTag &Key) const {
+  return BlackboardComponent ? BlackboardComponent->ResolveKey(Key) : Key;
+}
 
 // 기본값 설정
 AItemBase::AItemBase() {
@@ -68,27 +103,29 @@ AItemBase::AItemBase() {
       TEXT("SmoothingComponent"));
   CarryComponent =
       CreateDefaultSubobject<UCarryableComponent>(TEXT("CarryComponent"));
+  BlackboardComponent = CreateDefaultSubobject<ULogicContextComponent>(
+      TEXT("BlackboardComponent"));
 }
 
 // 게임이 시작되거나 스폰될 때 호출됩니다
 void AItemBase::BeginPlay() {
   Super::BeginPlay();
 
+  if (BlackboardComponent) {
+    BlackboardComponent->InitializeLogic(ItemData, this);
+  }
+
   if (SmoothingComponent) {
     SmoothingComponent->InitialSetup(SphereCollision, VisualMesh);
   }
 }
 
-bool AItemBase::OnCarryInteract_Implementation(
-    AActor *Interactor, ECarryInteractionType InteractionType) {
+bool AItemBase::OnCarryInteract_Implementation(const FCarryContext &Context) {
   if (!StateComponent || !CarryComponent) {
     return false;
   }
 
-  // 액터 본연의 책임을 벗어나던 물리 및 상태 강제 전이(Prediction/Rollback)
-  // 로직을 모두 제거. 실제 줍기/내려놓기/투척(상태 전이, 부착, 물리 설정)은
-  // 모두 ICarryLogicInterface(모듈)에게 위임합니다.
-  return CarryComponent->OnCarryInteract(Interactor, InteractionType);
+  return CarryComponent->OnCarryInteract(Context);
 }
 
 void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled) {
@@ -111,32 +148,32 @@ void AItemBase::SetItemDataAndApply(UItemData *InData) {
       SphereCollision->SetSphereRadius(ItemData->GetEffectiveSphereRadius());
     }
     if (VisualMesh) {
-      VisualMesh->SetRelativeLocation(ItemData->GetEffectiveMeshRelativeLocation());
+      VisualMesh->SetRelativeLocation(
+          ItemData->GetEffectiveMeshRelativeLocation());
     }
+
+    // [Decoupling] 이제 컴포넌트들이 Pull 패턴을 사용하여 직접 조회하므로
+    // 수동으로 전달(Push)할 필요가 없습니다.
   }
+}
+
+TArray<ULogicModuleBase *> AItemBase::GetLogicModules() const {
+  return BlackboardComponent ? BlackboardComponent->GetLogicModules()
+                             : TArray<ULogicModuleBase *>();
 }
 
 void AItemBase::OnConstruction(const FTransform &Transform) {
   Super::OnConstruction(Transform);
+  SetItemDataAndApply(ItemData);
 
-  if (ItemData) {
-    // 메쉬 적용 (VisualMesh)
-    UStaticMesh *Mesh = ItemData->GetEffectiveItemMesh();
-    if (Mesh && VisualMesh) {
-      VisualMesh->SetStaticMesh(Mesh);
-    }
+  // 모든 로직 모듈에 에디터 미리보기 기회 제공
+  if (BlackboardComponent) {
+    BlackboardComponent->InitializeLogic(ItemData, this);
+  }
 
-    // 무게(질량) 및 콜리전 크기 적용
-    if (SphereCollision) {
-      SphereCollision->SetMassOverrideInKg(NAME_None,
-                                           ItemData->GetEffectiveWeight(),
-                                           true);
-      SphereCollision->SetSphereRadius(ItemData->GetEffectiveSphereRadius());
-    }
-
-    // 메쉬 상대 좌표 적용
-    if (VisualMesh) {
-      VisualMesh->SetRelativeLocation(ItemData->GetEffectiveMeshRelativeLocation());
+  for (ULogicModuleBase *Module : GetLogicModules()) {
+    if (Module) {
+      Module->OnConstructionLogic(this);
     }
   }
 }

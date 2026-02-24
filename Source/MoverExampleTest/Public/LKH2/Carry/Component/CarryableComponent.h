@@ -16,9 +16,11 @@ public:
   UCarryableComponent();
 
   // 부모 액터(인터페이스)로부터 전달받은 메시지 처리
-  bool OnCarryInteract(AActor *Interactor,
-                       ECarryInteractionType InteractionType);
+  bool OnCarryInteract(const FCarryContext &Context);
   void SetOutlineEnabled(bool bEnabled);
+
+protected:
+  // [Pull Pattern] 소유자로부터 직접 조회하므로 자체 보관하지 않습니다.
 
 protected:
   virtual void BeginPlay() override;

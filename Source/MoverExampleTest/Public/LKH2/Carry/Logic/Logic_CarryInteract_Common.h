@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "LKH2/Carry/Logic/Interface/CarryLogicInterface.h"
+#include "LKH2/Logic/LogicInteractionInterface.h"
 #include "LKH2/Logic/LogicModuleBase.h"
 #include "Logic_CarryInteract_Common.generated.h"
 
@@ -17,20 +17,26 @@ class UWorkstationData;
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew)
 class MOVEREXAMPLETEST_API ULogic_CarryInteract_Common
-    : public ULogicModuleBase,
-      public ICarryLogicInterface {
+    : public ULogicModuleBase {
   GENERATED_BODY()
 
 public:
   ULogic_CarryInteract_Common();
 
-  virtual bool OnModuleInteract_Implementation(
-      AActor *Interactor, AActor *TargetActor,
-      ECarryInteractionType InteractionType) override;
+  virtual bool PreInteractCheck(const FCarryContext &Context) override;
+  virtual bool PerformInteraction(const FCarryContext &Context) override;
 
 protected:
   /** 이 로직이 블랙보드에 아이템을 거치할 때 사용할 GameplayTag 키입니다.
    * 에디터에서 선택합니다. */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard Mapping")
   FGameplayTag StoredItemKey;
+
+  /** 플레이어가 아이템을 들고 있을 때 거치(Store) 동작을 허용할지 여부입니다. */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic Constraints")
+  bool bAllowStore = true;
+
+  /** 플레이어 손이 비었을 때 거치된 아이템 회수(Retrieve) 동작을 허용할지 여부입니다. */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic Constraints")
+  bool bAllowRetrieve = true;
 };

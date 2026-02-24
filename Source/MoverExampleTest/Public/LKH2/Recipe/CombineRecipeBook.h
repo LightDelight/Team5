@@ -23,15 +23,15 @@ public:
 
   // 요구 재료 A
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recipe Data")
-  TObjectPtr<UItemData> MaterialA = nullptr;
+  FGameplayTag MaterialA;
 
   // 요구 재료 B
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recipe Data")
-  TObjectPtr<UItemData> MaterialB = nullptr;
+  FGameplayTag MaterialB;
 
-  // 생산 결과 아이템 데이터 (메쉬, 이름 등)
+  // 생산 결과 아이템 태그
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recipe Data")
-  TObjectPtr<UItemData> ResultItemData = nullptr;
+  FGameplayTag ResultItemTag;
 };
 
 /**

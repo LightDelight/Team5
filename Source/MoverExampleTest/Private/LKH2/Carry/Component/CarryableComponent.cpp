@@ -3,7 +3,7 @@
 #include "LKH2/Carry/Component/CarryableComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "GameFramework/Actor.h"
-#include "LKH2/Carry/Logic/Interface/CarryLogicInterface.h"
+#include "LKH2/Logic/LogicInteractionInterface.h"
 #include "LKH2/Item/ItemBase.h"
 #include "LKH2/Item/ItemData.h"
 #include "LKH2/Logic/LogicModuleBase.h"
@@ -16,21 +16,16 @@ UCarryableComponent::UCarryableComponent() {
 
 void UCarryableComponent::BeginPlay() { Super::BeginPlay(); }
 
-bool UCarryableComponent::OnCarryInteract(
-    AActor *Interactor, ECarryInteractionType InteractionType) {
-  if (GetOwner()) {
-    if (AItemBase *Item = Cast<AItemBase>(GetOwner())) {
-      if (UItemData *ItemData = Item->GetItemData()) {
-        const TArray<ULogicModuleBase *> Modules =
-            ItemData->GetAllModules();
-
-        // 책임 연쇄 패턴(Chain of Responsibility)으로 순회
-        for (ULogicModuleBase *Module : Modules) {
-          if (Module && Module->Implements<UCarryLogicInterface>()) {
-            if (ICarryLogicInterface::Execute_OnModuleInteract(
-                    Module, Interactor, GetOwner(), InteractionType)) {
-              return true; // 로직 중단
-            }
+bool UCarryableComponent::OnCarryInteract(const FCarryContext &Context) {
+  if (Context.Interactor) {
+    // [Pull Pattern] 소유자로부터 인터페이스를 통해 최신 모듈 목록을 직접 조회
+    ILogicContextInterface *LogicContext = Cast<ILogicContextInterface>(GetOwner());
+    if (LogicContext) {
+      TArray<ULogicModuleBase *> Modules = LogicContext->GetLogicModules();
+      for (ULogicModuleBase *Module : Modules) {
+        if (Module) {
+          if (Module->ExecuteInteraction(Context)) {
+            return true; // 처리에 성공하면 흐름을 중단
           }
         }
       }
@@ -38,6 +33,7 @@ bool UCarryableComponent::OnCarryInteract(
   }
   return false;
 }
+
 
 void UCarryableComponent::SetOutlineEnabled(bool bEnabled) {
   if (AActor *OwnerActor = GetOwner()) {

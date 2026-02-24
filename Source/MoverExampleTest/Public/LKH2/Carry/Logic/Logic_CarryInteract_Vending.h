@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "LKH2/Carry/Logic/Interface/CarryLogicInterface.h"
+#include "LKH2/Logic/LogicInteractionInterface.h"
 #include "LKH2/Logic/LogicModuleBase.h"
 #include "Logic_CarryInteract_Vending.generated.h"
 
@@ -25,17 +25,15 @@ class UCarryComponent;
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew)
 class MOVEREXAMPLETEST_API ULogic_CarryInteract_Vending
-    : public ULogicModuleBase,
-      public ICarryLogicInterface {
+    : public ULogicModuleBase {
   GENERATED_BODY()
 
 public:
-  virtual bool OnModuleInteract_Implementation(
-      AActor *Interactor, AActor *TargetActor,
-      ECarryInteractionType InteractionType) override;
+  virtual bool PreInteractCheck(const FCarryContext &Context) override;
+  virtual bool PerformInteraction(const FCarryContext &Context) override;
 
   /** BeginPlay 시 Display 액터를 스폰하여 미리보기 세팅 */
-  virtual void InitializeLogic(AActor *OwnerActor) override;
+  virtual void InitializeLogic(AActor *InOwnerActor) override;
 
   /** 필수 Stats 태그 선언 */
   virtual TArray<FGameplayTag> GetRequiredStatTags() const override;
@@ -43,12 +41,13 @@ public:
 protected:
   // ─── 필요 태그 선언 ───
 
-  /** Stats에서 공급 아이템 데이터(UItemData*)를 조회할 태그 */
+  /** Stats에서 공급 아이템 태그(FGameplayTag)를 조회할 태그 */
   UPROPERTY(EditAnywhere, BlueprintReadWrite,
             Category = "Vending|RequiredTags")
-  FGameplayTag VendingItemDataTag;
+  FGameplayTag VendingItemTag;
 
-  /** Display 액터를 블랙보드에 저장할 때 사용할 GameplayTag 키 */
+  /** Display 액터를 블랙보드에 저장할 때 사용할 GameplayTag 키.
+   *  ResolveKey를 통해 치환될 수 있습니다. */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vending|Display")
   FGameplayTag DisplayActorKey;
 };

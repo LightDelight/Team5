@@ -42,8 +42,7 @@ public:
 
   /** 단일 항목 등록 */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|Registry")
-  void RegisterItemData(FGameplayTag ItemTag, UItemData *Data,
-                        TSubclassOf<AItemBase> ItemClass = nullptr);
+  void RegisterItemData(FGameplayTag ItemTag, UItemData *Data);
 
   /** Tag로 UItemData 조회 (미등록 시 nullptr) */
   UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ItemManager|Registry")
@@ -55,79 +54,83 @@ public:
    * GameplayTag로 아이템을 스폰합니다.
    * 레지스트리에서 Data/Class를 자동 조회합니다.
    *
-   * @return 스폰된 AItemBase* (실패 시 nullptr)
+   * @return 스폰된 아이템의 고유 인스턴스 ID (실패 시 유효하지 않은 FGuid)
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|Spawn")
-  AItemBase *SpawnItem(FGameplayTag ItemTag, const FTransform &Transform);
+  FGuid SpawnItem(FGameplayTag ItemTag, const FTransform &Transform);
 
   /**
-   * UItemData를 직접 지정하여 아이템을 스폰합니다.
+   * UItemData를 직접 지정하여 아이템을 스폰합니다. (내부용/특수 케이스)
    *
    * @param ClassOverride  스폰 클래스 직접 지정 (nullptr이면 레지스트리/기본값 사용)
-   * @return 스폰된 AItemBase* (실패 시 nullptr)
+   * @return 스폰된 아이템의 고유 인스턴스 ID
    */
-  UFUNCTION(BlueprintCallable, Category = "ItemManager|Spawn")
-  AItemBase *SpawnItemFromData(UItemData *Data, const FTransform &Transform,
-                               TSubclassOf<AItemBase> ClassOverride = nullptr);
+  FGuid SpawnItemFromData(UItemData *Data, const FTransform &Transform,
+                          TSubclassOf<AItemBase> ClassOverride = nullptr);
+
+  // ─── 조회 API (내부 로직용/예외처리용) ───
+
+  /**
+   * 인스턴스 ID로 월드 내 활성 아이템 액터를 조회합니다.
+   * 원칙적으로 외부 통신은 ID로만 이뤄지나, 불가피한 룩업이나 내부 처리를 위해 제공합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|Access")
+  AItemBase *GetItemActor(const FGuid &InstanceId) const;
 
   // ─── 파괴 ───
 
-  /** 아이템을 파괴하고 추적 목록에서 제거합니다. */
+  /** 인스턴스 ID로 아이템을 파괴하고 추적 목록에서 제거합니다. */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|Lifecycle")
-  void DestroyItem(AItemBase *Item);
+  void DestroyItem(const FGuid &InstanceId);
 
   // ─── 상태 전이 API ───
 
   /**
    * 아이템을 대상 컴포넌트에 거치합니다.
-   * ForceDrop → Stored 상태 전이 → AttachToComponent 를 원자적으로 수행합니다.
    *
-   * @param Item         거치할 아이템
+   * @param InstanceId   거치할 아이템의 인스턴스 ID
    * @param AttachTarget 부착 대상 SceneComponent (CarryInteractComponent 등)
    * @param Carrier      아이템을 들고 있던 CarryComponent (nullptr이면 ForceDrop 생략)
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void StoreItem(AItemBase *Item, USceneComponent *AttachTarget,
+  void StoreItem(const FGuid &InstanceId, USceneComponent *AttachTarget,
                  UCarryComponent *Carrier = nullptr);
 
   /**
    * 거치된 아이템을 분리하여 Carrier에게 전달합니다.
-   * DetachFromActor → Carried 상태 전이 → ForceEquip 을 원자적으로 수행합니다.
    *
-   * @param Item    회수할 아이템
-   * @param Carrier 아이템을 받을 CarryComponent
+   * @param InstanceId 회수할 아이템 인스턴스 ID
+   * @param Carrier    아이템을 받을 CarryComponent
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void RetrieveItem(AItemBase *Item, UCarryComponent *Carrier);
+  void RetrieveItem(const FGuid &InstanceId, UCarryComponent *Carrier);
 
   /**
    * 아이템을 줍기 처리합니다.
-   * Carried 상태 전이 → AttachToComponent 를 수행합니다.
    *
-   * @param Item         줍을 아이템
+   * @param InstanceId   줍을 아이템 인스턴스 ID
    * @param AttachTarget 부착 대상 SceneComponent (CarryComponent 또는 Actor)
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void PickUpItem(AItemBase *Item, USceneComponent *AttachTarget);
+  void PickUpItem(const FGuid &InstanceId, USceneComponent *AttachTarget);
 
   /**
    * 아이템을 내려놓기/던지기 처리합니다.
-   * Placed 상태 전이 → DetachFromActor → 선택적 Impulse 를 수행합니다.
    *
-   * @param Item    내려놓을 아이템
-   * @param Impulse 던지기 시 적용할 임펄스 벡터 (ZeroVector이면 일반 놓기)
-   * @param Carrier 아이템을 던지거나 놓은 주체 (겹침 방지 보정 및 ForceDrop에 사용)
+   * @param InstanceId 내려놓을 아이템의 인스턴스 ID
+   * @param Impulse    던지기 시 적용할 임펄스 벡터 (ZeroVector이면 일반 놓기)
+   * @param Carrier    아이템을 던지거나 놓은 주체
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void DropItem(AItemBase *Item,
+  void DropItem(const FGuid &InstanceId,
                 const FVector &Impulse = FVector::ZeroVector,
                 UCarryComponent *Carrier = nullptr);
 
   // ─── 조회 ───
 
   /** 월드 내 활성 아이템 목록 반환 */
-  const TArray<TWeakObjectPtr<AItemBase>> &GetActiveItems() const {
-    return ActiveItems;
+  const TMap<FGuid, TWeakObjectPtr<AItemBase>> &GetActiveItems() const {
+    return ActiveItemsMap;
   }
 
 private:
@@ -135,16 +138,20 @@ private:
   UPROPERTY()
   TMap<FGameplayTag, TObjectPtr<UItemData>> ItemDataRegistry;
 
-  /** Data → 스폰 클래스 레지스트리 */
-  UPROPERTY()
-  TMap<TObjectPtr<UItemData>, TSubclassOf<AItemBase>> ItemClassRegistry;
-
-  /** 월드 내 활성 아이템 추적 (WeakPtr로 수동 파괴 감지) */
-  TArray<TWeakObjectPtr<AItemBase>> ActiveItems;
+  /** 월드 내 활성 아이템 레지스트리 맵 */
+  TMap<FGuid, TWeakObjectPtr<AItemBase>> ActiveItemsMap;
 
   /** 기본 아이템 스폰 클래스 (레지스트리에 없을 때 폴백) */
   UPROPERTY()
   TSubclassOf<AItemBase> DefaultItemClass;
+
+  /** 기본 아이템 스폰 클래스 대신 에러 클래스를 사용할지 여부 */
+  UPROPERTY()
+  bool bUseErrorClassForMissingClass = true;
+
+  /** 에러 아이템 스폰 클래스 (로직에서 클래스 누락 시 스폰) */
+  UPROPERTY()
+  TSubclassOf<AItemBase> ErrorItemClass;
 
   /** 스폰 클래스 결정 헬퍼 */
   UClass *ResolveSpawnClass(UItemData *Data,

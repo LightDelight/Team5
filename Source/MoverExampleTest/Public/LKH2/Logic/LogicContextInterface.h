@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "GameplayTagContainer.h"
 #include "LogicContextInterface.generated.h"
 
 class UCarryableComponent;
 class UCarryInteractComponent;
 struct FLogicBlackboard;
 struct FItemStatValue;
-struct FGameplayTag;
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
@@ -39,7 +39,25 @@ public:
   /**
    * 이 액터를 정의하는 DataAsset의 ItemStats 맵에서
    * 주어진 태그에 해당하는 값을 반환합니다.
+   * (Blackboard에 런타임 값이 있으면 우선 반환합니다.)
    * 찾지 못하면 nullptr을 반환합니다.
    */
   virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const = 0;
+
+  /**
+   * 이 액터의 블랙보드(런타임 상태)에 Stat 값을 설정합니다.
+   * 성공 시 네트워크를 통해 클라이언트로 복제됩니다.
+   */
+  virtual void SetStat(const FGameplayTag &Tag,
+                       const FItemStatValue &Value) = 0;
+
+  /**
+   * 주어진 키에 대해 Stats 시스템에 등록된 오버라이드 태그가 있는지 확인합니다.
+   * @param Key 기본 키 태그 (예: 로직 모듈의 StoredItemKey 필드 값)
+   * @return Stats에 해당 키의 Tag 타입 값이 있으면 그 값을, 없으면 입력받은 Key를 반환합니다.
+   */
+  virtual FGameplayTag ResolveKey(const FGameplayTag &Key) const = 0;
+
+  /** 이 액터가 보유한 로직 모듈 목록을 반환합니다. */
+  virtual TArray<class ULogicModuleBase *> GetLogicModules() const = 0;
 };

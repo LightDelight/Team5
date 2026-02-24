@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LKH2/Carry/Logic/Interface/CarryLogicInterface.h"
+#include "LKH2/Logic/LogicInteractionInterface.h"
 #include "LKH2/Logic/LogicModuleBase.h"
 #include "Logic_CarryInteract_Trash.generated.h"
 
@@ -19,12 +19,9 @@ class AContainerItemBase;
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew)
 class MOVEREXAMPLETEST_API ULogic_CarryInteract_Trash
-    : public ULogicModuleBase,
-      public ICarryLogicInterface {
+    : public ULogicModuleBase {
   GENERATED_BODY()
 
-public:
-  virtual bool OnModuleInteract_Implementation(
-      AActor *Interactor, AActor *TargetActor,
-      ECarryInteractionType InteractionType) override;
+protected:
+  virtual bool PerformInteraction(const FCarryContext &Context) override;
 };

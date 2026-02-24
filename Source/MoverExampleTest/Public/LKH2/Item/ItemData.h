@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
+#include "LKH2/Data/LogicEntityDataBase.h"
 #include "GameplayTagContainer.h"
 #include "LKH2/Data/ItemStatValue.h"
 #include "ItemData.generated.h"
@@ -22,24 +22,15 @@ class AItemBase;
  * 무게(Weight)는 Stats 시스템 (ItemStats / DefaultStats)으로 관리합니다.
  */
 UCLASS(BlueprintType)
-class UItemData : public UPrimaryDataAsset {
+class MOVEREXAMPLETEST_API UItemData : public ULogicEntityDataBase {
   GENERATED_BODY()
 
 public:
-  // ─── 투 트랙: 로직 ───
+  /** 아이템 식별을 위한 상위 수준의 고유 태그 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item|Identification")
+  FGameplayTag ItemTag;
 
-  /** [Track 1] 로직 프리셋 (모듈 + Stats) */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item|Preset")
-  TObjectPtr<UPresetData> Preset;
-
-  /** [Track 2] 추가 로직 모듈 (에디터에서 개별 편집 가능) */
-  UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite,
-            Category = "Item|Modules")
-  TArray<TObjectPtr<ULogicModuleBase>> AdditionalModules;
-
-  /** GameplayTag 기반 아이템 설정값 (무게 등) */
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Stats")
-  TMap<FGameplayTag, FItemStatValue> ItemStats;
+  // ─── 투 트랙: 로직 (부모 클래스에서 상속받음: EntityStats) ───
 
   // ─── Preset 미리보기 (읽기 전용) ───
 
@@ -51,12 +42,12 @@ public:
   /** [읽기 전용] Preset에서 가져온 기본 Stats */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Preset",
             meta = (DisplayName = "[Preset] 기본 Stats"))
-  TMap<FGameplayTag, FItemStatValue> PresetStats;
+  TMap<FGameplayTag, FItemStatValue> ItemPresetStats;
 
   /** [읽기 전용] 모듈들이 요구하는 필수 Stats 태그 */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Preset",
             meta = (DisplayName = "[필수 태그] 모듈 요구사항"))
-  TArray<FGameplayTag> PresetRequiredTags;
+  TArray<FGameplayTag> ItemRequiredTags;
 
   // ─── 투 트랙: 비주얼 ───
 
@@ -112,20 +103,10 @@ public:
   float GetEffectiveWeight() const;
 
   /**
-   * Preset 모듈 + AdditionalModules를 합산한 전체 모듈 배열을 반환합니다.
+   * 전체 모듈 배열 반환 (부모 클래스 메서드 재정의 X, 부모 기능 사용)
    */
-  UFUNCTION(BlueprintCallable, Category = "Item|Modules")
-  TArray<ULogicModuleBase *> GetAllModules() const;
 
-#if WITH_EDITOR
-  /** Preset 변경 시 미리보기 필드 갱신 */
-  virtual void PostEditChangeProperty(
-      FPropertyChangedEvent &PropertyChangedEvent) override;
-#endif
-  /** 에셋 로드 시 미리보기 필드 갱신 */
-  virtual void PostLoad() override;
-
-private:
+protected:
   /** Preset의 모듈/Stats를 미리보기 필드에 복사 */
-  void RefreshPresetPreview();
+  virtual void RefreshPresetPreview() override;
 };

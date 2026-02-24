@@ -1,43 +1,32 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "LKH2/WorkStation/WorkStationBase.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameFramework/GameStateBase.h"
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
+#include "LKH2/Grid/GridManagerComponent.h"
+#include "LKH2/Logic/LogicContextComponent.h"
 #include "LKH2/Logic/LogicModuleBase.h"
 #include "LKH2/WorkStation/WorkstationData.h"
-#include "LKH2/Data/ItemStatValue.h"
 #include "Net/UnrealNetwork.h"
 
 AWorkStationBase::AWorkStationBase() {
   PrimaryActorTick.bCanEverTick = false;
-
-  // 본 액터 리플리케이션 활성화 (고정형이므로 Movement는 기본 false)
   bReplicates = true;
 
-  // 고정형 스태틱 메쉬 중심 설계
   RootMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RootMesh"));
   RootComponent = RootMesh;
-
-  // 메쉬 자체의 물리/충돌 비활성화 (오직 시각 요소)
   RootMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-  // 박스 충돌체
   BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
   BoxCollision->SetupAttachment(RootMesh);
-
-  // 충돌 설정 (플레이어 및 다른 물리 객체를 막거나 인터랙션 감지용)
-  BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-  BoxCollision->SetCollisionResponseToAllChannels(ECR_Block);
-
-  // 워크스테이션도 아웃라인 및 감지에 반응해야 하므로 관련된 Overlap 채널 설정
-  // CarryComponent의 DetectionSphere가 Overlap 할 수 있는 채널로 설정 (예:
-  // ECC_PhysicsBody 이나 필요시 Custom Channel 할당)
-  BoxCollision->SetCollisionObjectType(ECC_PhysicsBody);
+  BoxCollision->SetCollisionProfileName(TEXT("PhysicsActor"));
 
   InteractComponent = CreateDefaultSubobject<UCarryInteractComponent>(
       TEXT("InteractComponent"));
   InteractComponent->SetupAttachment(RootMesh);
+
+  BlackboardComponent = CreateDefaultSubobject<ULogicContextComponent>(
+      TEXT("BlackboardComponent"));
 }
 
 void AWorkStationBase::GetLifetimeReplicatedProps(
@@ -46,44 +35,30 @@ void AWorkStationBase::GetLifetimeReplicatedProps(
   DOREPLIFETIME(AWorkStationBase, WorkstationData);
 }
 
-void AWorkStationBase::OnRep_WorkstationData() {
-  // 클라이언트에서 WorkstationData가 리플리케이트되면 메쉬 적용
-  if (WorkstationData) {
-    UStaticMesh *Mesh = WorkstationData->GetEffectiveWorkstationMesh();
-    if (Mesh && RootMesh) {
-      RootMesh->SetStaticMesh(Mesh);
-    }
-  }
-
-  // 박스 콜리전 크기 및 상대 좌표 적용
-  if (WorkstationData && BoxCollision) {
-    BoxCollision->SetBoxExtent(WorkstationData->GetEffectiveBoxExtent());
-    BoxCollision->SetRelativeLocation(WorkstationData->GetEffectiveBoxRelativeLocation());
-  }
-
-  // InteractComponent 오프셋 적용
-  if (WorkstationData && InteractComponent) {
-    InteractComponent->SetRelativeLocation(WorkstationData->GetEffectiveInteractRelativeLocation());
-  }
-
-  // 로직 모듈 초기화 (Display 액터 등)
-  if (WorkstationData) {
-    for (ULogicModuleBase *Module : WorkstationData->GetAllModules()) {
-      if (Module) {
-        Module->InitializeLogic(this);
-      }
-    }
-  }
-}
-
-void AWorkStationBase::BeginPlay() {
+void AWorkStationBase::BeginPlay()
+{
   Super::BeginPlay();
 
-  // 모든 로직 모듈에 런타임 초기화 기회 제공
-  if (WorkstationData) {
-    for (ULogicModuleBase *Module : WorkstationData->GetAllModules()) {
-      if (Module) {
-        Module->InitializeLogic(this);
+  // 1. 모든 로직 모듈 초기화 (LogicContextComponent에 위임)
+  if (BlackboardComponent) 
+    {
+    BlackboardComponent->InitializeLogic(WorkstationData, this);
+    }
+
+  // 2. 클라이언트 사이드 그리드 자동 등록 보완
+  // GridManager가 클라이언트에서 스폰 액터를 제때 찾지 못했을 경우를 대비
+  UWorld* World = GetWorld();
+  if (World)
+  {
+    if (!HasAuthority())
+    {
+      if (AGameStateBase *GameState = GetWorld()->GetGameState())
+      {
+        if (UGridManagerComponent *GridManager =
+                GameState->FindComponentByClass<UGridManagerComponent>())              
+        {
+          GridManager->RegisterActorAtWorldLocation(this, GetActorLocation());
+        }
       }
     }
   }
@@ -92,60 +67,70 @@ void AWorkStationBase::BeginPlay() {
 void AWorkStationBase::OnConstruction(const FTransform &Transform) {
   Super::OnConstruction(Transform);
 
-  // 그리드 스냅: 에디터에서 배치/이동 시 셀 중심에 자동 정렬
-  if (bSnapToGrid && SnapCellSize > 0.0f) {
-    FVector Loc = GetActorLocation();
-    FVector Relative = Loc - SnapGridOrigin;
+  // 1. 그리드 스냅 (에디터 전용)
+  if (bSnapToGrid && !GetWorld()->IsGameWorld()) {
+    FVector CurrentLoc = GetActorLocation();
+    FVector RelativeLoc = CurrentLoc - SnapGridOrigin;
 
-    // GridManager와 동일한 좌표 변환: Floor → 셀 중심 계산
-    int32 GridX = FMath::FloorToInt32(Relative.X / SnapCellSize);
-    int32 GridY = FMath::FloorToInt32(Relative.Y / SnapCellSize);
+    float SnappedX = FMath::GridSnap(RelativeLoc.X, SnapCellSize);
+    float SnappedY = FMath::GridSnap(RelativeLoc.Y, SnapCellSize);
 
-    float SnappedX = SnapGridOrigin.X + (GridX + 0.5f) * SnapCellSize;
-    float SnappedY = SnapGridOrigin.Y + (GridY + 0.5f) * SnapCellSize;
-
-    SetActorLocation(FVector(SnappedX, SnappedY, Loc.Z));
+    FVector SnappedLoc =
+        FVector(SnappedX, SnappedY, RelativeLoc.Z) + SnapGridOrigin;
+    SetActorLocation(SnappedLoc);
   }
 
+  // 2. 통합 데이터 적용 (메쉬, 콜리전, 오프셋)
+  SetWorkstationDataAndApply(WorkstationData);
+
+  // 3. 모든 로직 모듈에 에디터 미리보기 기회 제공
+  if (BlackboardComponent) {
+    BlackboardComponent->InitializeLogic(WorkstationData, this);
+  }
+
+  for (ULogicModuleBase *Module : GetLogicModules()) {
+    if (Module) {
+      Module->OnConstructionLogic(this);
+    }
+  }
+}
+
+void AWorkStationBase::SetWorkstationDataAndApply(UWorkstationData *InData) {
+  WorkstationData = InData;
   if (WorkstationData) {
+    // 메쉬 적용
     UStaticMesh *Mesh = WorkstationData->GetEffectiveWorkstationMesh();
     if (Mesh && RootMesh) {
       RootMesh->SetStaticMesh(Mesh);
     }
-  }
 
-  // 박스 콜리전 크기 및 상대 좌표 적용
-  if (WorkstationData && BoxCollision) {
-    BoxCollision->SetBoxExtent(WorkstationData->GetEffectiveBoxExtent());
-    BoxCollision->SetRelativeLocation(WorkstationData->GetEffectiveBoxRelativeLocation());
-  }
+    // 박스 콜리전 크기 및 상대 좌표 적용
+    if (BoxCollision) {
+      BoxCollision->SetBoxExtent(WorkstationData->GetEffectiveBoxExtent());
+      BoxCollision->SetRelativeLocation(
+          WorkstationData->GetEffectiveBoxRelativeLocation());
+    }
 
-  // InteractComponent 오프셋 적용
-  if (WorkstationData && InteractComponent) {
-    InteractComponent->SetRelativeLocation(WorkstationData->GetEffectiveInteractRelativeLocation());
-  }
-
-  // 모든 로직 모듈에 에디터 미리보기 기회 제공
-  if (WorkstationData) {
-    for (ULogicModuleBase *Module : WorkstationData->GetAllModules()) {
-      if (Module) {
-        Module->OnConstructionLogic(this);
-      }
+    // InteractComponent 오프셋 적용
+    if (InteractComponent) {
+      InteractComponent->SetRelativeLocation(
+          WorkstationData->GetEffectiveInteractRelativeLocation());
     }
   }
 }
 
-bool AWorkStationBase::OnCarryInteract_Implementation(
-    AActor *Interactor, ECarryInteractionType InteractionType) {
-  if (InteractComponent && WorkstationData) {
-    return InteractComponent->OnInteract(Interactor, WorkstationData,
-                                         InteractionType);
+void AWorkStationBase::OnRep_WorkstationData() {
+  // 클라이언트 복제 시 데이터 적용
+  SetWorkstationDataAndApply(WorkstationData);
+
+  // 로직 모듈 런타임 초기화 (클라이언트 사이드)
+  if (BlackboardComponent) {
+    BlackboardComponent->InitializeLogic(WorkstationData, this);
   }
-  return false;
 }
 
 UCarryableComponent *AWorkStationBase::GetCarryableComponent() const {
-  return nullptr; // 워크스테이션 자체는 들려지지 않으므로 nullptr 반환
+  return nullptr;
 }
 
 UCarryInteractComponent *AWorkStationBase::GetCarryInteractComponent() const {
@@ -153,22 +138,37 @@ UCarryInteractComponent *AWorkStationBase::GetCarryInteractComponent() const {
 }
 
 FLogicBlackboard *AWorkStationBase::GetLogicBlackboard() {
-  if (InteractComponent) {
-    return &InteractComponent->LogicBlackboard;
-  }
-  return nullptr;
+  return BlackboardComponent ? BlackboardComponent->GetBlackboard() : nullptr;
 }
 
-const FItemStatValue *AWorkStationBase::FindStat(
-    const FGameplayTag &Tag) const {
-  if (WorkstationData) {
-    return WorkstationData->ItemStats.Find(Tag);
+const FItemStatValue *AWorkStationBase::FindStat(const FGameplayTag &Tag) const {
+  return BlackboardComponent ? BlackboardComponent->FindStat(Tag) : nullptr;
+}
+
+void AWorkStationBase::SetStat(const FGameplayTag &Tag,
+                               const FItemStatValue &Value) {
+  if (BlackboardComponent) {
+    BlackboardComponent->SetStat(Tag, Value);
   }
-  return nullptr;
+}
+
+FGameplayTag AWorkStationBase::ResolveKey(const FGameplayTag &Key) const {
+  return BlackboardComponent ? BlackboardComponent->ResolveKey(Key) : Key;
+}
+
+TArray<ULogicModuleBase *> AWorkStationBase::GetLogicModules() const {
+  return BlackboardComponent ? BlackboardComponent->GetLogicModules()
+                             : TArray<ULogicModuleBase *>();
+}
+
+bool AWorkStationBase::OnCarryInteract_Implementation(const FCarryContext &Context) {
+  if (InteractComponent) {
+    return InteractComponent->OnInteract(Context);
+  }
+  return false;
 }
 
 void AWorkStationBase::SetOutlineEnabled_Implementation(bool bEnabled) {
-  // 워크스테이션 외곽선 강조 처리
   if (RootMesh) {
     RootMesh->SetRenderCustomDepth(bEnabled);
     RootMesh->SetCustomDepthStencilValue(1);

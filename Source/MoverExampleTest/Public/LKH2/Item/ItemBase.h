@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "LKH2/Carry/Interface/CarryInterface.h"
+#include "LKH2/Logic/LogicContextInterface.h"
+#include "LKH2/Logic/LogicInteractionInterface.h"
 #include "ItemBase.generated.h"
 
 class USphereComponent;
@@ -13,9 +15,10 @@ class UItemData;
 class UItemStateComponent;
 class UItemSmoothingComponent;
 class UCarryableComponent;
+class ULogicContextComponent;
 
 UCLASS()
-class AItemBase : public AActor, public ICarryInterface {
+class AItemBase : public AActor, public ICarryInterface, public ILogicContextInterface {
   GENERATED_BODY()
 
 public:
@@ -23,6 +26,16 @@ public:
   AItemBase();
 
   class UItemData *GetItemData() const { return ItemData; }
+
+  // ILogicContextInterface 구현
+  virtual UCarryableComponent *GetCarryableComponent() const override;
+  virtual UCarryInteractComponent *GetCarryInteractComponent() const override;
+  virtual FLogicBlackboard *GetLogicBlackboard() override;
+  virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
+  virtual void SetStat(const FGameplayTag &Tag,
+                       const FItemStatValue &Value) override;
+  virtual FGameplayTag ResolveKey(const FGameplayTag &Key) const override;
+  virtual TArray<class ULogicModuleBase *> GetLogicModules() const override;
 
 protected:
   // 게임이 시작되거나 스폰될 때 호출됩니다
@@ -55,12 +68,25 @@ protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Components")
   TObjectPtr<UCarryableComponent> CarryComponent;
 
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Logic")
+  TObjectPtr<ULogicContextComponent> BlackboardComponent;
+
   // ICarryInterface
-  virtual bool OnCarryInteract_Implementation(
-      AActor *Interactor, ECarryInteractionType InteractionType) override;
+  virtual bool OnCarryInteract_Implementation(const FCarryContext &Context) override;
   virtual void SetOutlineEnabled_Implementation(bool bEnabled) override;
 
 public:
   UFUNCTION(BlueprintCallable, Category = "Item|Data")
   void SetItemDataAndApply(UItemData *InData);
+
+  UFUNCTION(BlueprintCallable, Category = "Item|Identifier")
+  void SetInstanceId(const FGuid &InId) { InstanceId = InId; }
+
+  UFUNCTION(BlueprintCallable, Category = "Item|Identifier")
+  FGuid GetInstanceId() const { return InstanceId; }
+
+protected:
+  /** 매니저가 발급한 인스턴스 고유 식별자 */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "Item|Identifier")
+  FGuid InstanceId;
 };

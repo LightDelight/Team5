@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "LKH2/Data/ItemStatValue.h"
 #include "Net/Serialization/FastArraySerializer.h"
 #include "LogicBlackboard.generated.h"
 
@@ -92,6 +93,81 @@ struct FLogicBlackboardObjectSerializer : public FFastArraySerializer {
 };
 
 /**
+ * 블랙보드에 저장되는 단일 스탯 데이터 항목
+ */
+USTRUCT(BlueprintType)
+struct FLogicBlackboardStatEntry : public FFastArraySerializerItem {
+  GENERATED_BODY()
+
+  FLogicBlackboardStatEntry() : Key(FGameplayTag::EmptyTag) {}
+
+  FLogicBlackboardStatEntry(const FGameplayTag &InKey,
+                            const FItemStatValue &InValue)
+      : Key(InKey), Value(InValue) {}
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
+  FGameplayTag Key;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
+  FItemStatValue Value;
+};
+
+/**
+ * 런타임 가변 수치(Stats)를 동기화하기 위한 시리얼라이저
+ */
+USTRUCT(BlueprintType)
+struct FLogicBlackboardStatSerializer : public FFastArraySerializer {
+  GENERATED_BODY()
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
+  TArray<FLogicBlackboardStatEntry> Items;
+
+  bool NetDeltaSerialize(FNetDeltaSerializeInfo &DeltaParms) {
+    return FFastArraySerializer::FastArrayDeltaSerialize<
+        FLogicBlackboardStatEntry, FLogicBlackboardStatSerializer>(
+        Items, DeltaParms, *this);
+  }
+
+  bool SetStat(const FGameplayTag &Key, const FItemStatValue &Value) {
+    if (!Key.IsValid())
+      return false;
+
+    for (FLogicBlackboardStatEntry &Entry : Items) {
+      if (Entry.Key == Key) {
+        // 간단한 비교 로직 (필요시 FItemStatValue에 operator== 추가 고려)
+        // 여기서는 구조체 복사 후 변경 마킹 위주로 처리
+        Entry.Value = Value;
+        MarkItemDirty(Entry);
+        return true;
+      }
+    }
+
+    FLogicBlackboardStatEntry NewEntry(Key, Value);
+    Items.Add(NewEntry);
+    MarkArrayDirty();
+    return true;
+  }
+
+  const FItemStatValue *GetStat(const FGameplayTag &Key) const {
+    for (const FLogicBlackboardStatEntry &Entry : Items) {
+      if (Entry.Key == Key) {
+        return &Entry.Value;
+      }
+    }
+    return nullptr;
+  }
+};
+
+/**
+ * 메커니즘 등록
+ */
+template <>
+struct TStructOpsTypeTraits<FLogicBlackboardStatSerializer>
+    : public TStructOpsTypeTraitsBase2<FLogicBlackboardStatSerializer> {
+  enum { WithNetDeltaSerializer = true };
+};
+
+/**
  * 위에서 정의한 FastArraySerializer 메커니즘이 언리얼 엔진의 RPC 리플리케이션
  * 시스템에 제대로 연결되도록 델타 직렬화 특성(Trait)을 선언합니다.
  */
@@ -115,6 +191,10 @@ public:
   /** 오브젝트 타입 데이터를 담는 동기화 지원 블랙보드 */
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blackboard")
   FLogicBlackboardObjectSerializer ObjectBlackboard;
+
+  /** 런타임 가변 수치(Stats)를 담는 동기화 지원 블랙보드 */
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blackboard")
+  FLogicBlackboardStatSerializer Stats;
 
   /**
    * 필요할 경우 이곳에 Float, Int 기반의 Serializer 도 동일하게 만들어서 넣을

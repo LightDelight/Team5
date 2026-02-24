@@ -93,8 +93,12 @@ bool UGridManagerComponent::RegisterActor(AActor *Actor,
   if (!Cell)
     return false;
 
-  if (!Cell->IsEmpty())
+  if (!Cell->IsEmpty()) {
+    if (Cell->OccupyingActor == Actor) {
+      return true; // 이미 본인이 등록되어 있으면 성공으로 간주
+    }
     return false;
+  }
 
   Cell->OccupyingActor = Actor;
   return true;
@@ -300,29 +304,48 @@ AWorkStationBase *UGridManagerComponent::SpawnWorkstation(
   FVector SpawnLocation = GridToWorld(GridCoord);
   FTransform SpawnTransform(Rotation, SpawnLocation);
 
-  // SpawnActorDeferred → WorkstationData 설정 → FinishSpawning
-  // (BeginPlay 전에 데이터를 설정해야 LogicModule 초기화가 정상 동작)
-  AWorkStationBase *NewStation = World->SpawnActorDeferred<AWorkStationBase>(
-      StationClass, SpawnTransform);
-  if (!NewStation)
-    return nullptr;
+  AWorkStationBase *NewStation = nullptr;
 
-  // WorkstationData 설정 (Reflection으로 안전하게)
-  if (StationData) {
-    if (FProperty *Prop = NewStation->GetClass()->FindPropertyByName(
-            TEXT("WorkstationData"))) {
-      if (FObjectPropertyBase *ObjProp =
-              CastField<FObjectPropertyBase>(Prop)) {
-        ObjProp->SetObjectPropertyValue_InContainer(NewStation, StationData);
+  if (GetOwner()->HasAuthority()) {
+    // [Server] 실제로 스택틱 액터 스폰
+    NewStation = World->SpawnActorDeferred<AWorkStationBase>(StationClass,
+                                                             SpawnTransform);
+    if (NewStation) {
+      NewStation->SetWorkstationDataAndApply(StationData);
+      NewStation->FinishSpawning(SpawnTransform);
+    }
+  } else {
+    // [Client] 리플리케이트된 액터를 찾아서 그리드에 등록만 시도
+    TArray<AActor *> FoundActors;
+    UGameplayStatics::GetAllActorsOfClass(World, StationClass, FoundActors);
+
+    for (AActor *Actor : FoundActors) {
+      if (Actor->GetActorLocation().Equals(SpawnLocation, 10.0f)) {
+        NewStation = Cast<AWorkStationBase>(Actor);
+        break;
       }
+    }
+
+    if (NewStation) {
+      UE_LOG(LogTemp, Log,
+             TEXT("GridManager: 클라이언트에서 위치 (%d, %d)의 리플리케이트된 "
+                  "액터를 찾았습니다."),
+             GridCoord.X, GridCoord.Y);
+    } else {
+      UE_LOG(LogTemp, Warning,
+             TEXT("GridManager: 클라이언트에서 위치 (%d, %d)의 리플리케이트된 "
+                  "액터를 찾지 못했습니다. (지연될 수 있음)"),
+             GridCoord.X, GridCoord.Y);
     }
   }
 
-  NewStation->FinishSpawning(SpawnTransform);
-
-  // 그리드에 등록 및 추적
-  RegisterActor(NewStation, GridCoord);
-  SpawnedActors.Add(NewStation);
+  if (NewStation) {
+    // 그리드에 등록 및 추적
+    // (AWorkStationBase::BeginPlay에서도 등록을 시도하지만, 여기서 중복 체크를
+    // 수행하므로 안전함)
+    RegisterActor(NewStation, GridCoord);
+    SpawnedActors.AddUnique(NewStation);
+  }
 
   return NewStation;
 }

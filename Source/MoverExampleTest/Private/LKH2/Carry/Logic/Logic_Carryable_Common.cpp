@@ -10,9 +10,10 @@
 #include "LKH2/Logic/InstigatorContextInterface.h"
 #include "LKH2/Manager/ItemManagerSubsystem.h"
 
-bool ULogic_Carryable_Common::OnModuleInteract_Implementation(
-    AActor *Interactor, AActor *TargetActor,
-    ECarryInteractionType InteractionType) {
+bool ULogic_Carryable_Common::PerformInteraction(const FCarryContext &Context) {
+  AActor *TargetActor = GetOwner(); // 모듈 객체가 소유한 액터
+  AActor *Interactor = Context.Interactor;
+
   if (!TargetActor || !Interactor)
     return false;
 
@@ -48,7 +49,7 @@ bool ULogic_Carryable_Common::OnModuleInteract_Implementation(
         World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
 
     if (ItemMgr && TargetItem && AttachTarget) {
-      ItemMgr->PickUpItem(TargetItem, AttachTarget);
+      ItemMgr->PickUpItem(TargetItem->GetInstanceId(), AttachTarget);
     }
     return true;
   } else {
@@ -60,14 +61,19 @@ bool ULogic_Carryable_Common::OnModuleInteract_Implementation(
         World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
 
     if (ItemMgr && TargetItem) {
-      // 던지기 판단
+      // 던지기 판단: 컨텍스트에 이미 계산된 속도가 있다면 그것을 사용
       FVector Impulse = FVector::ZeroVector;
-      if (InteractionType == ECarryInteractionType::Throw) {
-        Impulse = Interactor->GetActorForwardVector() * 800.0f +
-                  FVector(0, 0, 300.0f);
+      if (Context.InteractionType == ECarryInteractionType::Throw) {
+        Impulse = Context.Velocity;
+        
+        // 만약 컨텍스트에 속도가 비어있다면(Zero) 기본값 계산
+        if (Impulse.IsNearlyZero()) {
+          Impulse = Interactor->GetActorForwardVector() * 800.0f +
+                    FVector(0, 0, 300.0f);
+        }
       }
 
-      ItemMgr->DropItem(TargetItem, Impulse, Carrier);
+      ItemMgr->DropItem(TargetItem->GetInstanceId(), Impulse, Carrier);
     }
     return true;
   }

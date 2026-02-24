@@ -19,10 +19,10 @@ struct FRecipeUIData {
 
 public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recipe UI")
-  TArray<UItemData *> Inputs;
+  TArray<FGameplayTag> Inputs;
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recipe UI")
-  UItemData *Output = nullptr;
+  FGameplayTag Output;
 
   // 요리 시간, 망치질 횟수 등 커스텀 수치를 태그로 제공
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recipe UI")
