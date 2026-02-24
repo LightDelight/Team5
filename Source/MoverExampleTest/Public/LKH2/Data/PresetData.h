@@ -11,28 +11,14 @@
 class ULogicModuleBase;
 
 /**
- * 프리셋 대상 타입
- */
-UENUM(BlueprintType)
-enum class EPresetDataType : uint8 {
-  Item UMETA(DisplayName = "Item"),
-  Workstation UMETA(DisplayName = "Workstation"),
-};
-
-/**
- * 데이터 에셋(ItemData/WorkstationData)의 기본 모듈 구성을 정의하는 프리셋.
- * 어떤 종류의 데이터인지(Item/Workstation)와
- * 기본적으로 포함할 로직 모듈 클래스 목록, 그리고 기본 Stats를 설정합니다.
+ * 로직 프리셋 — 로직 모듈 구성과 기본 Stats를 정의합니다.
+ * ItemData/WorkstationData의 Track 1 (Preset 기반 모듈)으로 사용됩니다.
  */
 UCLASS(BlueprintType)
 class MOVEREXAMPLETEST_API UPresetData : public UPrimaryDataAsset {
   GENERATED_BODY()
 
 public:
-  /** 이 프리셋의 대상 타입 (Item 또는 Workstation) */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Preset")
-  EPresetDataType PresetType = EPresetDataType::Item;
-
   /** 기본적으로 포함할 로직 모듈 클래스 목록 */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Preset|Modules")
   TArray<TSubclassOf<ULogicModuleBase>> DefaultModuleClasses;
@@ -40,4 +26,20 @@ public:
   /** 프리셋의 기본 Stats (Data에 적용 시 복사됨) */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Preset|Stats")
   TMap<FGameplayTag, FItemStatValue> DefaultStats;
+
+  // ─── 필수 태그 미리보기 (읽기 전용) ───
+
+  /** [읽기 전용] 모든 모듈이 요구하는 Stats 태그 총합 */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Preset|Info",
+            meta = (DisplayName = "[필수 태그] 모듈 요구사항"))
+  TArray<FGameplayTag> RequiredStatTags;
+
+#if WITH_EDITOR
+  virtual void PostEditChangeProperty(
+      FPropertyChangedEvent &PropertyChangedEvent) override;
+#endif
+  virtual void PostLoad() override;
+
+private:
+  void RefreshRequiredTags();
 };

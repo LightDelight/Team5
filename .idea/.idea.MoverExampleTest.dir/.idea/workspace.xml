@@ -8,41 +8,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map002.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_VendingMachine_Cone.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_VendingMachine_Cube.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_VendingMachine_Sphere.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Container.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_CuttingBoard.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cube.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Sphere.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/Preset/DA_Preset_Workstation_Visual_WoodenPalette.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGameState.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGameState.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Container.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Container.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Combiner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Combiner.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner4.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner4.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_StationSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_StationSpawner.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicItemStatsTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicItemStatsTag.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cone.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cube.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Sphere.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Sphere.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_ForBake.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_ForBake.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/Preset/DA_Preset_Item_Common.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map001.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map001.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/RecipeData/DA_CombineRecipeBook.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/RecipeData/DA_CombineRecipeBook.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_Combiner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_Combiner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_Container.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_Container.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_CuttingBoard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_CuttingBoard.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_TrashCan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_TrashCan.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_VendingMachine.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/StationData/DA_VendingMachine.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Container.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Container.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cube.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/Preset/DA_Preset_Workstation_Common.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/Preset/DA_Preset_Workstation_Vending.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Docs/ArchitecturePrinciples.md" beforeDir="false" afterPath="$PROJECT_DIR$/Docs/ArchitecturePrinciples.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Combine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Combine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Common.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Common.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Trash.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Trash.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Vending.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Vending.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_Carryable_Common.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_Carryable_Common.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Data/PresetData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Data/PresetData.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ContainerItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ContainerItemBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemData.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Manager/ItemManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Manager/ItemManagerSubsystem.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkStationBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkStationBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkstationData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkstationData.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Combine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Combine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Vending.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Vending.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/ItemStatValue.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/ItemStatValue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/PresetData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/PresetData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/GridManagerComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/GridManagerComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ContainerItemBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ContainerItemBase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ItemData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ItemData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicContextInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicModuleBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Manager/ItemManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Manager/ItemManagerSubsystem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkStationBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkStationBase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkstationData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkstationData.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,6 +65,11 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -69,13 +85,12 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/Core/Public/Containers/Array.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/CoreUObject/Public/Templates/SubclassOf.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/core.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/dist_sink.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/Core/Public/Algo/Reverse.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectPtr.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -199,7 +214,8 @@
       <updated>1771696170435</updated>
       <workItem from="1771696171888" duration="294000" />
       <workItem from="1771696966483" duration="59543000" />
-      <workItem from="1771819829712" duration="3808000" />
+      <workItem from="1771819829712" duration="7581000" />
+      <workItem from="1771892140342" duration="19306000" />
     </task>
     <task id="LOCAL-00001" summary="ss">
       <option name="closed" value="true" />
@@ -217,7 +233,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771793313351</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="tt">
+      <option name="closed" value="true" />
+      <created>1771826142672</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1771826142672</updated>
+    </task>
+    <task id="LOCAL-00004" summary="kk">
+      <option name="closed" value="true" />
+      <created>1771837566638</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1771837566638</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -230,7 +262,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feat/Product" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -240,7 +284,9 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="ss" />
     <MESSAGE value="ff" />
-    <option name="LAST_COMMIT_MESSAGE" value="ff" />
+    <MESSAGE value="tt" />
+    <MESSAGE value="kk" />
+    <option name="LAST_COMMIT_MESSAGE" value="kk" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

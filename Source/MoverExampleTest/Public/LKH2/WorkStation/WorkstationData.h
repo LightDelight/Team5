@@ -10,35 +10,24 @@
 
 class ULogicModuleBase;
 class UPresetData;
+class UVisualPresetData;
+class UStaticMesh;
+class AWorkStationBase;
 
 /**
  * 워크스테이션(작업대) 데이터를 정의하는 클래스.
  * 투 트랙 구조:
- *   Track 1 — Preset 기반 모듈 (TSubclassOf, Preset 변경 시 자동 반영)
- *   Track 2 — AdditionalModules (Instanced, 에디터에서 직접 편집 가능)
+ *   Track 1 — Preset 기반 (로직: PresetData, 비주얼: VisualPresetData)
+ *   Track 2 — Custom (AdditionalModules, bUseCustomVisuals → Custom* 필드)
  */
 UCLASS(BlueprintType)
 class MOVEREXAMPLETEST_API UWorkstationData : public UPrimaryDataAsset {
   GENERATED_BODY()
 
 public:
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation")
-  FText WorkstationName;
+  // ─── 투 트랙: 로직 ───
 
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation")
-  TObjectPtr<UStaticMesh> WorkstationMesh;
-
-  /** Box 콜리전 크기 (Half-Extent) */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Collision")
-  FVector BoxExtent = FVector(50.0f, 50.0f, 50.0f);
-
-  /** 루트(RootMesh) 기준 BoxCollision의 상대 위치 오프셋 */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Collision")
-  FVector BoxRelativeLocation = FVector::ZeroVector;
-
-  // ─── 투 트랙 모듈 시스템 ───
-
-  /** [Track 1] 프리셋 기반 모듈 구성 (변경 시 자동 반영) */
+  /** [Track 1] 로직 프리셋 (모듈 + Stats) */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Preset")
   TObjectPtr<UPresetData> Preset;
 
@@ -47,16 +36,105 @@ public:
             Category = "Workstation|Modules")
   TArray<TObjectPtr<ULogicModuleBase>> AdditionalModules;
 
-  /** GameplayTag 기반 워크스테이션 설정값 */
+  /** GameplayTag 기반 설정값 */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Stats")
   TMap<FGameplayTag, FItemStatValue> ItemStats;
 
+  // ─── Preset 미리보기 (읽기 전용) ───
+
+  /** [읽기 전용] Preset에서 가져온 모듈 클래스 목록 */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Preset",
+            meta = (DisplayName = "[Preset] 모듈"))
+  TArray<TSubclassOf<ULogicModuleBase>> PresetModules;
+
+  /** [읽기 전용] Preset에서 가져온 기본 Stats */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Preset",
+            meta = (DisplayName = "[Preset] 기본 Stats"))
+  TMap<FGameplayTag, FItemStatValue> PresetStats;
+
+  /** [읽기 전용] 모듈들이 요구하는 필수 Stats 태그 */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Preset",
+            meta = (DisplayName = "[필수 태그] 모듈 요구사항"))
+  TArray<FGameplayTag> PresetRequiredTags;
+
+  // ─── 투 트랙: 비주얼 ───
+
+  /** [Track 1] 비주얼 프리셋 (이름, 메쉬, 콜리전/오프셋 기본값) */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Workstation|Visual")
+  TObjectPtr<UVisualPresetData> VisualPreset;
+
+  /** [Track 2] 체크하면 아래 커스텀 비주얼 값을 사용, 해제하면 VisualPreset 사용
+   */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Visual")
+  bool bUseCustomVisuals = false;
+
+  /** [커스텀] 워크스테이션 스폰 클래스 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Visual",
+            meta = (EditCondition = "bUseCustomVisuals"))
+  TSubclassOf<AWorkStationBase> CustomWorkstationClass;
+
+  /** [커스텀] 워크스테이션 메쉬 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Visual",
+            meta = (EditCondition = "bUseCustomVisuals"))
+  TObjectPtr<UStaticMesh> CustomWorkstationMesh;
+
+  /** [커스텀] Box 콜리전 크기 (Half-Extent) */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Visual",
+            meta = (EditCondition = "bUseCustomVisuals"))
+  FVector CustomBoxExtent = FVector(50.0f, 50.0f, 50.0f);
+
+  /** [커스텀] Box 콜리전의 상대 위치 오프셋 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Visual",
+            meta = (EditCondition = "bUseCustomVisuals"))
+  FVector CustomBoxRelativeLocation = FVector::ZeroVector;
+
+  /** [커스텀] CarryInteractComponent의 상대 위치 오프셋 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Visual",
+            meta = (EditCondition = "bUseCustomVisuals"))
+  FVector CustomInteractRelativeLocation = FVector::ZeroVector;
+
   // ─── 헬퍼 ───
+
+  /** 유효 스폰 클래스 반환 */
+  UFUNCTION(BlueprintCallable, Category = "Workstation|Visual")
+  TSubclassOf<AWorkStationBase> GetEffectiveWorkstationClass() const;
+
+  /** 유효 메쉬 반환 */
+  UFUNCTION(BlueprintCallable, Category = "Workstation|Visual")
+  UStaticMesh *GetEffectiveWorkstationMesh() const;
+
+  /** 유효 Box 콜리전 크기 반환 */
+  UFUNCTION(BlueprintCallable, Category = "Workstation|Visual")
+  FVector GetEffectiveBoxExtent() const;
+
+  /** 유효 Box 오프셋 반환 */
+  UFUNCTION(BlueprintCallable, Category = "Workstation|Visual")
+  FVector GetEffectiveBoxRelativeLocation() const;
+
+  /** 유효 InteractComponent 오프셋 반환 */
+  UFUNCTION(BlueprintCallable, Category = "Workstation|Visual")
+  FVector GetEffectiveInteractRelativeLocation() const;
 
   /**
    * Preset 모듈 + AdditionalModules를 합산한 전체 모듈 배열을 반환합니다.
-   * Preset의 TSubclassOf 목록은 CDO(Class Default Object)로 반환됩니다.
    */
   UFUNCTION(BlueprintCallable, Category = "Workstation|Modules")
   TArray<ULogicModuleBase *> GetAllModules() const;
+
+#if WITH_EDITOR
+  virtual void PostEditChangeProperty(
+      FPropertyChangedEvent &PropertyChangedEvent) override;
+#endif
+  virtual void PostLoad() override;
+
+private:
+  void RefreshPresetPreview();
 };

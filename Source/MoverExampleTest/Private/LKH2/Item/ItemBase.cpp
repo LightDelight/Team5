@@ -100,16 +100,18 @@ void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled) {
 void AItemBase::SetItemDataAndApply(UItemData *InData) {
   ItemData = InData;
   if (ItemData) {
-    if (ItemData->ItemMesh && VisualMesh) {
-      VisualMesh->SetStaticMesh(ItemData->ItemMesh);
+    UStaticMesh *Mesh = ItemData->GetEffectiveItemMesh();
+    if (Mesh && VisualMesh) {
+      VisualMesh->SetStaticMesh(Mesh);
     }
     if (SphereCollision) {
-      SphereCollision->SetMassOverrideInKg(NAME_None, ItemData->ItemWeight,
+      SphereCollision->SetMassOverrideInKg(NAME_None,
+                                           ItemData->GetEffectiveWeight(),
                                            true);
-      SphereCollision->SetSphereRadius(ItemData->SphereRadius);
+      SphereCollision->SetSphereRadius(ItemData->GetEffectiveSphereRadius());
     }
     if (VisualMesh) {
-      VisualMesh->SetRelativeLocation(ItemData->MeshRelativeLocation);
+      VisualMesh->SetRelativeLocation(ItemData->GetEffectiveMeshRelativeLocation());
     }
   }
 }
@@ -119,20 +121,22 @@ void AItemBase::OnConstruction(const FTransform &Transform) {
 
   if (ItemData) {
     // 메쉬 적용 (VisualMesh)
-    if (ItemData->ItemMesh && VisualMesh) {
-      VisualMesh->SetStaticMesh(ItemData->ItemMesh);
+    UStaticMesh *Mesh = ItemData->GetEffectiveItemMesh();
+    if (Mesh && VisualMesh) {
+      VisualMesh->SetStaticMesh(Mesh);
     }
 
     // 무게(질량) 및 콜리전 크기 적용
     if (SphereCollision) {
-      SphereCollision->SetMassOverrideInKg(NAME_None, ItemData->ItemWeight,
+      SphereCollision->SetMassOverrideInKg(NAME_None,
+                                           ItemData->GetEffectiveWeight(),
                                            true);
-      SphereCollision->SetSphereRadius(ItemData->SphereRadius);
+      SphereCollision->SetSphereRadius(ItemData->GetEffectiveSphereRadius());
     }
 
     // 메쉬 상대 좌표 적용
     if (VisualMesh) {
-      VisualMesh->SetRelativeLocation(ItemData->MeshRelativeLocation);
+      VisualMesh->SetRelativeLocation(ItemData->GetEffectiveMeshRelativeLocation());
     }
   }
 }

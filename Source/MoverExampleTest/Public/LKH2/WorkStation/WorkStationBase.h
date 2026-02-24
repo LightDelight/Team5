@@ -26,6 +26,7 @@ public:
   virtual UCarryableComponent *GetCarryableComponent() const override;
   virtual UCarryInteractComponent *GetCarryInteractComponent() const override;
   virtual FLogicBlackboard *GetLogicBlackboard() override;
+  virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
 
 protected:
   virtual void BeginPlay() override;

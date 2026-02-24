@@ -10,6 +10,7 @@
 class UItemData;
 class AItemBase;
 class UItemRegistryData;
+class UCarryComponent;
 
 /**
  * 아이템 생성·파괴·추적을 중앙 관리하는 월드 서브시스템.
@@ -18,6 +19,7 @@ class UItemRegistryData;
  *  - GameplayTag ↔ UItemData ↔ TSubclassOf<AItemBase> 레지스트리
  *  - SpawnActorDeferred → SetItemDataAndApply → FinishSpawning 표준 스폰 파이프라인
  *  - 월드 내 활성 아이템 추적
+ *  - 아이템 상태 전이 + 부착/분리의 단일 창구 (StoreItem, RetrieveItem, PickUpItem, DropItem)
  */
 UCLASS()
 class MOVEREXAMPLETEST_API UItemManagerSubsystem : public UWorldSubsystem {
@@ -73,6 +75,53 @@ public:
   /** 아이템을 파괴하고 추적 목록에서 제거합니다. */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|Lifecycle")
   void DestroyItem(AItemBase *Item);
+
+  // ─── 상태 전이 API ───
+
+  /**
+   * 아이템을 대상 컴포넌트에 거치합니다.
+   * ForceDrop → Stored 상태 전이 → AttachToComponent 를 원자적으로 수행합니다.
+   *
+   * @param Item         거치할 아이템
+   * @param AttachTarget 부착 대상 SceneComponent (CarryInteractComponent 등)
+   * @param Carrier      아이템을 들고 있던 CarryComponent (nullptr이면 ForceDrop 생략)
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void StoreItem(AItemBase *Item, USceneComponent *AttachTarget,
+                 UCarryComponent *Carrier = nullptr);
+
+  /**
+   * 거치된 아이템을 분리하여 Carrier에게 전달합니다.
+   * DetachFromActor → Carried 상태 전이 → ForceEquip 을 원자적으로 수행합니다.
+   *
+   * @param Item    회수할 아이템
+   * @param Carrier 아이템을 받을 CarryComponent
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void RetrieveItem(AItemBase *Item, UCarryComponent *Carrier);
+
+  /**
+   * 아이템을 줍기 처리합니다.
+   * Carried 상태 전이 → AttachToComponent 를 수행합니다.
+   *
+   * @param Item         줍을 아이템
+   * @param AttachTarget 부착 대상 SceneComponent (CarryComponent 또는 Actor)
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void PickUpItem(AItemBase *Item, USceneComponent *AttachTarget);
+
+  /**
+   * 아이템을 내려놓기/던지기 처리합니다.
+   * Placed 상태 전이 → DetachFromActor → 선택적 Impulse 를 수행합니다.
+   *
+   * @param Item    내려놓을 아이템
+   * @param Impulse 던지기 시 적용할 임펄스 벡터 (ZeroVector이면 일반 놓기)
+   * @param Carrier 아이템을 던지거나 놓은 주체 (겹침 방지 보정 및 ForceDrop에 사용)
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void DropItem(AItemBase *Item,
+                const FVector &Impulse = FVector::ZeroVector,
+                UCarryComponent *Carrier = nullptr);
 
   // ─── 조회 ───
 

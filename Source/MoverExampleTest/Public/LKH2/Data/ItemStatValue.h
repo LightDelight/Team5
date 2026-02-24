@@ -16,6 +16,9 @@ enum class EItemStatType : uint8 {
   Bool UMETA(DisplayName = "Bool"),
   Tag UMETA(DisplayName = "GameplayTag"),
   Object UMETA(DisplayName = "Object"),
+  Text UMETA(DisplayName = "Text"),
+  String UMETA(DisplayName = "String"),
+  ObjectArray UMETA(DisplayName = "Object Array"),
 };
 
 /**
@@ -61,6 +64,24 @@ struct MOVEREXAMPLETEST_API FItemStatValue {
                     EditConditionHides))
   TObjectPtr<UObject> ObjectValue = nullptr;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite,
+            Category = "Stat",
+            meta = (EditCondition = "Type == EItemStatType::Text",
+                    EditConditionHides))
+  FText TextValue;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite,
+            Category = "Stat",
+            meta = (EditCondition = "Type == EItemStatType::String",
+                    EditConditionHides))
+  FString StringValue;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite,
+            Category = "Stat",
+            meta = (EditCondition = "Type == EItemStatType::ObjectArray",
+                    EditConditionHides))
+  TArray<TObjectPtr<UObject>> ObjectArrayValue;
+
   // --- 편의 생성자 ---
   FItemStatValue() = default;
 
@@ -96,6 +117,29 @@ struct MOVEREXAMPLETEST_API FItemStatValue {
     FItemStatValue V;
     V.Type = EItemStatType::Object;
     V.ObjectValue = InValue;
+    return V;
+  }
+
+  static FItemStatValue MakeText(const FText &InValue) {
+    FItemStatValue V;
+    V.Type = EItemStatType::Text;
+    V.TextValue = InValue;
+    return V;
+  }
+
+  static FItemStatValue MakeString(const FString &InValue) {
+    FItemStatValue V;
+    V.Type = EItemStatType::String;
+    V.StringValue = InValue;
+    return V;
+  }
+
+  static FItemStatValue MakeObjectArray(const TArray<UObject *> &InValue) {
+    FItemStatValue V;
+    V.Type = EItemStatType::ObjectArray;
+    for (UObject *Obj : InValue) {
+      V.ObjectArrayValue.Add(Obj);
+    }
     return V;
   }
 };

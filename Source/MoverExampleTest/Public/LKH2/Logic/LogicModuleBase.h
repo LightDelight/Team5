@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/NoExportTypes.h"
 #include "LogicModuleBase.generated.h"
 
@@ -29,4 +30,12 @@ public:
    * 에디터에서 즉시 시각적 결과를 확인할 수 있는 로직을 여기서 수행합니다.
    */
   virtual void OnConstructionLogic(AActor *OwnerActor) {}
+
+  /**
+   * 이 모듈이 정상 작동하기 위해 DA의 ItemStats에 설정되어야 하는
+   * GameplayTag 목록을 반환합니다. 기획자에게 필수 태그를 안내하는 용도입니다.
+   */
+  virtual TArray<FGameplayTag> GetRequiredStatTags() const {
+    return TArray<FGameplayTag>();
+  }
 };

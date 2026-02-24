@@ -33,6 +33,7 @@ public:
   virtual UCarryableComponent *GetCarryableComponent() const override;
   virtual UCarryInteractComponent *GetCarryInteractComponent() const override;
   virtual FLogicBlackboard *GetLogicBlackboard() override;
+  virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
 
 protected:
   /** 접시나 바구니처럼 다른 아이템을 받을 수 있게 해주는 상호작용 컴포넌트 */

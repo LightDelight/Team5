@@ -209,24 +209,21 @@ AActor *UCarryComponent::GetCarriedActor() const { return CarriedActor; }
 
 void UCarryComponent::ForceDrop() {
   if (CarriedActor) {
-    AActor* ActorToDrop = CarriedActor;
-    CarriedActor = nullptr; // 재귀 방지: 먼저 참조를 해제
-    if (ActorToDrop->Implements<UCarryInterface>()) {
-      // Multicast RPC를 중복해서 부르지 않고 로컬하게 상호작용 처리
-      ICarryInterface::Execute_OnCarryInteract(ActorToDrop, GetOwner(),
-                                               ECarryInteractionType::Interact);
-    }
+    AActor* OldItem = CarriedActor;
+    CarriedActor = nullptr;
+
+    // 클라이언트 예측 혹은 서버 실행 모두 로컬 부착/탈착을 동기화해야 하므로 무조건 호출
+    OnRep_CarriedActor(OldItem);
   }
 }
 
 void UCarryComponent::ForceEquip(AActor *ItemToEquip) {
-  if (ItemToEquip && !CarriedActor) {
-    if (ItemToEquip->Implements<UCarryInterface>()) {
-      // 위 로직과 동일하게 순수 로컬 실행 제어
-      ICarryInterface::Execute_OnCarryInteract(ItemToEquip, GetOwner(),
-                                               ECarryInteractionType::Interact);
-      CarriedActor = ItemToEquip;
-    }
+  if (ItemToEquip && CarriedActor != ItemToEquip) {
+    AActor* OldItem = CarriedActor;
+    CarriedActor = ItemToEquip;
+
+    // 클라이언트 예측 혹은 서버 실행 모두 로컬 부착/탈착을 동기화해야 하므로 무조건 호출
+    OnRep_CarriedActor(OldItem);
   }
 }
 
@@ -239,7 +236,9 @@ void UCarryComponent::ProcessInputBuffer(AActor *Target) {
       } else {
         ICarryInterface::Execute_OnCarryInteract(
             CarriedActor, GetOwner(), ECarryInteractionType::Interact);
+        AActor *OldItem = CarriedActor;
         CarriedActor = nullptr;
+        OnRep_CarriedActor(OldItem);
       }
     } else {
       if (Target && Target->Implements<UCarryInterface>()) {
@@ -247,7 +246,10 @@ void UCarryComponent::ProcessInputBuffer(AActor *Target) {
             Target, GetOwner(), ECarryInteractionType::Interact);
 
         if (bSuccess && Cast<AItemBase>(Target) != nullptr) {
+          AActor *OldItem = CarriedActor;
           CarriedActor = Target;
+          OnRep_CarriedActor(OldItem);
+
           SetTarget(nullptr);
         }
       }
@@ -263,7 +265,10 @@ void UCarryComponent::ProcessInputBuffer(AActor *Target) {
       ICarryInterface::Execute_OnCarryInteract(CarriedActor, GetOwner(),
                                                ECarryInteractionType::Throw);
     }
+    AActor *OldItem = CarriedActor;
     CarriedActor = nullptr;
+    OnRep_CarriedActor(OldItem);
+
     bWantsThrow = false;
     InputBufferTimer = 0.f;
   }

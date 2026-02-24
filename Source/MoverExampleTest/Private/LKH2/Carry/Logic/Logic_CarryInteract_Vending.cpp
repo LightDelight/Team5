@@ -2,23 +2,49 @@
 
 #include "LKH2/Carry/Logic/Logic_CarryInteract_Vending.h"
 
-#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "LKH2/Carry/Component/CarryComponent.h"
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
+#include "LKH2/Data/ItemStatValue.h"
 #include "LKH2/Item/ItemBase.h"
 #include "LKH2/Item/ItemData.h"
-#include "LKH2/Item/ItemStateComponent.h"
 #include "LKH2/Logic/InstigatorContextInterface.h"
 #include "LKH2/Logic/LogicBlackboard.h"
 #include "LKH2/Logic/LogicContextInterface.h"
 #include "LKH2/Manager/ItemManagerSubsystem.h"
 
+TArray<FGameplayTag>
+ULogic_CarryInteract_Vending::GetRequiredStatTags() const {
+  TArray<FGameplayTag> Tags;
+  if (VendingItemDataTag.IsValid())
+    Tags.Add(VendingItemDataTag);
+  return Tags;
+}
+
 bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
     AActor *Interactor, AActor *TargetActor,
     ECarryInteractionType InteractionType) {
-  if (!Interactor || !TargetActor || !VendingItemData || !VendingItemClass)
+  if (!Interactor || !TargetActor)
+    return false;
+
+  // Stats에서 ItemData 조회
+  ILogicContextInterface *Context =
+      Cast<ILogicContextInterface>(TargetActor);
+  if (!Context)
+    return false;
+
+  const FItemStatValue *DataStat = Context->FindStat(VendingItemDataTag);
+  UItemData *VendingItemData =
+      DataStat ? Cast<UItemData>(DataStat->ObjectValue.Get()) : nullptr;
+
+  if (!VendingItemData)
+    return false;
+
+  // 스폰 클래스는 ItemData의 VisualPreset에서 가져옴
+  TSubclassOf<AItemBase> VendingItemClass =
+      VendingItemData->GetEffectiveItemClass();
+  if (!VendingItemClass)
     return false;
 
   // 1. 플레이어의 CarryComponent 획득
@@ -56,21 +82,32 @@ bool ULogic_CarryInteract_Vending::OnModuleInteract_Implementation(
   if (!NewItem)
     return false;
 
-  // ForceEquip → OnCarryInteract → Logic_Carryable_Common 픽업 경로가
-  // 물리 비활성화 + Carried 상태 + CarrierComp 부착을 자동 처리
   CarrierComp->ForceEquip(NewItem);
 
   return true;
 }
 
 void ULogic_CarryInteract_Vending::InitializeLogic(AActor *OwnerActor) {
-  if (!OwnerActor || !DisplayActorKey.IsValid() || !VendingItemData ||
-      !VendingItemClass)
+  if (!OwnerActor || !DisplayActorKey.IsValid())
     return;
 
   ILogicContextInterface *Context =
       Cast<ILogicContextInterface>(OwnerActor);
   if (!Context)
+    return;
+
+  // Stats에서 데이터 조회
+  const FItemStatValue *DataStat = Context->FindStat(VendingItemDataTag);
+  UItemData *VendingItemData =
+      DataStat ? Cast<UItemData>(DataStat->ObjectValue.Get()) : nullptr;
+
+  if (!VendingItemData)
+    return;
+
+  // 스폰 클래스는 ItemData의 VisualPreset에서 가져옴
+  TSubclassOf<AItemBase> VendingItemClass =
+      VendingItemData->GetEffectiveItemClass();
+  if (!VendingItemClass)
     return;
 
   FLogicBlackboard *Blackboard = Context->GetLogicBlackboard();
@@ -107,22 +144,9 @@ void ULogic_CarryInteract_Vending::InitializeLogic(AActor *OwnerActor) {
   if (!DisplayItem)
     return;
 
-  // 물리/충돌 완전 비활성화 (순수 시각용)
-  if (UPrimitiveComponent *RootPrim =
-          Cast<UPrimitiveComponent>(DisplayItem->GetRootComponent())) {
-    RootPrim->SetSimulatePhysics(false);
-    RootPrim->SetCollisionProfileName(TEXT("NoCollision"));
-  }
-
-  // Stored 상태로 설정 (물리가 꺼진 채로 부착 유지)
-  if (UItemStateComponent *StateComp =
-          DisplayItem->FindComponentByClass<UItemStateComponent>()) {
-    StateComp->SetItemState(EItemState::Stored);
-  }
-  DisplayItem->AttachToComponent(
-      SnapComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+  // Manager API로 Display 아이템을 Stored 상태로 거치
+  ItemMgr->StoreItem(DisplayItem, SnapComp);
 
   // 블랙보드에 Display 액터 등록
   Blackboard->ObjectBlackboard.SetObject(DisplayActorKey, DisplayItem);
 }
-

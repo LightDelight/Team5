@@ -5,6 +5,7 @@
 #include "LKH2/Carry/Component/CarryableComponent.h"
 #include "LKH2/Logic/InstigatorContextInterface.h"
 #include "LKH2/Logic/LogicModuleBase.h"
+#include "LKH2/Data/ItemStatValue.h"
 #include "LKH2/WorkStation/WorkstationData.h"
 
 AContainerItemBase::AContainerItemBase() {
@@ -86,6 +87,14 @@ UCarryInteractComponent *AContainerItemBase::GetCarryInteractComponent() const {
 FLogicBlackboard *AContainerItemBase::GetLogicBlackboard() {
   if (InteractComponent) {
     return &InteractComponent->LogicBlackboard;
+  }
+  return nullptr;
+}
+
+const FItemStatValue *AContainerItemBase::FindStat(
+    const FGameplayTag &Tag) const {
+  if (WorkstationData) {
+    return WorkstationData->ItemStats.Find(Tag);
   }
   return nullptr;
 }

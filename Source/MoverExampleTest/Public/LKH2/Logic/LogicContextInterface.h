@@ -9,6 +9,8 @@
 class UCarryableComponent;
 class UCarryInteractComponent;
 struct FLogicBlackboard;
+struct FItemStatValue;
+struct FGameplayTag;
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
@@ -33,4 +35,11 @@ public:
 
   /** 실제 런타임 상태 데이터를 보관하는 블랙보드 포인터를 반환합니다. */
   virtual FLogicBlackboard *GetLogicBlackboard() = 0;
+
+  /**
+   * 이 액터를 정의하는 DataAsset의 ItemStats 맵에서
+   * 주어진 태그에 해당하는 값을 반환합니다.
+   * 찾지 못하면 nullptr을 반환합니다.
+   */
+  virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const = 0;
 };

@@ -2,12 +2,12 @@
 
 #include "LKH2/Carry/Logic/Logic_CarryInteract_Combine.h"
 
-#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "LKH2/Carry/Component/CarryComponent.h"
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
 #include "LKH2/Carry/Interface/CarryInterface.h"
+#include "LKH2/Data/ItemStatValue.h"
 #include "LKH2/Item/ContainerItemBase.h"
 #include "LKH2/Item/ItemBase.h"
 #include "LKH2/Item/ItemData.h"
@@ -22,28 +22,51 @@ ULogic_CarryInteract_Combine::ULogic_CarryInteract_Combine() {
   StoredItemKey = FGameplayTag::EmptyTag;
 }
 
+TArray<FGameplayTag>
+ULogic_CarryInteract_Combine::GetRequiredStatTags() const {
+  TArray<FGameplayTag> Tags;
+  if (RecipeBooksTag.IsValid())
+    Tags.Add(RecipeBooksTag);
+  return Tags;
+}
+
+void ULogic_CarryInteract_Combine::InitializeLogic(AActor *OwnerActor) {
+  if (!OwnerActor)
+    return;
+
+  // Stats에서 레시피 책 배열 조회
+  ILogicContextInterface *Context =
+      Cast<ILogicContextInterface>(OwnerActor);
+  if (!Context)
+    return;
+
+  // 레시피 캐싱
+  if (const FItemStatValue *BooksStat = Context->FindStat(RecipeBooksTag)) {
+    if (BooksStat->Type == EItemStatType::ObjectArray) {
+      CachedRecipes.Empty();
+      for (const TObjectPtr<UObject> &Obj : BooksStat->ObjectArrayValue) {
+        UCombineRecipeBook *Book = Cast<UCombineRecipeBook>(Obj.Get());
+        if (Book) {
+          for (const FCombineRecipe &Recipe : Book->Recipes) {
+            CachedRecipes.Add(Recipe);
+          }
+        }
+      }
+
+      // 부모 클래스 템플릿 정렬
+      SortRecipes(CachedRecipes,
+                  [](const FCombineRecipe &A, const FCombineRecipe &B) {
+                    return A.Priority < B.Priority;
+                  });
+    }
+  }
+}
+
 void ULogic_CarryInteract_Combine::CacheRecipes() {
   Super::CacheRecipes();
 
-  CachedRecipes.Empty();
-
-  // 1. 책에 있는 레시피 구조체 포인터들을 모두 복사하여 캐싱합니다.
-  for (UCombineRecipeBook *Book : RecipeBooks) {
-    if (Book) {
-      for (const FCombineRecipe &Recipe : Book->Recipes) {
-        CachedRecipes.Add(Recipe);
-      }
-    }
-  }
-
-  // 2. 부모 클래스 템플릿 정렬 함수를 활용하여 Priority 기준으로 정리합니다.
-  SortRecipes(CachedRecipes,
-              [](const FCombineRecipe &A, const FCombineRecipe &B) {
-                // 오름차순 기준으로 적습니다. bSortDescending 여부에 따라
-                // 내부에서 자동으로 반전되어 최고 Priority가 맨 앞에 오게
-                // 됩니다.
-                return A.Priority < B.Priority;
-              });
+  // InitializeLogic에서 Stats 기반으로 캐싱하므로
+  // PostLoad/PostEditChangeProperty 시에는 빈 상태로 대기
 }
 
 bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
@@ -87,6 +110,7 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
 
   AItemBase *StoredItem = Cast<AItemBase>(StoredActor);
 
+  // SnapComp / AttachTarget 결정
   UCarryInteractComponent *SnapComp = nullptr;
   if (ILogicContextInterface *Context =
           Cast<ILogicContextInterface>(TargetActor)) {
@@ -95,6 +119,15 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
     SnapComp = TargetActor->FindComponentByClass<UCarryInteractComponent>();
   }
 
+  USceneComponent *AttachTarget =
+      SnapComp ? Cast<USceneComponent>(SnapComp)
+               : TargetActor->GetRootComponent();
+
+  // ItemManagerSubsystem 획득
+  UWorld *World = TargetActor->GetWorld();
+  UItemManagerSubsystem *ItemMgr =
+      World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
+
   if (StoredActor == nullptr) {
     // 워크스테이션이 비어있음 -> 거치 수행
     if (PlayerActor != nullptr) {
@@ -102,31 +135,14 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
       if (Cast<AContainerItemBase>(PlayerActor)) {
         return false;
       }
-      if (TargetActor->HasAuthority()) {
-        CarrierComp->ForceDrop();
+      if (ItemMgr && AttachTarget) {
+        // Manager API로 거치 수행 (클라이언트 예측 포함)
+        ItemMgr->StoreItem(PlayerItem, AttachTarget, CarrierComp);
 
-        if (UPrimitiveComponent *RootPrim =
-                Cast<UPrimitiveComponent>(PlayerActor->GetRootComponent())) {
-          RootPrim->SetSimulatePhysics(false);
-          RootPrim->SetCollisionProfileName(TEXT("NoCollision"));
+        // 블루프린트나 서버 측 로직을 위한 블랙보드 상태 업데이트는 서버 전용
+        if (TargetActor->HasAuthority()) {
+          Blackboard->ObjectBlackboard.SetObject(StoredItemKey, PlayerActor);
         }
-
-        if (UItemStateComponent *StateComp =
-                PlayerActor->FindComponentByClass<UItemStateComponent>()) {
-          StateComp->SetItemState(EItemState::Stored);
-        }
-
-        if (SnapComp) {
-          PlayerActor->AttachToComponent(
-              SnapComp,
-              FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-        } else {
-          PlayerActor->AttachToActor(
-              TargetActor,
-              FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-        }
-
-        Blackboard->ObjectBlackboard.SetObject(StoredItemKey, PlayerActor);
       }
       return true;
     }
@@ -134,17 +150,14 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
     // 워크스테이션에 아이템이 거치되어 있음
     if (PlayerActor == nullptr) {
       // 플레이어 손이 비어있음 -> 회수 수행
-      if (TargetActor->HasAuthority()) {
-        StoredActor->DetachFromActor(
-            FDetachmentTransformRules::KeepWorldTransform);
-        CarrierComp->ForceEquip(StoredActor);
+      if (ItemMgr && StoredItem) {
+        // Manager API로 회수 수행 (클라이언트 예측 포함)
+        ItemMgr->RetrieveItem(StoredItem, CarrierComp);
 
-        if (UItemStateComponent *StateComp =
-                StoredActor->FindComponentByClass<UItemStateComponent>()) {
-          StateComp->SetItemState(EItemState::Carried);
+        // 블루프린트나 서버 측 로직을 위한 블랙보드 상태 업데이트는 서버 전용
+        if (TargetActor->HasAuthority()) {
+          Blackboard->ObjectBlackboard.SetObject(StoredItemKey, nullptr);
         }
-
-        Blackboard->ObjectBlackboard.SetObject(StoredItemKey, nullptr);
       }
       return true;
     } else if (PlayerItem && StoredItem) {
@@ -156,60 +169,36 @@ bool ULogic_CarryInteract_Combine::OnModuleInteract_Implementation(
         const FCombineRecipe *FoundRecipe = nullptr;
         if (TryFindRecipe(StoredData, PlayerData, FoundRecipe) &&
             FoundRecipe != nullptr) {
-          // 레시치 매칭 성공
-          if (TargetActor->HasAuthority()) {
+          // 레시피 매칭 성공 — 클래스는 ResultItemData에서 가져옴
+          TSubclassOf<AItemBase> ResultClass =
+              FoundRecipe->ResultItemData
+                  ? FoundRecipe->ResultItemData->GetEffectiveItemClass()
+                  : nullptr;
+
+          if (TargetActor->HasAuthority() && ItemMgr && ResultClass) {
             CarrierComp->ForceDrop(); // 손에서 내려놓기 처리
 
-            UWorld *World = TargetActor->GetWorld();
-            UItemManagerSubsystem *ItemMgr =
-                World ? World->GetSubsystem<UItemManagerSubsystem>()
-                      : nullptr;
+            FTransform SpawnTransform =
+                SnapComp ? SnapComp->GetComponentTransform()
+                         : TargetActor->GetActorTransform();
 
-            if (World && ItemMgr) {
-              FTransform SpawnTransform =
-                  SnapComp ? SnapComp->GetComponentTransform()
-                           : TargetActor->GetActorTransform();
+            // 기존 아이템 파괴 (ItemManager 추적)
+            ItemMgr->DestroyItem(PlayerItem);
+            ItemMgr->DestroyItem(StoredItem);
 
-              // 기존 아이템 대상 파괴 (ItemManager 추적)
-              ItemMgr->DestroyItem(PlayerItem);
-              ItemMgr->DestroyItem(StoredItem);
+            // 결과 아이템 스폰 (ItemManager 파이프라인)
+            AItemBase *NewItem = ItemMgr->SpawnItemFromData(
+                FoundRecipe->ResultItemData, SpawnTransform, ResultClass);
 
-              // 결과 아이템 스폰 (ItemManager 파이프라인)
-              AItemBase *NewItem = ItemMgr->SpawnItemFromData(
-                  FoundRecipe->ResultItemData, SpawnTransform,
-                  BaseItemClassToSpawn);
+            if (NewItem && AttachTarget) {
+              // Manager API로 결과 아이템 거치
+              ItemMgr->StoreItem(NewItem, AttachTarget);
 
-              if (NewItem) {
-                // 서버 사이드 물리 끄기 및 콜리전 해제 (초기화)
-                if (UPrimitiveComponent *RootPrim = Cast<UPrimitiveComponent>(
-                        NewItem->GetRootComponent())) {
-                  RootPrim->SetSimulatePhysics(false);
-                  RootPrim->SetCollisionProfileName(TEXT("NoCollision"));
-                }
-
-                if (UItemStateComponent *StateComp =
-                        NewItem->FindComponentByClass<UItemStateComponent>()) {
-                  StateComp->SetItemState(EItemState::Stored);
-                }
-
-                // 스폰이 완료된 이후에 부착을 진행해야 부착 상태가 유실되지
-                // 않음
-                if (SnapComp) {
-                  NewItem->AttachToComponent(
-                      SnapComp,
-                      FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-                } else {
-                  NewItem->AttachToActor(
-                      TargetActor,
-                      FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-                }
-
-                // 블랙보드에 신규 거치 아이템 등록
-                Blackboard->ObjectBlackboard.SetObject(StoredItemKey, NewItem);
-              }
+              // 블랙보드에 신규 거치 아이템 등록
+              Blackboard->ObjectBlackboard.SetObject(StoredItemKey, NewItem);
             }
-            return true;
           }
+          return true;
         }
       }
     }
@@ -231,8 +220,7 @@ bool ULogic_CarryInteract_Combine::TryFindRecipe(
       return true;
     }
 
-    // 2. 순서 무관 매칭: 재료 B = 거치아이템, 재료 A = 플레이어아이템
-    // 구조체 확장 전에는 bOrderIndependent 가 없으므로 생략 혹은 확장
+    // 2. 순서 무관 매칭
     if (Recipe.MaterialA == InItemB && Recipe.MaterialB == InItemA) {
       OutRecipe = &Recipe;
       return true;

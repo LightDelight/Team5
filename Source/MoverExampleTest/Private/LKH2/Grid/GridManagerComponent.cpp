@@ -254,43 +254,97 @@ void UGridManagerComponent::LoadFromMapData() {
   }
   SpawnedActors.Empty();
 
-  // 4. 워크스테이션 스폰 및 등록
-  // SpawnActorDeferred를 사용하여 WorkstationData를 BeginPlay 전에 설정.
-  // (SpawnActor 사용 시 BeginPlay가 먼저 실행되어 LogicModule 초기화 누락)
+  // 4. 워크스테이션 스폰 및 등록 (SpawnWorkstation API 활용)
   for (const FMapWorkstationEntry &Entry : MapData->Workstations) {
-    if (!Entry.StationClass || !IsValidCoord(Entry.GridCoord))
-      continue;
-
-    FVector SpawnLocation = GridToWorld(Entry.GridCoord);
-    FTransform SpawnTransform(Entry.Rotation, SpawnLocation);
-
-    AWorkStationBase *NewStation = World->SpawnActorDeferred<AWorkStationBase>(
-        Entry.StationClass, SpawnTransform);
-    if (!NewStation)
-      continue;
-
-    // WorkstationData 설정 (FinishSpawning/BeginPlay 전에 설정해야 LogicModule 초기화 정상 동작)
-    if (Entry.StationData) {
-      if (FProperty *Prop = NewStation->GetClass()->FindPropertyByName(
-              TEXT("WorkstationData"))) {
-        if (FObjectPropertyBase *ObjProp =
-                CastField<FObjectPropertyBase>(Prop)) {
-          ObjProp->SetObjectPropertyValue_InContainer(NewStation,
-                                                      Entry.StationData);
-        }
-      }
-    }
-
-    NewStation->FinishSpawning(SpawnTransform);
-
-    // 그리드에 등록
-    RegisterActor(NewStation, Entry.GridCoord);
-    SpawnedActors.Add(NewStation);
+    SpawnWorkstation(Entry.StationClass, Entry.StationData, Entry.GridCoord,
+                     Entry.Rotation);
   }
 
   UE_LOG(LogTemp, Log,
          TEXT("GridManager: MapData로부터 %d개 워크스테이션을 로드했습니다."),
          SpawnedActors.Num());
+}
+
+// ── 런타임 워크스테이션 스폰 ──
+
+AWorkStationBase *UGridManagerComponent::SpawnWorkstation(
+    TSubclassOf<AWorkStationBase> StationClass,
+    UWorkstationData *StationData, const FIntPoint &GridCoord,
+    const FRotator &Rotation) {
+  if (!StationClass) {
+    UE_LOG(LogTemp, Warning,
+           TEXT("GridManager::SpawnWorkstation - StationClass가 nullptr입니다."));
+    return nullptr;
+  }
+
+  if (!IsValidCoord(GridCoord)) {
+    UE_LOG(LogTemp, Warning,
+           TEXT("GridManager::SpawnWorkstation - 좌표 (%d, %d)가 그리드 범위 "
+                "밖입니다."),
+           GridCoord.X, GridCoord.Y);
+    return nullptr;
+  }
+
+  if (!IsCellEmpty(GridCoord)) {
+    UE_LOG(LogTemp, Warning,
+           TEXT("GridManager::SpawnWorkstation - 좌표 (%d, %d)가 이미 "
+                "점유되어 있습니다."),
+           GridCoord.X, GridCoord.Y);
+    return nullptr;
+  }
+
+  UWorld *World = GetWorld();
+  if (!World)
+    return nullptr;
+
+  FVector SpawnLocation = GridToWorld(GridCoord);
+  FTransform SpawnTransform(Rotation, SpawnLocation);
+
+  // SpawnActorDeferred → WorkstationData 설정 → FinishSpawning
+  // (BeginPlay 전에 데이터를 설정해야 LogicModule 초기화가 정상 동작)
+  AWorkStationBase *NewStation = World->SpawnActorDeferred<AWorkStationBase>(
+      StationClass, SpawnTransform);
+  if (!NewStation)
+    return nullptr;
+
+  // WorkstationData 설정 (Reflection으로 안전하게)
+  if (StationData) {
+    if (FProperty *Prop = NewStation->GetClass()->FindPropertyByName(
+            TEXT("WorkstationData"))) {
+      if (FObjectPropertyBase *ObjProp =
+              CastField<FObjectPropertyBase>(Prop)) {
+        ObjProp->SetObjectPropertyValue_InContainer(NewStation, StationData);
+      }
+    }
+  }
+
+  NewStation->FinishSpawning(SpawnTransform);
+
+  // 그리드에 등록 및 추적
+  RegisterActor(NewStation, GridCoord);
+  SpawnedActors.Add(NewStation);
+
+  return NewStation;
+}
+
+bool UGridManagerComponent::DestroyWorkstation(const FIntPoint &GridCoord) {
+  if (!IsValidCoord(GridCoord))
+    return false;
+
+  AActor *Actor = GetActorAt(GridCoord);
+  if (!Actor)
+    return false;
+
+  // 추적 목록에서 제거
+  SpawnedActors.Remove(Actor);
+
+  // 그리드에서 해제
+  UnregisterActor(GridCoord);
+
+  // 액터 파괴
+  Actor->Destroy();
+
+  return true;
 }
 
 void UGridManagerComponent::ClearGrid() {

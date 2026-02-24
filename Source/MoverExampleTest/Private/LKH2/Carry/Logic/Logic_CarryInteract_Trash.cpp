@@ -2,6 +2,7 @@
 
 #include "LKH2/Carry/Logic/Logic_CarryInteract_Trash.h"
 
+#include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "LKH2/Carry/Component/CarryComponent.h"
 #include "LKH2/Item/ContainerItemBase.h"
@@ -9,6 +10,7 @@
 #include "LKH2/Logic/InstigatorContextInterface.h"
 #include "LKH2/Logic/LogicBlackboard.h"
 #include "LKH2/Logic/LogicContextInterface.h"
+#include "LKH2/Manager/ItemManagerSubsystem.h"
 
 bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
     AActor *Interactor, AActor *TargetActor,
@@ -30,6 +32,11 @@ bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
   if (!PlayerActor)
     return false; // 손이 비어있으면 처리 없음
 
+  // ItemManagerSubsystem 획득
+  UWorld *World = TargetActor->GetWorld();
+  UItemManagerSubsystem *ItemMgr =
+      World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
+
   // 2. ContainerItemBase인지 판별
   AContainerItemBase *ContainerItem =
       Cast<AContainerItemBase>(PlayerActor);
@@ -47,9 +54,12 @@ bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
         bool bRemovedAny = false;
         for (FLogicBlackboardObjectEntry &Entry :
              Blackboard->ObjectBlackboard.Items) {
-          AActor *StoredActor = Cast<AActor>(Entry.ObjectValue);
-          if (StoredActor) {
-            StoredActor->Destroy();
+          AItemBase *StoredItem = Cast<AItemBase>(Entry.ObjectValue);
+          if (StoredItem) {
+            // Manager API로 파괴
+            if (ItemMgr) {
+              ItemMgr->DestroyItem(StoredItem);
+            }
             Entry.ObjectValue = nullptr;
             Blackboard->ObjectBlackboard.MarkItemDirty(Entry);
             bRemovedAny = true;
@@ -66,7 +76,12 @@ bool ULogic_CarryInteract_Trash::OnModuleInteract_Implementation(
       return true;
 
     CarrierComp->ForceDrop();
-    PlayerActor->Destroy();
+
+    AItemBase *Item = Cast<AItemBase>(PlayerActor);
+    if (Item && ItemMgr) {
+      // Manager API로 파괴
+      ItemMgr->DestroyItem(Item);
+    }
     return true;
   }
 }

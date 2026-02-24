@@ -50,10 +50,12 @@
 
 ### **🗄️ Data Assets (데이터 주도 설계)**
 
-기능 확장을 위해 클래스 상속(Subclassing)을 최소화하고 데이터 에셋 중심의 확장을 지향합니다.
+기능 확장을 위해 클래스 상속(Subclassing)을 최소화하고 데이터 에셋 중심의 확장을 지향합니다. 본 프로젝트는 시각적 데이터와 논리적(기능적) 데이터를 명확히 분리합니다.
 
-* **UItemData**: 각 아이템이 어떤 논리적 특성(LogicModules)을 가질지 정의하는 데이터 컨테이너입니다.  
-* **UWorkstationData**: 각 워크스테이션이 처리가능한 로직 모듈들을 담는 데이터 컨테이너입니다.
+* **UPresetData**: 로직 모듈 배열(`ItemStats` 등)의 기본값을 정의하는 순수 논리적 컨테이너입니다.
+* **UVisualPresetData**: Меsh, Collision 형태, 스폰 클래스, 오프셋 등 **시각적·물리적 외형**을 정의하는 데이터 컴테이너입니다.
+* **UItemData**: 각 아이템이 어떤 논리적 특성(LogicModules)과 시각적 특성(VisualPreset/Custom)을 가질지 최종적으로 조립하는 핵심 컨테이너입니다.  
+* **UWorkstationData**: 각 워크스테이션이 처리 가능한 로직 모듈들과 외형을 담는 조립 컨테이너입니다.
 
 ### **📋 Logic Blackboard (상태 공유 공간)**
 
@@ -90,21 +92,31 @@
 
 ## **🎯 설계 철학 심화 (Advanced Design Philosophy)**
 
-### **4. Preset과 투트랙 (Preset & Two-Track Module Strategy)**
+### **4. 투트랙 아키텍처 (Two-Track Strategy: Logic & Visual)**
 
-* **원칙**: 데이터 에셋(UItemData, UWorkstationData)에 등록하는 로직 모듈을 **Preset 모듈**과 **Custom 모듈**의 두 트랙으로 분리하여 관리합니다.  
-* **Preset 모듈 (표준 트랙)**:  
-  * 줍기/놓기(Logic_Carryable_Common), 거치(Logic_CarryInteract_Common) 등 **대다수 오브젝트가 공유하는 표준 행동**을 캡슐화한 모듈입니다.  
-  * Preset 모듈은 범용적이며 재사용 가능해야 합니다. 특정 오브젝트에만 해당하는 분기가 내부에 존재해서는 안 됩니다.  
-  * 새로운 아이템이나 워크스테이션을 추가할 때 Preset 모듈만 데이터 에셋에 등록하면 기본 동작이 즉시 완성되므로, **기능 확장의 기본 단위(Building Block)**로 기능합니다.  
-* **Custom 모듈 (커스텀 트랙)**:  
-  * 특정 오브젝트에만 필요한 고유 행동(예: 특수 조합 레시피, 고유한 상호작용 연출)을 담당하는 모듈입니다.  
-  * Custom 모듈은 Preset 모듈이 제공하는 표준 흐름 위에 **추가(Additive)**로 얹어지며, Preset 모듈의 동작을 변경하거나 우회해서는 안 됩니다.  
-  * **Chain of Responsibility** 순서에서 Custom 모듈이 먼저 평가되어, 해당 모듈이 처리할 수 있으면 즉시 처리하고, 처리할 수 없으면 다음 Preset 모듈로 자연스럽게 넘어갑니다.  
-* **투트랙 분리의 효과**:  
-  * **표준화**: 기본 동작이 Preset으로 통일되므로 오브젝트마다 미묘하게 다른 "방언(Dialect)"이 생기는 것을 방지합니다.  
-  * **확장 용이성**: 새로운 고유 기능은 Custom 모듈만 추가하면 되므로, 기존 Preset 코드를 수정할 필요가 없습니다(Open-Closed Principle).  
-  * **디버깅 명확성**: 문제가 표준 동작에서 발생하면 Preset 모듈을, 특수 동작에서 발생하면 Custom 모듈을 살피면 되므로 원인 범위가 즉시 좁혀집니다.
+* **원칙**: 시스템의 핵심 데이터(로직 배열, 시각적 형태 등)는 항상 **표준(Preset) 트랙**과 **개별(Custom) 트랙** 두 가지 채널로 분리하여 관리하고, 실행 시점에 병합(Evaluate)합니다.
+
+#### **A. 로직 모듈의 투트랙 (Logic)**
+* **Preset 트랙**: 데이터 에셋(`UItemData`, `UWorkstationData`)에 할당된 `UPresetData`에 정의된 로직 모듈입니다.
+  * 줍기, 거치 등 대다수 오브젝트가 공유하는 표준 행동을 캡슐화합니다.
+  * 새로운 아이템 추가 시 프리셋만 지정하면 기본 동작이 완성되는 **기능 확장의 기본 단위(Building Block)**입니다.
+* **Custom 트랙**: 해당 데이터 에셋 내장 배열(`CustomItemStats`, `CustomInstancedModules` 등)에 직접 추가한 모듈입니다.
+  * 특정 오브젝트에만 필요한 고유 행동(특수 조합, 예외 상호작용)을 추가(Additive)합니다.
+* **실행 시점 평가 (Evaluation)**: 대상과 상호작용할 때 `GetAllModules()` 등의 헬퍼를 통해 Custom 트랙이 먼저 평가되고, 그 다음 Preset 트랙이 차례대로 평가됩니다 (Chain of Responsibility). 이를 통해 표준 동작의 일관성을 유지하면서 오브젝트별 "방언(Dialect)" 확장이 가능합니다.
+
+#### **B. 시각 데이터의 투트랙 (Visual)**
+* **Preset 트랙**: `UVisualPresetData`에 정의된 메쉬, 스폰 클래스, 콜리전 크기 등입니다. (예: "목재 가구 프리셋", "음식 프리셋")
+* **Custom 트랙**: `bUseCustomVisuals`를 활성화하고 직접 할당한 고유 메쉬나 커스텀 스폰 클래스입니다.
+* **실행 시점 평가 (Evaluation)**: `GetEffectiveItemMesh()`, `GetEffectiveItemClass()` 등의 헬퍼 함수가 내부적으로 Custom 속성이 유효한지 확인하고, 유효하면 Custom을, 없으면 Preset 값을 반환합니다. 이를 통해 디자이너가 공통 외형을 손쉽게 상속받으면서도 부분적인 외형 오버라이드가 가능합니다.
+
+### **5. 시각/인스턴스화 정보와 로직의 분리 (Decoupling Visuals from Logic)**
+
+* **원칙**: 로직 모듈(`ULogic_CarryInteract_Combine` 등)은 **순수 논리**만 평가해야 하며, **"무엇을 스폰할 것인가?", "어떤 메쉬를 쓸 것인가?"** 같은 시각적·인스턴스화 정보에 직접 의존하거나 이를 정의해서는 안 됩니다.
+* **이유**: 만약 Vending(자판기) 로직 모듈 안에 `SpawnClass` 정보를 넣는다면, 동일한 Vending 로직을 사용하되 스폰 아이템만 다른 10개의 자판기를 만들기 위해 10개의 각기 다른 인스턴스화된 로직 모듈을 생성해야 하는 참강이 발생합니다.
+* **구현 방식**: 
+  1. 스폰할 클래스나 메쉬 정보는 오직 **`UVisualPresetData`**, **`UItemData`**, **`UWorkstationData`** 내부에만 존재합니다.
+  2. 로직 모듈은 단순히 아이템 데이터(ItemData)나 레시피 결과 데이터 컨테이너를 가리키는 **키(Key/GameplayTag)**만 가지고 참조합니다.
+  3. 로직 실행 시 해당 데이터 컨테이너의 `GetEffectiveItemClass()`를 호출하여 실제 스폰 대상을 동적으로 결정합니다.
 
 ### **5. 사전 로직과 사후 로직 (Pre-Logic & Post-Logic)**
 

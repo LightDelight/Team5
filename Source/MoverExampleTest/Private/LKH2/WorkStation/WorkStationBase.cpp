@@ -6,6 +6,7 @@
 #include "LKH2/Carry/Component/CarryInteractComponent.h"
 #include "LKH2/Logic/LogicModuleBase.h"
 #include "LKH2/WorkStation/WorkstationData.h"
+#include "LKH2/Data/ItemStatValue.h"
 #include "Net/UnrealNetwork.h"
 
 AWorkStationBase::AWorkStationBase() {
@@ -47,14 +48,22 @@ void AWorkStationBase::GetLifetimeReplicatedProps(
 
 void AWorkStationBase::OnRep_WorkstationData() {
   // 클라이언트에서 WorkstationData가 리플리케이트되면 메쉬 적용
-  if (WorkstationData && WorkstationData->WorkstationMesh) {
-    RootMesh->SetStaticMesh(WorkstationData->WorkstationMesh);
+  if (WorkstationData) {
+    UStaticMesh *Mesh = WorkstationData->GetEffectiveWorkstationMesh();
+    if (Mesh && RootMesh) {
+      RootMesh->SetStaticMesh(Mesh);
+    }
   }
 
   // 박스 콜리전 크기 및 상대 좌표 적용
   if (WorkstationData && BoxCollision) {
-    BoxCollision->SetBoxExtent(WorkstationData->BoxExtent);
-    BoxCollision->SetRelativeLocation(WorkstationData->BoxRelativeLocation);
+    BoxCollision->SetBoxExtent(WorkstationData->GetEffectiveBoxExtent());
+    BoxCollision->SetRelativeLocation(WorkstationData->GetEffectiveBoxRelativeLocation());
+  }
+
+  // InteractComponent 오프셋 적용
+  if (WorkstationData && InteractComponent) {
+    InteractComponent->SetRelativeLocation(WorkstationData->GetEffectiveInteractRelativeLocation());
   }
 
   // 로직 모듈 초기화 (Display 액터 등)
@@ -98,14 +107,22 @@ void AWorkStationBase::OnConstruction(const FTransform &Transform) {
     SetActorLocation(FVector(SnappedX, SnappedY, Loc.Z));
   }
 
-  if (WorkstationData && WorkstationData->WorkstationMesh) {
-    RootMesh->SetStaticMesh(WorkstationData->WorkstationMesh);
+  if (WorkstationData) {
+    UStaticMesh *Mesh = WorkstationData->GetEffectiveWorkstationMesh();
+    if (Mesh && RootMesh) {
+      RootMesh->SetStaticMesh(Mesh);
+    }
   }
 
   // 박스 콜리전 크기 및 상대 좌표 적용
   if (WorkstationData && BoxCollision) {
-    BoxCollision->SetBoxExtent(WorkstationData->BoxExtent);
-    BoxCollision->SetRelativeLocation(WorkstationData->BoxRelativeLocation);
+    BoxCollision->SetBoxExtent(WorkstationData->GetEffectiveBoxExtent());
+    BoxCollision->SetRelativeLocation(WorkstationData->GetEffectiveBoxRelativeLocation());
+  }
+
+  // InteractComponent 오프셋 적용
+  if (WorkstationData && InteractComponent) {
+    InteractComponent->SetRelativeLocation(WorkstationData->GetEffectiveInteractRelativeLocation());
   }
 
   // 모든 로직 모듈에 에디터 미리보기 기회 제공
@@ -138,6 +155,14 @@ UCarryInteractComponent *AWorkStationBase::GetCarryInteractComponent() const {
 FLogicBlackboard *AWorkStationBase::GetLogicBlackboard() {
   if (InteractComponent) {
     return &InteractComponent->LogicBlackboard;
+  }
+  return nullptr;
+}
+
+const FItemStatValue *AWorkStationBase::FindStat(
+    const FGameplayTag &Tag) const {
+  if (WorkstationData) {
+    return WorkstationData->ItemStats.Find(Tag);
   }
   return nullptr;
 }

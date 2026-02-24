@@ -100,6 +100,33 @@ public:
   UFUNCTION(BlueprintCallable, Category = "Grid|Baking")
   void ClearGrid();
 
+  // ─── 런타임 워크스테이션 스폰 ───
+
+  /**
+   * 지정 그리드 좌표에 워크스테이션을 스폰하고 그리드에 등록합니다.
+   * SpawnActorDeferred를 사용하여 BeginPlay 전에 WorkstationData를 설정합니다.
+   *
+   * @param StationClass 스폰할 워크스테이션 블루프린트 클래스
+   * @param StationData  적용할 워크스테이션 데이터 에셋
+   * @param GridCoord    배치할 그리드 좌표
+   * @param Rotation     월드 회전값
+   * @return 스폰된 AWorkStationBase* (실패 시 nullptr)
+   */
+  UFUNCTION(BlueprintCallable, Category = "Grid|Spawn")
+  AWorkStationBase *SpawnWorkstation(TSubclassOf<AWorkStationBase> StationClass,
+                                     UWorkstationData *StationData,
+                                     const FIntPoint &GridCoord,
+                                     const FRotator &Rotation = FRotator::ZeroRotator);
+
+  /**
+   * 지정 그리드 좌표의 워크스테이션을 파괴하고 그리드에서 해제합니다.
+   *
+   * @param GridCoord 제거할 워크스테이션의 그리드 좌표
+   * @return 성공 시 true
+   */
+  UFUNCTION(BlueprintCallable, Category = "Grid|Spawn")
+  bool DestroyWorkstation(const FIntPoint &GridCoord);
+
 protected:
   virtual void BeginPlay() override;
 

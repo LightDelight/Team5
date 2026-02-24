@@ -2,11 +2,13 @@
 
 #include "LKH2/Carry/Logic/Logic_Carryable_Common.h"
 #include "Components/PrimitiveComponent.h"
+#include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "LKH2/Carry/Component/CarryComponent.h"
-#include "LKH2/Logic/InstigatorContextInterface.h"
-
+#include "LKH2/Item/ItemBase.h"
 #include "LKH2/Item/ItemStateComponent.h"
+#include "LKH2/Logic/InstigatorContextInterface.h"
+#include "LKH2/Manager/ItemManagerSubsystem.h"
 
 bool ULogic_Carryable_Common::OnModuleInteract_Implementation(
     AActor *Interactor, AActor *TargetActor,
@@ -25,6 +27,8 @@ bool ULogic_Carryable_Common::OnModuleInteract_Implementation(
   if (!StateComp)
     return false;
 
+  AItemBase *TargetItem = Cast<AItemBase>(TargetActor);
+
   bool bIsCarried = (StateComp->CurrentState == EItemState::Carried);
 
   if (!bIsCarried) {
@@ -35,64 +39,35 @@ bool ULogic_Carryable_Common::OnModuleInteract_Implementation(
       return false; // 이미 다른 것을 들고 있으면 실패
     }
 
-    if (TargetActor->HasAuthority()) {
-      StateComp->SetItemState(EItemState::Carried);
+    USceneComponent *AttachTarget =
+        Carrier ? Cast<USceneComponent>(Carrier)
+                : Interactor->GetRootComponent();
 
-      if (UPrimitiveComponent *RootPrim =
-              Cast<UPrimitiveComponent>(TargetActor->GetRootComponent())) {
-        RootPrim->SetSimulatePhysics(false);
+    UWorld *World = TargetActor->GetWorld();
+    UItemManagerSubsystem *ItemMgr =
+        World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
 
-        if (Carrier) {
-          TargetActor->AttachToComponent(
-              Carrier,
-              FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-        } else {
-          TargetActor->AttachToActor(
-              Interactor,
-              FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-        }
-      }
-    } else {
-      // 클라이언트 예측 (Prediction)
-      StateComp->CurrentState = EItemState::Carried;
-      if (UPrimitiveComponent *RootPrim =
-              Cast<UPrimitiveComponent>(TargetActor->GetRootComponent())) {
-        RootPrim->SetSimulatePhysics(false);
-        RootPrim->SetCollisionProfileName(TEXT("NoCollision"));
-      }
+    if (ItemMgr && TargetItem && AttachTarget) {
+      ItemMgr->PickUpItem(TargetItem, AttachTarget);
     }
     return true;
   } else {
     // ----------------------------------------------------
     // 내려놓기 또는 던지기 (Drop/Throw: Carried -> Placed)
     // ----------------------------------------------------
-    if (TargetActor->HasAuthority()) {
-      StateComp->SetItemState(EItemState::Placed);
+    UWorld *World = TargetActor->GetWorld();
+    UItemManagerSubsystem *ItemMgr =
+        World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
 
-      TargetActor->DetachFromActor(
-          FDetachmentTransformRules::KeepWorldTransform);
-      if (UPrimitiveComponent *RootPrim =
-              Cast<UPrimitiveComponent>(TargetActor->GetRootComponent())) {
-        RootPrim->SetSimulatePhysics(true);
-
-        // 던지기 판단: CarryComponent에 있던 물리 제어를 여기서 수행
-        if (InteractionType == ECarryInteractionType::Throw) {
-          FVector ThrowVelocity = Interactor->GetActorForwardVector() * 800.0f +
-                                  FVector(0, 0, 300.0f); // 던지기 물리
-          RootPrim->AddImpulse(ThrowVelocity, NAME_None, true);
-        }
+    if (ItemMgr && TargetItem) {
+      // 던지기 판단
+      FVector Impulse = FVector::ZeroVector;
+      if (InteractionType == ECarryInteractionType::Throw) {
+        Impulse = Interactor->GetActorForwardVector() * 800.0f +
+                  FVector(0, 0, 300.0f);
       }
-    } else {
-      // 클라이언트 예측 (Prediction)
-      StateComp->CurrentState = EItemState::Placed;
 
-      TargetActor->DetachFromActor(
-          FDetachmentTransformRules::KeepWorldTransform);
-      if (UPrimitiveComponent *RootPrim =
-              Cast<UPrimitiveComponent>(TargetActor->GetRootComponent())) {
-        RootPrim->SetSimulatePhysics(true);
-        RootPrim->SetCollisionProfileName(TEXT("PhysicsActor"));
-      }
+      ItemMgr->DropItem(TargetItem, Impulse, Carrier);
     }
     return true;
   }
