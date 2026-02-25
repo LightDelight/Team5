@@ -1,12 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LKH2/Grid/GridManagerComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 #include "LKH2/Grid/MapData.h"
-#include "LKH2/WorkStation/WorkStationBase.h"
-#include "LKH2/WorkStation/WorkstationData.h"
+#include "LKH2/Interactables/WorkStation/WorkStationBase.h"
+#include "LKH2/Interactables/WorkStation/WorkstationData.h"
 
 #if WITH_EDITOR
 #include "UObject/SavePackage.h"
