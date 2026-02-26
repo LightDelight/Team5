@@ -6,7 +6,10 @@
 #include "LKH2/Grid/GridManagerComponent.h"
 #include "LKH2/Interaction/Base/LogicContextComponent.h"
 #include "LKH2/Interaction/Base/LogicModuleBase.h"
+#include "LKH2/Interaction/Base/LogicModuleBase.h"
+#include "LKH2/Interaction/Component/InteractablePropertyComponent.h"
 #include "LKH2/Interactables/WorkStation/WorkstationData.h"
+#include "LKH2/Interaction/Component/InteractorComponent.h"
 #include "Net/UnrealNetwork.h"
 
 AWorkStationBase::AWorkStationBase() {
@@ -25,6 +28,9 @@ AWorkStationBase::AWorkStationBase() {
       TEXT("InteractableComponent"));
   InteractableComponent->SetupAttachment(RootMesh);
 
+  PropertyComponent = CreateDefaultSubobject<UInteractablePropertyComponent>(
+      TEXT("PropertyComponent"));
+
   BlackboardComponent = CreateDefaultSubobject<ULogicContextComponent>(
       TEXT("BlackboardComponent"));
 }
@@ -39,11 +45,21 @@ void AWorkStationBase::BeginPlay()
 {
   Super::BeginPlay();
 
-  // 1. 모든 로직 모듈 초기화 (LogicContextComponent에 위임)
-  if (BlackboardComponent) 
-    {
-    BlackboardComponent->InitializeLogic(WorkstationData, this);
+  // 1. 모든 로직 모듈
+  if (HasAuthority() && WorkstationData) {
+    if (InteractableComponent) {
+      InteractableComponent->InitializeLogic(WorkstationData, this);
     }
+    if (BlackboardComponent) {
+      BlackboardComponent->MarkLogicInitialized(WorkstationData);
+    }
+  }
+
+  // 에디터에서 설정한 커스텀 오브젝트 타입 적용 및 오버랩 허용 (Sphere 대상 감지용)
+  if (BoxCollision) {
+    BoxCollision->SetCollisionObjectType(ObjectType);
+    BoxCollision->SetCollisionResponseToChannel(ObjectType, ECR_Overlap);
+  }
 
   // 2. 클라이언트 사이드 그리드 자동 등록 보완
   // GridManager가 클라이언트에서 스폰 액터를 제때 찾지 못했을 경우를 대비
@@ -80,14 +96,25 @@ void AWorkStationBase::OnConstruction(const FTransform &Transform) {
     SetActorLocation(SnappedLoc);
   }
 
+  // 에디터에서 설정한 커스텀 오브젝트 타입 적용 및 오버랩 허용 (에디터 뷰포트용)
+  if (BoxCollision) {
+    BoxCollision->SetCollisionObjectType(ObjectType);
+    BoxCollision->SetCollisionResponseToChannel(ObjectType, ECR_Overlap);
+  }
+
   // 2. 통합 데이터 적용 (메쉬, 콜리전, 오프셋)
   SetWorkstationDataAndApply(WorkstationData);
 
-  // 3. 모든 로직 모듈에 에디터 미리보기 기회 제공
-  if (BlackboardComponent) {
-    BlackboardComponent->InitializeLogic(WorkstationData, this);
+  if (HasAuthority() && WorkstationData) {
+    if (InteractableComponent) {
+      InteractableComponent->InitializeLogic(WorkstationData, this);
+    }
+    if (BlackboardComponent) {
+      BlackboardComponent->MarkLogicInitialized(WorkstationData);
+    }
   }
 
+  // 외곽선 업데이트나 컴포넌트 초기화 콜백 등
   for (ULogicModuleBase *Module : GetLogicModules()) {
     if (Module) {
       Module->OnConstructionLogic(this);
@@ -124,13 +151,20 @@ void AWorkStationBase::OnRep_WorkstationData() {
   SetWorkstationDataAndApply(WorkstationData);
 
   // 로직 모듈 런타임 초기화 (클라이언트 사이드)
+  if (InteractableComponent) {
+    InteractableComponent->InitializeLogic(WorkstationData, this);
+  }
   if (BlackboardComponent) {
-    BlackboardComponent->InitializeLogic(WorkstationData, this);
+    BlackboardComponent->MarkLogicInitialized(WorkstationData);
   }
 }
 
 UInteractableComponent *AWorkStationBase::GetInteractableComponent() const {
   return InteractableComponent;
+}
+
+UInteractablePropertyComponent *AWorkStationBase::GetPropertyComponent() const {
+  return PropertyComponent;
 }
 
 FLogicBlackboard *AWorkStationBase::GetLogicBlackboard() {
@@ -153,8 +187,8 @@ FGameplayTag AWorkStationBase::ResolveKey(const FGameplayTag &Key) const {
 }
 
 TArray<ULogicModuleBase *> AWorkStationBase::GetLogicModules() const {
-  return BlackboardComponent ? BlackboardComponent->GetLogicModules()
-                             : TArray<ULogicModuleBase *>();
+  return InteractableComponent ? InteractableComponent->GetLogicModules()
+                               : TArray<ULogicModuleBase *>();
 }
 
 bool AWorkStationBase::OnInteract_Implementation(const FInteractionContext &Context) {
@@ -165,8 +199,7 @@ bool AWorkStationBase::OnInteract_Implementation(const FInteractionContext &Cont
 }
 
 void AWorkStationBase::SetOutlineEnabled_Implementation(bool bEnabled) {
-  if (RootMesh) {
-    RootMesh->SetRenderCustomDepth(bEnabled);
-    RootMesh->SetCustomDepthStencilValue(1);
+  if (InteractableComponent) {
+    InteractableComponent->SetOutlineEnabled(bEnabled);
   }
 }

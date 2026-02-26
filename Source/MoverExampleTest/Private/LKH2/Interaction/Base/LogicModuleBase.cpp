@@ -1,9 +1,5 @@
 ﻿#include "LKH2/Interaction/Base/LogicModuleBase.h"
 
-bool ULogicModuleBase::OnLogicInteract_Implementation(const FInteractionContext &Context) {
-  return ExecuteInteraction(Context);
-}
-
 bool ULogicModuleBase::ExecuteInteraction(const FInteractionContext &Context) {
   // 1. 사전 검사 (Pre-Logic)
   if (!PreInteractCheck(Context)) {

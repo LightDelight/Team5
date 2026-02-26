@@ -137,109 +137,66 @@ void UItemManagerSubsystem::DestroyItem(const FGuid &InstanceId) {
 
 // ─── 상태 전이 API ───
 
-void UItemManagerSubsystem::StoreItem(const FGuid &InstanceId,
-                                      USceneComponent *AttachTarget,
-                                      UInteractorComponent *Interactor) {
-  AItemBase *Item = GetItemActor(InstanceId);
-  if (!Item || !AttachTarget)
-    return;
-
-  // 1. Interactor에서 분리 (상호작용 중이던 경우)
-  if (Interactor) {
-    Interactor->ForceDrop();
-  }
-
-  // 2. 상태 전이 → Stored (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
-    StateComp->SetItemState(EItemState::Stored);
-  }
-
-  // 3. 대상 컴포넌트에 부착
-  Item->AttachToComponent(
-      AttachTarget,
-      FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-}
-
-void UItemManagerSubsystem::RetrieveItem(const FGuid &InstanceId,
-                                         UInteractorComponent *Interactor) {
-  AItemBase *Item = GetItemActor(InstanceId);
-  if (!Item || !Interactor)
-    return;
-
-  // 1. 기존 부착 해제
-  Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-
-  // 2. 상태 전이 → Carried (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
-    StateComp->SetItemState(EItemState::Carried);
-  }
-
-  // 3. Interactor에 장착 (피지컬 + 포인터)
-  Item->AttachToComponent(
-      Interactor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-  Interactor->ForceEquip(Item);
-}
-
-void UItemManagerSubsystem::PickUpItem(const FGuid &InstanceId,
-                                       USceneComponent *AttachTarget,
-                                       UInteractorComponent *Interactor) {
-  AItemBase *Item = GetItemActor(InstanceId);
-  if (!Item || !AttachTarget)
-    return;
-
-  // 1. 상태 전이 → Carried (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
-    StateComp->SetItemState(EItemState::Carried);
-  }
-
-  // 2. 대상에 부착
-  Item->AttachToComponent(
-      AttachTarget,
-      FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-      
-  // 3. Interactor에 장착 (피지컬 + 포인터)
-  if (Interactor) {
-    Interactor->ForceEquip(Item);
-  }
-}
-
-void UItemManagerSubsystem::DropItem(const FGuid &InstanceId,
-                                     const FVector &Impulse,
-                                     UInteractorComponent *Interactor) {
+void UItemManagerSubsystem::StoreItem(const FGuid &InstanceId) {
   AItemBase *Item = GetItemActor(InstanceId);
   if (!Item)
     return;
 
-  // 1. 항상 명시적으로 부착 해제 (이게 없으면 위치 보정 후에도 부모에 종속되어 원래 위치로 스냅됨)
-  Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-
-  // 1-1. 상태 전이 전 캐리어에서 참조 끊기 및 겹침 방지 위치 보정
-  if (Interactor) {
-    if (AActor *InteractorOwner = Interactor->GetOwner()) {
-      FVector SafeLoc = InteractorOwner->GetActorLocation() +
-                        InteractorOwner->GetActorForwardVector() * 80.0f;
-      SafeLoc.Z = Item->GetActorLocation().Z;
-      Item->SetActorLocation(SafeLoc);
-    }
-    // 캐리어 참조 끊기 (OnRep_CarriedActor 를 통해 클라이언트 디스플레이 갱신)
-    Interactor->ForceDrop();
+  // 상태 전이 → Stored (OnRep이 물리/콜리전을 자동 처리)
+  if (UItemStateComponent *StateComp =
+          Item->FindComponentByClass<UItemStateComponent>()) {
+    StateComp->SetItemState(EItemState::Stored);
   }
+}
 
-  // 2. 상태 전이 → Placed (OnRep이 물리 활성화 + 콜리전 복원을 자동 처리)
+void UItemManagerSubsystem::RetrieveItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // 상태 전이 → Carried (OnRep이 물리/콜리전을 자동 처리)
+  if (UItemStateComponent *StateComp =
+          Item->FindComponentByClass<UItemStateComponent>()) {
+    StateComp->SetItemState(EItemState::Carried);
+  }
+}
+
+void UItemManagerSubsystem::PickUpItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // 상태 전이 → Carried (OnRep이 물리/콜리전을 자동 처리)
+  if (UItemStateComponent *StateComp =
+          Item->FindComponentByClass<UItemStateComponent>()) {
+    StateComp->SetItemState(EItemState::Carried);
+  }
+}
+
+void UItemManagerSubsystem::DropItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // 상태 전이 → Placed (OnRep이 물리 활성화 + 콜리전 복원을 자동 처리)
   if (UItemStateComponent *StateComp =
           Item->FindComponentByClass<UItemStateComponent>()) {
     StateComp->SetItemState(EItemState::Placed);
   }
+}
 
-  // 3. 던지기 임펄스 (선택적)
-  if (!Impulse.IsZero()) {
-    if (UPrimitiveComponent *RootPrim =
-            Cast<UPrimitiveComponent>(Item->GetRootComponent())) {
-      RootPrim->AddImpulse(Impulse, NAME_None, true);
-    }
+void UItemManagerSubsystem::ThrowTargetItem(const FGuid &InstanceId, const FVector& Impulse) {
+  if (Impulse.IsZero())
+    return;
+    
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // 상태 컴포넌트에 물리 활성화 및 임펄스 가하기 위임
+  if (UItemStateComponent *StateComp =
+          Item->FindComponentByClass<UItemStateComponent>()) {
+    StateComp->ThrowItem(Impulse);
   }
 }
 

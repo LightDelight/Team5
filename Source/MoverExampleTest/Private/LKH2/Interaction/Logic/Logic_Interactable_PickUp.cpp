@@ -1,51 +1,38 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#include "LKH2/Interaction/Logic/Logic_Interactable_PickUp.h"
-#include "Engine/World.h"
-#include "LKH2/Interaction/Component/InteractorComponent.h"
+﻿#include "LKH2/Interaction/Logic/Logic_Interactable_PickUp.h"
+#include "LKH2/Interaction/Manager/InteractionManager.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
-#include "LKH2/Interactables/Item/ItemStateComponent.h"
-#include "LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h"
+#include "LKH2/Interaction/Component/InteractorPropertyComponent.h"
+#include "Engine/World.h"
 
-bool ULogic_Interactable_PickUp::PreInteractCheck(const FInteractionContext &Context) {
-  AActor *TargetActor = GetOwner();
-  if (!TargetActor || !Context.Interactor)
-    return false;
+bool ULogic_Interactable_PickUp::PreInteractCheck(const FInteractionContext &Context)
+{
+	// 에디터에서 설정한 의도 태그가 일치하는지 확인
+	if (RequiredIntentTag.IsValid() && !Context.InteractionTag.MatchesTag(RequiredIntentTag))
+	{
+		return false;
+	}
 
-  // 1. 상호작용 유형 검사 (Interact인 경우에만 줍기 가능)
-  if (Context.InteractionType != EInteractionType::Interact)
-    return false;
-
-  // 2. 아이템 상태 검사 (이미 들려있으면 줍기 불가)
-  UItemStateComponent *StateComp = TargetActor->FindComponentByClass<UItemStateComponent>();
-  if (!StateComp || StateComp->CurrentState == EItemState::Carried)
-    return false;
-
-  // 3. 인터랙터의 소지 상태 확인 (이미 무언가를 들고 있으면 줍기 불가)
-  if (Context.bIsHandOccupied) {
-    return false;
-  }
-
-  return true;
+	// 플레이어가 현재 객체를 들고 있지 않거나 다른 객체를 들고있으면 손을 먼저 비운다거나 하는
+	// 정책은 Manager의 ExecuteEquip 내부에서 처리 가능. (설계 상)
+	
+	return true;
 }
 
-bool ULogic_Interactable_PickUp::PerformInteraction(const FInteractionContext &Context) {
-  AActor *TargetActor = GetOwner();
-  AItemBase *TargetItem = Cast<AItemBase>(TargetActor);
-  if (!TargetItem)
-    return false;
-
-  USceneComponent *AttachTarget = Context.InHandActor ? Context.InHandActor->GetRootComponent() : Context.Interactor->GetRootComponent();
-  UInteractorComponent *Carrier = Context.Interactor->FindComponentByClass<UInteractorComponent>();
-  if (Carrier) AttachTarget = Cast<USceneComponent>(Carrier);
-
-  UWorld *World = TargetActor->GetWorld();
-  UItemManagerSubsystem *ItemMgr = World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
-
-  if (ItemMgr && AttachTarget) {
-    ItemMgr->PickUpItem(TargetItem->GetInstanceId(), AttachTarget, Carrier);
-    return true;
-  }
-
-  return false;
+bool ULogic_Interactable_PickUp::PerformInteraction(const FInteractionContext &Context)
+{
+	if (UWorld* World = GetWorld())
+	{
+		if (UInteractionManager* InteractionManager = World->GetSubsystem<UInteractionManager>())
+		{
+			UInteractorPropertyComponent* InteractorProperty = Cast<UInteractorPropertyComponent>(Context.InteractorPropertyComp);
+			AItemBase* ItemToEquip = Cast<AItemBase>(GetOwner());
+			
+			if (InteractorProperty && ItemToEquip)
+			{
+				InteractionManager->ExecuteEquip(InteractorProperty, ItemToEquip);
+				return true;
+			}
+		}
+	}
+	return false;
 }

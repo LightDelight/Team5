@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "LKH2/Interaction/Interface/InteractionContextInterface.h"
 #include "LKH2/Interaction/Base/LogicContextInterface.h"
-#include "LKH2/Interaction/Base/LogicInteractionInterface.h"
 #include "ItemBase.generated.h"
 
 class USphereComponent;
@@ -15,6 +14,7 @@ class UItemData;
 class UItemStateComponent;
 class UItemSmoothingComponent;
 class UInteractableComponent;
+class UInteractablePropertyComponent;
 class ULogicContextComponent;
 
 UCLASS()
@@ -29,6 +29,7 @@ public:
 
   // ILogicContextInterface 구현
   virtual UInteractableComponent *GetInteractableComponent() const override;
+  virtual UInteractablePropertyComponent* GetPropertyComponent() const override;
   virtual FLogicBlackboard *GetLogicBlackboard() override;
   virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
   virtual void SetStat(const FGameplayTag &Tag,
@@ -36,7 +37,6 @@ public:
   virtual FGameplayTag ResolveKey(const FGameplayTag &Key) const override;
   virtual TArray<class ULogicModuleBase *> GetLogicModules() const override;
 
-protected:
   // 게임이 시작되거나 스폰될 때 호출됩니다
   virtual void BeginPlay() override;
   virtual void OnConstruction(const FTransform &Transform) override;
@@ -45,6 +45,10 @@ protected:
   /** 충돌 및 물리 처리를 위한 루트 컴포넌트 */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Components")
   TObjectPtr<USphereComponent> SphereCollision;
+
+  /** 에디터 및 맵에 배치될 때 루트 컴포넌트에 적용할 Object Type (콜리전 채널) */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Collision")
+  TEnumAsByte<ECollisionChannel> ObjectType = ECC_PhysicsBody;
 
   /** 시각적 메쉬 컴포넌트 (물리 없음, 루트에 부착되거나 보간됨) */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Components")
@@ -66,6 +70,9 @@ protected:
 
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Components")
   TObjectPtr<UInteractableComponent> InteractableComponent;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Components")
+  TObjectPtr<UInteractablePropertyComponent> PropertyComponent;
 
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Logic")
   TObjectPtr<ULogicContextComponent> BlackboardComponent;

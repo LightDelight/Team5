@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "LKH2/Interaction/Interface/InteractionContextInterface.h"
-#include "LKH2/Interaction/Base/LogicInteractionInterface.h"
 #include "LogicModuleBase.generated.h"
 
 class AActor;
@@ -16,14 +15,11 @@ class AActor;
  * 소유 액터 컨텍스트에서 초기화 및 에디터 미리보기를 수행합니다.
  */
 UCLASS(Abstract, Blueprintable, EditInlineNew, DefaultToInstanced)
-class MOVEREXAMPLETEST_API ULogicModuleBase : public UObject,
-                                             public ILogicInteractionInterface {
+class MOVEREXAMPLETEST_API ULogicModuleBase : public UObject
+                                              {
   GENERATED_BODY()
 
 public:
-  /** ILogicInteractionInterface 구현: ExecuteInteraction과 시스템 통합 */
-  virtual bool OnLogicInteract_Implementation(const FInteractionContext &Context) override;
-
   /**
    * 상호작용 실행을 위한 템플릿 메서드.
    * 사전 검사 -> 핵심 실행 -> 사후 처리 과정을 캡슐화합니다.
@@ -54,6 +50,13 @@ protected:
 protected:
   UPROPERTY(BlueprintReadOnly, Category = "Logic")
   TObjectPtr<AActor> OwnerActor;
+
+  /**
+   * 이 로직 모듈이 반응할 상호작용 의도(Intent) 태그입니다.
+   * 에디터에서 설정 가능하며, PreInteractCheck 등에서 이를 기준으로 실행 여부를 판단할 수 있습니다.
+   */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic|Intent")
+  FGameplayTag RequiredIntentTag;
 
 public:
   /**

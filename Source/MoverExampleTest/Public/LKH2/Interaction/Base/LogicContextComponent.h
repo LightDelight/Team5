@@ -30,17 +30,10 @@ public:
   FLogicBlackboard *GetBlackboard() { return &Blackboard; }
   const FLogicBlackboard *GetBlackboard() const { return &Blackboard; }
 
-  /**
-   * 데이터 에셋 기반으로 로직 모듈들을 초기화합니다.
-   * 이미 초기화된 경우 무시됩니다.
-   */
-  void InitializeLogic(ULogicEntityDataBase* InData, AActor* Context);
-
   /** 초기화 여부를 반환합니다. */
   bool IsLogicInitialized() const { return bLogicInitialized; }
 
-  /** 보관 중인 로직 모듈 목록을 반환합니다. */
-  TArray<ULogicModuleBase *> GetLogicModules() const { return LogicModules; }
+  // [Moved] GetLogicModules() 및 InitializeLogic()은 UInteractableComponent로 이관됨.
 
   /** 
    * 스탯을 찾습니다 (우선순위: 블랙보드 -> 엔티티 데이터 -> 프리셋)
@@ -57,6 +50,15 @@ public:
    */
   FGameplayTag ResolveKey(const FGameplayTag& Key) const;
 
+  /**
+   * 블랙보드 데이터만 초기화됨을 표시하는 함수.
+   */
+  void MarkLogicInitialized(ULogicEntityDataBase* InData)
+  {
+      bLogicInitialized = true;
+      EntityData = InData;
+  }
+
 protected:
   /** 로직 상태를 관리하고 멀티플레이 복제를 담당하는 블랙보드입니다. */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "Logic")
@@ -69,8 +71,4 @@ protected:
   /** 데이터 에셋 참조를 캐싱합니다 (스탯 조회용) */
   UPROPERTY(Transient)
   TObjectPtr<ULogicEntityDataBase> EntityData;
-
-  /** 이 엔티티의 로직 모듈 인스턴스/CDO 목록 */
-  UPROPERTY(Transient)
-  TArray<TObjectPtr<ULogicModuleBase>> LogicModules;
 };

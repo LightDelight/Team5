@@ -43,4 +43,13 @@ public:
 
   UFUNCTION(BlueprintCallable, Category = "Item State")
   void SetItemState(EItemState NewState);
+
+  /**
+   * 아이템의 상태를 Dropped로 변경하고 임펄스를 가합니다.
+   * 물리 및 충돌 활성화 처리는 SetItemState(Dropped) 내에서 처리됩니다.
+   *
+   * @param Impulse 가해질 던지기 힘
+   */
+  UFUNCTION(BlueprintCallable, Category = "Item State")
+  void ThrowItem(const FVector &Impulse);
 };

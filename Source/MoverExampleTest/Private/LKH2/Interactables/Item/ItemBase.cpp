@@ -23,13 +23,20 @@ void AItemBase::GetLifetimeReplicatedProps(
 
 void AItemBase::OnRep_ItemData() {
   SetItemDataAndApply(ItemData);
+  if (InteractableComponent) {
+    InteractableComponent->InitializeLogic(ItemData, this);
+  }
   if (BlackboardComponent) {
-    BlackboardComponent->InitializeLogic(ItemData, this);
+    BlackboardComponent->MarkLogicInitialized(ItemData);
   }
 }
 
 UInteractableComponent *AItemBase::GetInteractableComponent() const {
   return InteractableComponent;
+}
+
+UInteractablePropertyComponent *AItemBase::GetPropertyComponent() const {
+  return PropertyComponent;
 }
 
 FLogicBlackboard *AItemBase::GetLogicBlackboard() {
@@ -68,8 +75,7 @@ AItemBase::AItemBase() {
   // 물리 설정
   SphereCollision->InitSphereRadius(32.0f); // 기본 반지름 설정
   SphereCollision->SetSimulatePhysics(true);
-  SphereCollision->SetCollisionProfileName(
-      TEXT("PhysicsActor")); // 표준 물리 프로필
+  SphereCollision->SetCollisionProfileName(TEXT("PhysicsActor")); // 표준 물리 프로필 고정 (디폴트)
   SphereCollision->SetGenerateOverlapEvents(true);
 
   // 세팅: 밀리긴 하지만 튕기거나 미끄러지지는 않도록 (바운스 없음, 높은
@@ -106,12 +112,28 @@ AItemBase::AItemBase() {
 void AItemBase::BeginPlay() {
   Super::BeginPlay();
 
-  if (BlackboardComponent) {
-    BlackboardComponent->InitializeLogic(ItemData, this);
+  // 에디터에서 설정한 커스텀 오브젝트 타입 적용 및 오버랩 허용
+  if (SphereCollision) {
+    SphereCollision->SetCollisionObjectType(ObjectType);
+    SphereCollision->SetCollisionResponseToChannel(ObjectType, ECR_Overlap);
+  }
+
+  if (HasAuthority() && ItemData) {
+    if (InteractableComponent) {
+      InteractableComponent->InitializeLogic(ItemData, this);
+    }
+    if (BlackboardComponent) {
+      BlackboardComponent->MarkLogicInitialized(ItemData);
+    }
   }
 
   if (SmoothingComponent) {
     SmoothingComponent->InitialSetup(SphereCollision, VisualMesh);
+  }
+
+  // 컴포넌트들의 BeginPlay보다 늦게 확실하게 커스텀 콜리전 채널 세팅 후 초기 상태 적용
+  if (StateComponent) {
+    StateComponent->SetItemState(StateComponent->CurrentState);
   }
 }
 
@@ -153,19 +175,30 @@ void AItemBase::SetItemDataAndApply(UItemData *InData) {
 }
 
 TArray<ULogicModuleBase *> AItemBase::GetLogicModules() const {
-  return BlackboardComponent ? BlackboardComponent->GetLogicModules()
-                             : TArray<ULogicModuleBase *>();
+  return InteractableComponent ? InteractableComponent->GetLogicModules()
+                               : TArray<ULogicModuleBase *>();
 }
 
 void AItemBase::OnConstruction(const FTransform &Transform) {
   Super::OnConstruction(Transform);
-  SetItemDataAndApply(ItemData);
-
-  // 모든 로직 모듈에 에디터 미리보기 기회 제공
-  if (BlackboardComponent) {
-    BlackboardComponent->InitializeLogic(ItemData, this);
+  
+  // 에디터에서 설정한 커스텀 오브젝트 타입 적용 및 오버랩 허용 (에디터 뷰포트용)
+  if (SphereCollision) {
+    SphereCollision->SetCollisionObjectType(ObjectType);
+    SphereCollision->SetCollisionResponseToChannel(ObjectType, ECR_Overlap);
   }
-
+  
+  SetItemDataAndApply(ItemData);
+  
+  // 모든 로직 모듈에 에디터 미리보기 기회 제공
+  if (HasAuthority() && ItemData) {
+    if (InteractableComponent) {
+      InteractableComponent->InitializeLogic(ItemData, this);
+    }
+    if (BlackboardComponent) {
+      BlackboardComponent->MarkLogicInitialized(ItemData);
+    }
+  }
   for (ULogicModuleBase *Module : GetLogicModules()) {
     if (Module) {
       Module->OnConstructionLogic(this);

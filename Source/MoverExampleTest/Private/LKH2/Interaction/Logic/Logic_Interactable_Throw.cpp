@@ -1,50 +1,59 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#include "LKH2/Interaction/Logic/Logic_Interactable_Throw.h"
-#include "Engine/World.h"
-#include "LKH2/Interaction/Component/InteractorComponent.h"
+﻿#include "LKH2/Interaction/Logic/Logic_Interactable_Throw.h"
+#include "LKH2/Interaction/Manager/InteractionManager.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
-#include "LKH2/Interactables/Item/ItemStateComponent.h"
-#include "LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h"
+#include "LKH2/Interaction/Component/InteractorPropertyComponent.h"
+#include "Engine/World.h"
+#include "GameFramework/Actor.h"
 
-bool ULogic_Interactable_Throw::PreInteractCheck(const FInteractionContext &Context) {
-  AActor *TargetActor = GetOwner();
-  if (!TargetActor || !Context.Interactor)
-    return false;
+bool ULogic_Interactable_Throw::PreInteractCheck(const FInteractionContext& Context)
+{
+	// 에디터에서 설정한 의도 태그가 일치하는지 확인
+	if (RequiredIntentTag.IsValid() && !Context.InteractionTag.MatchesTag(RequiredIntentTag))
+	{
+		return false;
+	}
 
-  // 1. 상호작용 유형 검사 (Throw인 경우에만 던지기 가능)
-  if (Context.InteractionType != EInteractionType::Throw)
-    return false;
+	// 던지기 전에 플레이어가 이 아이템을 현재 들고 있는지 확인
+	UInteractorPropertyComponent* InteractorProperty = Cast<UInteractorPropertyComponent>(Context.InteractorPropertyComp);
+	if (!InteractorProperty) return false;
 
-  // 2. 아이템 상태 검사 (내가 손에 들려있는지 확인)
-  if (Context.InHandActor != TargetActor)
-    return false;
+	if (InteractorProperty->GetCarriedActor() != GetOwner())
+	{
+		return false; // 안 들고 있으면 못 던짐
+	}
 
-  return true;
+	return true;
 }
 
-bool ULogic_Interactable_Throw::PerformInteraction(const FInteractionContext &Context) {
-  AActor *TargetActor = GetOwner();
-  AItemBase *TargetItem = Cast<AItemBase>(TargetActor);
-  if (!TargetItem)
-    return false;
-
-  UInteractorComponent *Carrier = Context.Interactor->FindComponentByClass<UInteractorComponent>();
-  UWorld *World = TargetActor->GetWorld();
-  UItemManagerSubsystem *ItemMgr = World ? World->GetSubsystem<UItemManagerSubsystem>() : nullptr;
-
-  if (ItemMgr) {
-    // 컨텍스트에 이미 계산된 속도가 있다면 그것을 사용 (InteractorComponent에서 생성됨)
-    FVector Impulse = Context.Velocity;
-    
-    // 만약 컨텍스트에 속도가 비어있다면(Zero) 기본값 계산
-    if (Impulse.IsNearlyZero()) {
-      Impulse = Context.Interactor->GetActorForwardVector() * 800.0f + FVector(0, 0, 300.0f);
-    }
-
-    ItemMgr->DropItem(TargetItem->GetInstanceId(), Impulse, Carrier);
-    return true;
-  }
-
-  return false;
+bool ULogic_Interactable_Throw::PerformInteraction(const FInteractionContext& Context)
+{
+	if (UWorld* World = GetWorld())
+	{
+		if (UInteractionManager* InteractionManager = World->GetSubsystem<UInteractionManager>())
+		{
+			UInteractorPropertyComponent* InteractorProperty = Cast<UInteractorPropertyComponent>(Context.InteractorPropertyComp);
+			AItemBase* CarriedItem = Cast<AItemBase>(GetOwner());
+			
+			if (InteractorProperty && CarriedItem)
+			{
+				// 인터랙터 주체의 전방 벡터 방향으로 임펄스 계산
+				FVector ThrowDir = FVector::ZeroVector;
+				if (AActor* InteractorOwner = InteractorProperty->GetOwner())
+				{
+					// 카메라이면 더 좋겠지만 일단 소유자 기준 전방
+					ThrowDir = InteractorOwner->GetActorForwardVector();
+					// 약간 위쪽으로 던지도록 상향력 추가
+					ThrowDir += FVector(0.0f, 0.0f, 0.5f);
+					ThrowDir.Normalize();
+				}
+				
+				FVector ComputedImpulse = ThrowDir * ThrowForce;
+				
+				// ExecuteDrop을 통해 물리적 해제 + State 변경 후 Impulse 적용
+				InteractionManager->ExecuteDrop(InteractorProperty, CarriedItem, ComputedImpulse);
+				return true;
+			}
+		}
+	}
+	return false;
 }

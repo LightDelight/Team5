@@ -9,7 +9,9 @@
 
 
 class USphereComponent;
+class UInteractorPropertyComponent;
 class AActor;
+class UGridManagerComponent;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MOVEREXAMPLETEST_API UInteractorComponent : public USceneComponent {
@@ -18,30 +20,15 @@ class MOVEREXAMPLETEST_API UInteractorComponent : public USceneComponent {
 public:
   UInteractorComponent();
 
-  // 줍기/놓기 버퍼링 입력
   UFUNCTION(BlueprintCallable, Category = "Interaction")
-  void TryPickupOrDrop();
-
-  // 던지기 버퍼링 입력
-  UFUNCTION(BlueprintCallable, Category = "Interaction")
-  void TryThrow();
+  void TryInteract(FGameplayTag IntentTag);
 
   UFUNCTION(Server, Reliable, WithValidation)
-  void Server_TryPickupOrDrop(AActor *Target);
+  void Server_TryInteract(AActor* Target, FGameplayTag IntentTag);
 
-  UFUNCTION(Server, Reliable, WithValidation)
-  void Server_TryThrow(AActor *Target);
-
-  // 상호작용 등을 위한 아이템 강제 제어 함수
-  UFUNCTION(BlueprintCallable, Category = "Interaction")
-  AActor *GetCarriedActor() const;
-
-  UFUNCTION(BlueprintCallable, Category = "Interaction")
-  void ForceDrop();
-
-  UFUNCTION(BlueprintCallable, Category = "Interaction")
-  void ForceEquip(AActor *ItemToEquip);
-
+  /** 액터 소속 상호작용 속성(예: 들고 있는 아이템)을 보관하는 컴포넌트 */
+  UPROPERTY()
+  TObjectPtr<UInteractorPropertyComponent> PropertyComponent;
 protected:
   virtual void BeginPlay() override;
 
@@ -72,33 +59,66 @@ protected:
 
 private:
   void UpdateTargetInteractable();
-  void SetTarget(AActor *NewTarget);
-  void ProcessInputBuffer(AActor *Target);
+  void PollGridTarget();
+  void SetSphereTarget(AActor *NewTarget);
+  void SetGridTarget(AActor *NewTarget);
+  void ProcessInputBuffer(AActor* ServerOverrideTarget = nullptr);
 
   /** 상호작용 상황(Context)을 생성합니다. */
   FInteractionContext CreateInteractionContext(AActor *Target,
-                                   EInteractionType Type) const;
+                                   FGameplayTag InteractionTag) const;
 
   UPROPERTY()
   TArray<AActor *> OverlappingActors;
 
-  // 현재 바라보고 있는 (아웃라인이 켜진) 대상
+  // 현재 아웃라인이 켜진(조건에 맞는) 대상들
   UPROPERTY()
-  TObjectPtr<AActor> CurrentTarget;
+  TObjectPtr<AActor> CurrentSphereTarget;
 
-  // 현재 들고 있는 대상
-  UPROPERTY(ReplicatedUsing = OnRep_CarriedActor)
-  TObjectPtr<AActor> CarriedActor;
+  UPROPERTY()
+  TObjectPtr<AActor> CurrentGridTarget;
 
-  UFUNCTION()
-  void OnRep_CarriedActor(AActor *OldCarriedActor);
+  UPROPERTY()
+  TObjectPtr<UGridManagerComponent> CachedGridManager;
+
+  // Grid Manager에서 액터를 찾을 때 앞쪽으로 얼마나 떨어진 곳을 찾을지 (단위: cm)
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction",
+            meta = (AllowPrivateAccess = "true"))
+  float GridTargetCheckDistance = 100.0f;
+
+  // 물건을 들었을 때 기본적으로 Sphere 기반 대상 추적을 끕니다. 다만, 지정된 Tag를 가진 아이템을 들었을 때는 추적을 켤지 여부를 결정하는 프로퍼티
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction",
+            meta = (AllowPrivateAccess = "true"))
+  bool bEnableSphereTraceWhenHoldingItem = true;
+
+  // 물건을 들었을 때 어느 태그를 가져야 SphereTrace를 계속 진행할지
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction",
+            meta = (AllowPrivateAccess = "true", EditCondition = "bEnableSphereTraceWhenHoldingItem"))
+  FGameplayTag RequiredSphereTraceTag;
 
   // 입력 버퍼링 관련 변수들
-  bool bWantsPickupOrDrop;
-  bool bWantsThrow;
+  FGameplayTag BufferedIntentTag;
   float InputBufferTimer;
+
+  // 매 틱마다 태그 검사를 하는 오버헤드를 줄이기 위한 캐싱 변수
+  UPROPERTY()
+  TObjectPtr<AActor> CachedCarriedActorForTagCheck;
+
+  bool bCachedShouldSearchSphere = true;
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction",
             meta = (AllowPrivateAccess = "true"))
   float InputBufferTimeLimit = 0.2f; // 0.2초 동안 입력을 기억
+
+  // 에디터에서 어느 채널을 사용하여 DetectionSphere에 오버랩 이벤트를 발생시킬지 결정하는 프로퍼티
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction|Collision",
+            meta = (AllowPrivateAccess = "true"))
+  TEnumAsByte<ECollisionChannel> InteractionTraceChannel = ECC_PhysicsBody;
+
+  // GridTarget 추적을 위한 타이머 핸들 및 스캔 주기
+  FTimerHandle GridTargetTimerHandle;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction|Grid",
+            meta = (AllowPrivateAccess = "true"))
+  float GridTargetPollingInterval = 0.1f;
 };

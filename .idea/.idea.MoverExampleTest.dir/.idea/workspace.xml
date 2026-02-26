@@ -9,80 +9,53 @@
   <component name="ChangeListManager">
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ContainerBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cone.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cube.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Sphere.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Sphere.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryInteractComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Component/CarryableComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Interface/CarryInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Combine.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Common.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Trash.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_CarryInteract_Vending.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_Carryable_Common.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_Carryable_Drop.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_Carryable_PickUp.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Carry/Logic/Logic_Carryable_Throw.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Data/ItemRegistryData.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Data/LogicEntityDataBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Data/PresetData.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Data/VisualPresetData.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ContainerItemBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemData.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemSmoothingComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Item/ItemStateComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic/InstigatorContextInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic/LogicContextComponent.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic/LogicContextInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic/LogicInteractionInterface.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Logic/LogicModuleBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Manager/ItemManagerSubsystem.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Recipe/CombineRecipeBook.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Recipe/RecipeLogicModuleBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkStationBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/WorkStation/WorkstationData.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Component/CarryComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Component/CarryInteractComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Component/CarryableComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Interface/CarryInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Combine.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Common.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Trash.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_CarryInteract_Vending.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_Carryable_Common.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_Carryable_Drop.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_Carryable_PickUp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Carry/Logic/Logic_Carryable_Throw.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/ItemRegistryData.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/ItemStatValue.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/LogicEntityDataBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/PresetData.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Data/VisualPresetData.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ContainerItemBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ItemBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ItemData.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ItemSmoothingComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Item/ItemStateComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/InstigatorContextInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicBlackboard.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicContextComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicContextInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicInteractionInterface.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Logic/LogicModuleBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Manager/ItemManagerSubsystem.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Recipe/CombineRecipeBook.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Recipe/RecipeBookBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Recipe/RecipeLogicModuleBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkStationBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/WorkStation/WorkstationData.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Docs/Structure.md" beforeDir="false" afterPath="$PROJECT_DIR$/Docs/Structure.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ContainerItemBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkStationBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkStationBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicContextComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicContextComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicInteractionInterface.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicModuleBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicModuleBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractableComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractableComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Common.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Drop.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Drop.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_PickUp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_PickUp.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Throw.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Throw.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_WorkstationInteract_Combine.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_WorkstationInteract_Common.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_WorkstationInteract_Trash.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_WorkstationInteract_Vending.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ContainerItemBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/WorkStation/WorkStationBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/WorkStation/WorkStationBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicInteractionInterface.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicModuleBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractableComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractableComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractorComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractorComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Common.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Throw.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Throw.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_WorkstationInteract_Combine.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_WorkstationInteract_Common.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_WorkstationInteract_Trash.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_WorkstationInteract_Vending.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,12 +79,12 @@
     &quot;assignee&quot;: &quot;LightDelight&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/LightDelight/Team5.git",
-    "accountId": "eab0cb9d-ff5e-4d4b-9ac0-d4145a91a121"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LightDelight/Team5.git&quot;,
+    &quot;accountId&quot;: &quot;2f3dc1a0-1c7e-43c4-8537-0e7b3d69a197&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h" root0="SKIP_HIGHLIGHTING" />
@@ -164,10 +137,10 @@
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\kga\Documents\GitHub\Team5\MoverExampleTest.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\Neighbor\Git\Team5\MoverExampleTest.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -180,7 +153,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest-Win64-DebugGame.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -190,10 +163,10 @@
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\kga\Documents\GitHub\Team5\MoverExampleTest.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\Neighbor\Git\Team5\MoverExampleTest.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -206,7 +179,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -219,7 +192,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest-Win64-Shipping.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -245,6 +218,9 @@
       <workItem from="1771819829712" duration="7581000" />
       <workItem from="1771892140342" duration="19306000" />
       <workItem from="1771999163904" duration="7891000" />
+      <workItem from="1772043359079" duration="1354000" />
+      <workItem from="1772117788677" duration="8172000" />
+      <workItem from="1772136143412" duration="10351000" />
     </task>
     <task id="LOCAL-00001" summary="ss">
       <option name="closed" value="true" />

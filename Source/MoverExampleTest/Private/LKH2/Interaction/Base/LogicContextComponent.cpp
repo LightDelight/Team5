@@ -18,33 +18,7 @@ void ULogicContextComponent::GetLifetimeReplicatedProps(
   DOREPLIFETIME(ULogicContextComponent, Blackboard);
 }
 
-void ULogicContextComponent::InitializeLogic(ULogicEntityDataBase *InData,
-                                             AActor *Context) {
-  if (!InData || !Context) {
-    return;
-  }
-
-  // 이미 초기화되었고 데이터도 같다면 중복 초기화 방지
-  if (bLogicInitialized && EntityData == InData) {
-    return;
-  }
-
-  bLogicInitialized = true;
-  EntityData = InData; // 캐싱
-
-  TArray<ULogicModuleBase *> Modules = InData->GetAllModules();
-  LogicModules.Empty(Modules.Num());
-
-  for (ULogicModuleBase *Module : Modules) {
-    if (Module) {
-      ULogicModuleBase* InstancedModule = DuplicateObject<ULogicModuleBase>(Module, this);
-      if (InstancedModule) {
-        LogicModules.Add(InstancedModule);
-        InstancedModule->InitializeLogic(Context);
-      }
-    }
-  }
-}
+// [Moved] InitializeLogic implementation has been moved to UInteractableComponent.
 
 const FItemStatValue* ULogicContextComponent::FindStat(const FGameplayTag& Tag) const {
   // 1. 런타임 블랙보드 확인

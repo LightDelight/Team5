@@ -4,59 +4,65 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "GameplayTagContainer.h"
 #include "InteractionContextInterface.generated.h"
 
 UINTERFACE(MinimalAPI, Blueprintable)
-class UInteractionContextInterface : public UInterface {
+class UInteractionContextInterface : public UInterface
+{
   GENERATED_BODY()
-};
-
-UENUM(BlueprintType)
-enum class EInteractionType : uint8 {
-  Interact UMETA(DisplayName = "Interact (Pick Up or Drop)"),
-  Throw UMETA(DisplayName = "Throw")
 };
 
 /**
  * 상호작용에 필요한 모든 컨텍스트 데이터를 담는 구조체입니다.
  */
 USTRUCT(BlueprintType)
-struct FInteractionContext {
+struct FInteractionContext
+{
   GENERATED_BODY()
 
   /** 상호작용 시도자 (예: 플레이어) */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
   TObjectPtr<AActor> Interactor;
 
-  /** 상호작용 유형 (Grab, Drop, Throw 등) */
+  /** 상호작용 유형 태그 (Interaction.Interact, Interaction.Throw 등) */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
-  EInteractionType InteractionType = EInteractionType::Interact;
+  FGameplayTag InteractionTag;
 
-  /** 현재 손에 무언가를 들고 있는지 여부 */
+  /** 상호작용 의도를 발생시킨 컴포넌트 */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
-  bool bIsHandOccupied = false;
+  TObjectPtr<UActorComponent> InteractorComp;
 
-  /** 현재 손에 들고 있는 아이템 (없으면 nullptr) */
+  /** 시도자의 프로퍼티(상태) 컴포넌트 */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
-  TObjectPtr<AActor> InHandActor;
-
-  /** 던지기 등 물리 동작 시 적용할 속도/방향 (선택 사항) */
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
-  FVector Velocity = FVector::ZeroVector;
+  TObjectPtr<UActorComponent> InteractorPropertyComp;
 
   /** 추가적인 대상 액터 (예: 아이템을 올려둘 워크스테이션 등, 선택 사항) */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
   TObjectPtr<AActor> TargetActor;
 
+  /** 대상의 상호작용 컴포넌트 */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+  TObjectPtr<UActorComponent> InteractableComp;
+
+  /** 대상의 프로퍼티 컴포넌트 */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+  TObjectPtr<UActorComponent> InteractablePropertyComp;
+
+  /** 대상의 로직 컨텍스트(블랙보드) 컴포넌트 */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+  TObjectPtr<UActorComponent> ContextComp;
+
   FInteractionContext() {}
-  FInteractionContext(AActor *InInteractor, EInteractionType InType)
-      : Interactor(InInteractor), InteractionType(InType) {}
+  FInteractionContext(AActor *InInteractor, FGameplayTag InTag)
+      : Interactor(InInteractor), InteractionTag(InTag) {}
 };
 
 /**
  * 상호작용 가능한 객체가 구현해야 할 인터페이스
  */
-class IInteractionContextInterface {
+class IInteractionContextInterface
+{
   GENERATED_BODY()
 
 public:

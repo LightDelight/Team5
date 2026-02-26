@@ -3,10 +3,12 @@
 #include "LKH2/Interaction/Component/InteractableComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "GameFramework/Actor.h"
-#include "LKH2/Interaction/Base/LogicInteractionInterface.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
 #include "LKH2/Interactables/Item/ItemData.h"
 #include "LKH2/Interaction/Base/LogicModuleBase.h"
+#include "LKH2/Interactables/Data/LogicEntityDataBase.h"
+#include "LKH2/Interaction/Component/InteractablePropertyComponent.h"
+#include "LKH2/Interaction/Base/LogicContextComponent.h"
 
 UInteractableComponent::UInteractableComponent() {
   PrimaryComponentTick.bCanEverTick = false;
@@ -16,17 +18,56 @@ UInteractableComponent::UInteractableComponent() {
 
 void UInteractableComponent::BeginPlay() { Super::BeginPlay(); }
 
+void UInteractableComponent::InitializeLogic(ULogicEntityDataBase *InData,
+                                             AActor *Context) {
+  if (!InData || !Context) {
+    return;
+  }
+
+  // 이미 초기화되었고 데이터도 같다면 중복 초기화 방지
+  if (bLogicInitialized && EntityData == InData) {
+    return;
+  }
+
+  bLogicInitialized = true;
+  EntityData = InData; // 캐싱
+
+  TArray<ULogicModuleBase *> Modules = InData->GetAllModules();
+  LogicModules.Empty(Modules.Num());
+
+  for (ULogicModuleBase *Module : Modules) {
+    if (Module) {
+      ULogicModuleBase* InstancedModule = DuplicateObject<ULogicModuleBase>(Module, this);
+      if (InstancedModule) {
+        LogicModules.Add(InstancedModule);
+        InstancedModule->InitializeLogic(Context);
+      }
+    }
+  }
+}
+
 bool UInteractableComponent::OnInteract(const FInteractionContext &Context) {
   if (Context.Interactor) {
-    // [Pull Pattern] 소유자로부터 인터페이스를 통해 최신 모듈 목록을 직접 조회
-    ILogicContextInterface *LogicContext = Cast<ILogicContextInterface>(GetOwner());
-    if (LogicContext) {
-      TArray<ULogicModuleBase *> Modules = LogicContext->GetLogicModules();
-      for (ULogicModuleBase *Module : Modules) {
-        if (Module) {
-          if (Module->ExecuteInteraction(Context)) {
-            return true; // 처리에 성공하면 흐름을 중단
-          }
+    // 자신(Interactable의 Owner)을 TargetActor로 보장하는 Context 사본 생성
+    FInteractionContext ModifiedContext = Context;
+    
+    // 만약 TargetActor가 지정되지 않았다면 자기 자신으로 설정
+    if (ModifiedContext.TargetActor == nullptr) {
+        ModifiedContext.TargetActor = GetOwner();
+    }
+
+    // 피시도자 측 컴포넌트 세팅
+    if (AActor* OwnerActor = GetOwner()) {
+      ModifiedContext.InteractableComp = this;
+      ModifiedContext.InteractablePropertyComp = OwnerActor->FindComponentByClass<UInteractablePropertyComponent>();
+      ModifiedContext.ContextComp = OwnerActor->FindComponentByClass<ULogicContextComponent>();
+    }
+
+    // 이제 내부에서 직접 LogicModules 배열을 순회합니다.
+    for (ULogicModuleBase *Module : LogicModules) {
+      if (Module) {
+        if (Module->ExecuteInteraction(ModifiedContext)) {
+          return true; // 처리에 성공하면 흐름을 중단
         }
       }
     }

@@ -12,6 +12,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 class UWorkstationData;
 class UInteractableComponent;
+class UInteractablePropertyComponent;
 class ULogicContextComponent;
 
 UCLASS()
@@ -29,6 +30,7 @@ public:
 
   // ILogicContextInterface 구현
   virtual UInteractableComponent *GetInteractableComponent() const override;
+  virtual UInteractablePropertyComponent* GetPropertyComponent() const override;
   virtual FLogicBlackboard *GetLogicBlackboard() override;
   virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
   virtual void SetStat(const FGameplayTag &Tag,
@@ -53,6 +55,10 @@ protected:
             Category = "Workstation|Components")
   TObjectPtr<UBoxComponent> BoxCollision;
 
+  /** 에디터 및 맵에 배치될 때 박스 콜리전에 적용할 Object Type (콜리전 채널) */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Workstation|Collision")
+  TEnumAsByte<ECollisionChannel> ObjectType = ECC_PhysicsBody;
+
   /** 이 워크스테이션을 정의하는 데이터 에셋 */
   UPROPERTY(ReplicatedUsing = OnRep_WorkstationData, EditAnywhere,
             BlueprintReadOnly, Category = "Workstation|Data")
@@ -65,6 +71,11 @@ protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
             Category = "Workstation|Components")
   TObjectPtr<UInteractableComponent> InteractableComponent;
+
+  /** 액터 소속 상호작용 속성(예: 거치된 아이템)을 보관하는 컴포넌트 */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
+            Category = "Workstation|Components")
+  TObjectPtr<UInteractablePropertyComponent> PropertyComponent;
 
   /** 런타임 상태 데이터를 통합 관리하는 컴포넌트 */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly,

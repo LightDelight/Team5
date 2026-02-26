@@ -7,14 +7,18 @@
 #include "Logic_Interactable_Throw.generated.h"
 
 /**
- * 아이템을 던지는(Throw) 기능을 담당하는 로직 모듈입니다.
- * 아이템이 들려있는 상태에서 던지기(Throw) 상호작용 시 실행됩니다.
+ * 아이템을 던지는 상호작용 로직
  */
-UCLASS(Blueprintable, BlueprintType, EditInlineNew)
-class MOVEREXAMPLETEST_API ULogic_Interactable_Throw : public ULogicModuleBase {
-  GENERATED_BODY()
+UCLASS(Blueprintable, BlueprintType, meta = (DisplayName = "Logic: Throw Item"))
+class MOVEREXAMPLETEST_API ULogic_Interactable_Throw : public ULogicModuleBase
+{
+	GENERATED_BODY()
 
-protected:
-  virtual bool PreInteractCheck(const FInteractionContext &Context) override;
-  virtual bool PerformInteraction(const FInteractionContext &Context) override;
+public:
+	// 이 로직은 아이템을 들고 있는 상태에서만 유효하게 동작해야 함.
+	virtual bool PreInteractCheck(const FInteractionContext& Context) override;
+	virtual bool PerformInteraction(const FInteractionContext& Context) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Throw")
+	float ThrowForce = 1000.0f;
 };

@@ -86,45 +86,45 @@ public:
   // ─── 상태 전이 API ───
 
   /**
-   * 아이템을 대상 컴포넌트에 거치합니다.
+   * 아이템을 거치 상태로 갱신합니다.
    *
    * @param InstanceId   거치할 아이템의 인스턴스 ID
-   * @param AttachTarget 부착 대상 SceneComponent (InteractableComponent 등)
-   * @param Interactor   아이템을 들고 있던 InteractorComponent (nullptr이면 ForceDrop 생략)
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void StoreItem(const FGuid &InstanceId, USceneComponent *AttachTarget,
-                 UInteractorComponent *Interactor = nullptr);
+  void StoreItem(const FGuid &InstanceId);
 
   /**
-   * 거치된 아이템을 분리하여 Interactor에게 전달합니다.
+   * 아이템을 거치 해제 상태로 갱신합니다.
    *
    * @param InstanceId 회수할 아이템 인스턴스 ID
-   * @param Interactor 아이템을 받을 InteractorComponent
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void RetrieveItem(const FGuid &InstanceId, UInteractorComponent *Interactor);
+  void RetrieveItem(const FGuid &InstanceId);
 
   /**
-   * 아이템을 줍기 처리합니다.
+   * 아이템을 줍기 상태로 갱신합니다.
    *
    * @param InstanceId   줍을 아이템 인스턴스 ID
-   * @param AttachTarget 부착 대상 SceneComponent (InteractorComponent 또는 Actor)
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|Transitions")
-  void PickUpItem(const FGuid &InstanceId, USceneComponent *AttachTarget, UInteractorComponent *Interactor = nullptr);
+  void PickUpItem(const FGuid &InstanceId);
 
   /**
-   * 아이템을 내려놓기/던지기 처리합니다.
+   * 아이템을 내려놓기/던지기 상태로 갱신합니다.
    *
    * @param InstanceId 내려놓을 아이템의 인스턴스 ID
-   * @param Impulse    던지기 시 적용할 임펄스 벡터 (ZeroVector이면 일반 놓기)
-   * @param Carrier    아이템을 던지거나 놓은 주체
    */
   UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
-  void DropItem(const FGuid &InstanceId,
-                const FVector &Impulse = FVector::ZeroVector,
-                UInteractorComponent *Interactor = nullptr);
+  void DropItem(const FGuid &InstanceId);
+
+  /**
+   * 놓여진 아이템에 물리적인 던지기 힘을 가합니다.
+   *
+   * @param InstanceId 아이템 인스턴스 ID
+   * @param Impulse    가할 임펄스 벡터
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|Physics")
+  void ThrowTargetItem(const FGuid &InstanceId, const FVector& Impulse);
 
   // ─── 조회 ───
 
