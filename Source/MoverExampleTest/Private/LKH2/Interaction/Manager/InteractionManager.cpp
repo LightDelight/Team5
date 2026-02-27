@@ -6,6 +6,7 @@
 
 #include "LKH2/Interaction/Component/InteractorComponent.h"
 #include "LKH2/Interaction/Component/InteractorPropertyComponent.h"
+#include "LKH2/Interaction/Component/InteractablePropertyComponent.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
 #include "LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h"
 
@@ -27,13 +28,6 @@ void UInteractionManager::ExecuteEquip(UInteractorPropertyComponent* InteractorP
 
 	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
 	if (!ItemManager) return;
-
-	// 기존에 들고 있던 아이템이 있다면 먼저 내린다
-	if (InteractorProperty->GetCarriedActor() != nullptr)
-	{
-		AItemBase* CarriedItem = Cast<AItemBase>(InteractorProperty->GetCarriedActor());
-		ExecuteDrop(InteractorProperty, CarriedItem);
-	}
 
 	// 1. ItemManagerSubsystem을 통해 논리적 상태 갱신 (PickUpItem) - 물리를 먼저 끔
 	ItemManager->PickUpItem(ItemToEquip->GetInstanceId());
@@ -64,10 +58,21 @@ void UInteractionManager::ExecuteDrop(UInteractorPropertyComponent* InteractorPr
 
 void UInteractionManager::ExecuteStore(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* ItemToStore, FGameplayTag SlotTag)
 {
-	// TODO:
-	// 1. Interactor에서 아이템 분리 (ExecuteDrop 또는 별도 로직)
+	if (!InteractorProperty || !TargetProperty || !ItemToStore) return;
+
+	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
+	if (!ItemManager) return;
+
+	// 1. Interactor에서 아이템 분리 (물리적 해제)
+	InteractorProperty->ForceDrop();
+
 	// 2. InteractablePropertyComponent에 시각적/물리적 부착 (AttachTargetItem)
-	// 3. ItemManagerSubsystem을 통해 논리적 상태 갱신 (StoreItem)
+	if (TargetProperty->TryStoreItem(SlotTag, ItemToStore))
+	{
+		TargetProperty->AttachTargetItem(ItemToStore);
+		// 3. ItemManagerSubsystem을 통해 논리적 상태 갱신 (StoreItem)
+		ItemManager->StoreItem(ItemToStore->GetInstanceId());
+	}
 }
 
 void UInteractionManager::ExecuteRetrieve(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* ItemToRetrieve, FGameplayTag SlotTag)

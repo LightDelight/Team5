@@ -12,8 +12,14 @@ bool ULogic_Interactable_PickUp::PreInteractCheck(const FInteractionContext &Con
 		return false;
 	}
 
-	// 플레이어가 현재 객체를 들고 있지 않거나 다른 객체를 들고있으면 손을 먼저 비운다거나 하는
-	// 정책은 Manager의 ExecuteEquip 내부에서 처리 가능. (설계 상)
+	// 아이템을 이미 들고 있는 경우 줍기 거부
+	if (UInteractorPropertyComponent* InteractorProperty = Cast<UInteractorPropertyComponent>(Context.InteractorPropertyComp))
+	{
+		if (InteractorProperty->GetCarriedActor() != nullptr)
+		{
+			return false;
+		}
+	}
 	
 	return true;
 }

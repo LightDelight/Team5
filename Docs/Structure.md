@@ -38,6 +38,7 @@ Context Payload를 적용한 후에는 불필요하나, Context를 적용하기 
 InteractionManager
 실제 행동을 정의하는 곳. (예 : ExecuteDrop = 아이템을 플레이어에게서 분리하고, 땅에 떨어뜨린다.)
 게임에 필요한 모든 실제 행동은 매니저에 존재해야 한다. 그러나 반드시 헬퍼 함수를 통해서만 이루어져야 한다.
+InteractionManager가 전달받는 인자는 할 수 있는 가장 최소 단위어야 한다.
 
 
 
@@ -169,6 +170,12 @@ InteractionManager는 전달받은 데이터와 헬퍼 함수들을 조합해 �
 InteractorPropertyComponent가 ForceEquip 함수에서 InteractorComponent를 직접 참조함.
 
 Stateless를 유지해야 하는 원칙에 Throw 모듈이 던지는 힘을 보유하고 있어 위배?
+
+
+
+이슈 목록
+클라이언트에서 아이템이 겹쳐있을 때 외곽선 대상과 상호작용 대상이 간헐적으로 어긋나는 경우 발생.
+
 
 
 진행해야 하는 작업
