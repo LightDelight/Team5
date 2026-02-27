@@ -15,6 +15,11 @@ public class MoverExampleTest : ModuleRules
 			, "InputCore"
 			, "EnhancedInput"
 			, "Chaos"
+			, "UMG"
+			, "Niagara"
+			, "PhysicsCore"
+			, "GameplayTags"
+			, "NetCore"
 			}
 		);
 
