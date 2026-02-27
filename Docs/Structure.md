@@ -176,10 +176,12 @@ Stateless를 유지해야 하는 원칙에 Throw 모듈이 던지는 힘을 보�
 이슈 목록
 클라이언트에서 아이템이 겹쳐있을 때 외곽선 대상과 상호작용 대상이 간헐적으로 어긋나는 경우 발생.
 
+상호작용 가능 환경 세팅 워크플로우 만들기.
 
 
 진행해야 하는 작업
-로직 재구현
+메인 작업 로직 (예 : 요리, 재료 손질 등)
+
 
 
 
@@ -190,3 +192,14 @@ Interactor 없이도 스스로 진행되어야 하는 로직을 위한 베이스
 
 LogicalPreset
 모듈 배열과 스탯을 미리 정의해 반복 작업을 피하는 프리셋.
+
+PropertyComp의 필드도 태그로 받아올 수 있게 (UI용)
+
+
+
+개편 예정
+LogicModule을 다시 현장 관리자로 변경.
+InteractioManager는 헬퍼를 모아 통제된 래퍼를 제공. (예 : ChangeStateSafe, AttachItemSafe 등)
+LogicModule의 블루프린트화. 에디터에서 실제 행동을 정의할 수 있도록 변경.
+
+ItemSmoothing State에 따라 중지?

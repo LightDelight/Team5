@@ -2,6 +2,7 @@
 
 #include "LKH2/Interaction/Component/InteractablePropertyComponent.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values for this component's properties
 UInteractablePropertyComponent::UInteractablePropertyComponent()
@@ -10,6 +11,7 @@ UInteractablePropertyComponent::UInteractablePropertyComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 	
+	ProgressWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ProgressWidgetComponent"));
 	// bWantsInitializeComponent = true; // 필요 시
 }
 
@@ -18,6 +20,15 @@ void UInteractablePropertyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (ProgressWidgetComponent)
+	{
+		// 이 컴포넌트의 오너에게 붙입니다.
+		if (AActor* OwnerActor = GetOwner())
+		{
+			// 트랜스폼 유지 방식을 설정
+			ProgressWidgetComponent->SetupAttachment(OwnerActor->GetRootComponent());
+		}
+	}
 }
 
 // Called every frame

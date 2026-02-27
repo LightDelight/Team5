@@ -52,5 +52,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
 	void ExecuteRetrieve(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* ItemToRetrieve, FGameplayTag SlotTag);
 
+	/**
+	 * 두 아이템을 소비하여 새로운 아이템을 생성한 뒤 지정된 슬롯에 보관하는 조합 행동 정의.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
+	void ExecuteCombine(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* MaterialA, AItemBase* MaterialB, FGameplayTag ResultItemTag, FGameplayTag TargetSlotTag);
+
+	/**
+	 * 플레이어가 들고 있는 아이템을 버릴(파괴할) 때 호출되는 행동 정의.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
+	void ExecuteTrash(UInteractorPropertyComponent* InteractorProperty, AItemBase* ItemToTrash);
+
+	/**
+	 * 특정 아이템을 생성하여 플레이어가 즉시 집게 하는 행동 정의 (자판기/뽑기 로직용).
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
+	void ExecuteVending(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, FGameplayTag ItemToSpawnTag);
+
 	// 향후 확장: 조합된 결과물 생성, 파괴 후 변경 등 다중 액터 상호작용 행동 정의들이 추가될 수 있습니다.
 };

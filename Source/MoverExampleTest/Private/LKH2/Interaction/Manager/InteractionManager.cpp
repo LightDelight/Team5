@@ -77,8 +77,95 @@ void UInteractionManager::ExecuteStore(UInteractorPropertyComponent* InteractorP
 
 void UInteractionManager::ExecuteRetrieve(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* ItemToRetrieve, FGameplayTag SlotTag)
 {
-	// TODO:
-	// 1. InteractablePropertyComponent에서 시각적/물리적 해제 (DetachTargetItem)
-	// 2. InteractorPropertyComponent에 물리적 부착 (ForceEquip)
-	// 3. ItemManagerSubsystem을 통해 논리적 상태 갱신 (RetrieveItem)
+	if (!InteractorProperty || !TargetProperty || !ItemToRetrieve) return;
+
+	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
+	if (!ItemManager) return;
+
+	// 1. InteractablePropertyComponent에서 시각적/물리적 해제 및 아이템 꺼내기
+	AItemBase* RetrievedItem = TargetProperty->RetrieveItem(SlotTag);
+	if (RetrievedItem == ItemToRetrieve)
+	{
+		TargetProperty->DetachTargetItem(ItemToRetrieve);
+
+		// 2. Interactor에 물리적 부착 (PickUp)
+		InteractorProperty->ForceEquip(ItemToRetrieve);
+		
+		// 3. ItemManagerSubsystem을 통해 논리적 상태 갱신 (RetrieveItem)
+		ItemManager->RetrieveItem(ItemToRetrieve->GetInstanceId());
+	}
+}
+
+void UInteractionManager::ExecuteCombine(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* MaterialA, AItemBase* MaterialB, FGameplayTag ResultItemTag, FGameplayTag TargetSlotTag)
+{
+	if (!InteractorProperty || !TargetProperty || !MaterialA || !MaterialB) return;
+
+	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
+	if (!ItemManager) return;
+
+	// 1. 재료 아이템들을 물리적/시각적으로 분리
+	InteractorProperty->ForceDrop();
+	TargetProperty->RetrieveItem(TargetSlotTag); // 슬롯을 비움 (MaterialB)
+	TargetProperty->DetachTargetItem(MaterialB);
+
+	// 2. 재료 아이템 상태 파괴 및 소멸 요청
+	ItemManager->DestroyItem(MaterialA->GetInstanceId());
+	ItemManager->DestroyItem(MaterialB->GetInstanceId());
+
+	// 3. 결과 아이템 생성 요청
+	AActor* TargetActor = TargetProperty->GetOwner();
+	FTransform SpawnTransform = TargetActor ? TargetActor->GetActorTransform() : FTransform::Identity;
+	FGuid NewItemId = ItemManager->SpawnItem(ResultItemTag, SpawnTransform);
+
+	if (NewItemId.IsValid())
+	{
+		AItemBase* NewItem = ItemManager->GetItemActor(NewItemId);
+		if (NewItem)
+		{
+			// 4. 즉시 Result Item 보관 (StoreItem 로직 재사용)
+			if (TargetProperty->TryStoreItem(TargetSlotTag, NewItem))
+			{
+				TargetProperty->AttachTargetItem(NewItem);
+				ItemManager->StoreItem(NewItemId);
+			}
+		}
+	}
+}
+
+void UInteractionManager::ExecuteTrash(UInteractorPropertyComponent* InteractorProperty, AItemBase* ItemToTrash)
+{
+	if (!InteractorProperty || !ItemToTrash) return;
+
+	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
+	if (!ItemManager) return;
+
+	// 1. InteractorPropertyComponent를 통해 물리적으로 분리
+	InteractorProperty->ForceDrop();
+
+	// 2. ItemManagerSubsystem을 통해 아이템 상태 파괴 및 소멸 요청
+	ItemManager->DestroyItem(ItemToTrash->GetInstanceId());
+}
+
+void UInteractionManager::ExecuteVending(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, FGameplayTag ItemToSpawnTag)
+{
+	if (!InteractorProperty || !TargetProperty) return;
+
+	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
+	if (!ItemManager) return;
+
+	// 1. 결과 아이템 생성 요청
+	AActor* TargetActor = TargetProperty->GetOwner();
+	FTransform SpawnTransform = TargetActor ? TargetActor->GetActorTransform() : FTransform::Identity;
+	FGuid NewItemId = ItemManager->SpawnItem(ItemToSpawnTag, SpawnTransform);
+
+	if (NewItemId.IsValid())
+	{
+		AItemBase* NewItem = ItemManager->GetItemActor(NewItemId);
+		if (NewItem)
+		{
+			// 2. 생성된 아이템 즉시 줍기 (물리적 부착, 논리적 상태 갱신)
+			ItemManager->PickUpItem(NewItemId);
+			InteractorProperty->ForceEquip(NewItem);
+		}
+	}
 }

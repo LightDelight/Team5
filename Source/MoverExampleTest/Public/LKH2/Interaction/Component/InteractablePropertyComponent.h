@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameplayTagContainer.h"
+#include "Components/WidgetComponent.h"
 #include "InteractablePropertyComponent.generated.h"
 
 // Forward declaration
@@ -22,6 +23,10 @@ class MOVEREXAMPLETEST_API UInteractablePropertyComponent : public UActorCompone
 public:	
 	// Sets default values for this component's properties
 	UInteractablePropertyComponent();
+
+	/** 진행도 등을 표시하기 위해 액터에 부착할 3D 위젯 컴포넌트 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction|UI")
+	TObjectPtr<UWidgetComponent> ProgressWidgetComponent;
 
 protected:
 	// Called when the game starts

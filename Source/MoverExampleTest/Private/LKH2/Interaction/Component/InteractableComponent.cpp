@@ -40,7 +40,7 @@ void UInteractableComponent::InitializeLogic(ULogicEntityDataBase *InData,
       ULogicModuleBase* InstancedModule = DuplicateObject<ULogicModuleBase>(Module, this);
       if (InstancedModule) {
         LogicModules.Add(InstancedModule);
-        InstancedModule->InitializeLogic(Context);
+        InstancedModule->InitializeLogic(Context, EntityData);
       }
     }
   }

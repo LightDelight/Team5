@@ -59,11 +59,7 @@ protected:
   FGameplayTag RequiredIntentTag;
 
 public:
-  /**
-   * 소유 액터의 BeginPlay에서 호출됩니다.
-   * 월드/액터 컨텍스트가 필요한 런타임 초기화를 여기서 수행합니다.
-   */
-  virtual void InitializeLogic(AActor *InOwnerActor) { OwnerActor = InOwnerActor; }
+  virtual void InitializeLogic(AActor *InOwnerActor, const class ULogicEntityDataBase* InEntityData = nullptr) { OwnerActor = InOwnerActor; }
 
   /**
    * 소유 액터의 OnConstruction에서 호출됩니다.

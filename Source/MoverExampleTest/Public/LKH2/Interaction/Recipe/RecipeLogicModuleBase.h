@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "LKH2/Interaction/Base/LogicModuleBase.h"
+#include "LKH2/Interactables/Data/LogicEntityDataBase.h"
 #include "RecipeLogicModuleBase.generated.h"
 
 /**
@@ -30,16 +31,11 @@ public:
 
 protected:
   // --- 에셋 생명주기 (Lifecycle) 관리 ---
-  // 1. 게임 빌드 또는 에디터 로드 시 메모리에 올라올 때 단 1회 실행!
-  virtual void PostLoad() override;
+  virtual void InitializeLogic(AActor *Context, const class ULogicEntityDataBase* EntityData = nullptr) override;
 
   // 파생 클래스들이 레시피 데이터를 안전하게 캐싱할 수 있도록 제공하는 함수.
-  // PostLoad 및 PostEditChangeProperty에서 자동 호출됩니다.
-  virtual void CacheRecipes();
-
-  // 2. 에디터에서 기획자가 레시피 배열이나 숫자를 수정했을 때 즉시 실행!
-  virtual void
-  PostEditChangeProperty(FPropertyChangedEvent &PropertyChangedEvent) override;
+  // 이 함수는 원본(PostLoad) 및 인스턴스(InitializeLogic)에서 호출됩니다.
+  virtual void CacheRecipes(const class ULogicEntityDataBase* EntityData = nullptr);
 
 protected:
   /**
