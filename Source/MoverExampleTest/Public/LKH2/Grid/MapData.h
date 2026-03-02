@@ -20,9 +20,6 @@ struct MOVEREXAMPLETEST_API FMapWorkstationEntry {
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map")
   FIntPoint GridCoord;
 
-  /** 스폰할 워크스테이션 블루프린트 클래스 */
-  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map")
-  TSubclassOf<AWorkStationBase> StationClass;
 
   /** 워크스테이션에 적용할 데이터 에셋 */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map")

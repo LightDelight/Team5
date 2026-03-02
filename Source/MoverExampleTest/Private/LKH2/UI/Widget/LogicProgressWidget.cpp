@@ -10,6 +10,16 @@ void ULogicProgressWidget::InitializeProgressWidget(UInteractablePropertyCompone
 	TargetPropertyComp = InPropertyComp;
 }
 
+void ULogicProgressWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (ProgressBar)
+	{
+		ProgressBar->SetPercent(GetProgressRatio());
+	}
+}
+
 float ULogicProgressWidget::GetProgressRatio() const
 {
 	if (!TargetPropertyComp.IsValid())
@@ -30,37 +40,84 @@ float ULogicProgressWidget::GetProgressRatio() const
 		return 0.0f;
 	}
 
-	float StartTime = 0.0f;
-	float EndTime = 0.0f;
+	float CurrentRatio = 0.0f;
 
-	// 시작 시간 가져오기
-	if (const FItemStatValue* StartStat = ContextInterface->FindStat(StartTimeTag))
+	// 1. Step 기반 진행 (CurrentStepTag가 할당되어 있다면 우선 처리)
+	if (CurrentStepTag.IsValid() && MaxStepTag.IsValid())
 	{
-		if (StartStat->Type == EItemStatType::Float) StartTime = StartStat->FloatValue;
-		else if (StartStat->Type == EItemStatType::Int) StartTime = StartStat->IntValue;
+		// Blackboard 대신 InteractablePropertyComponent의 Replicated 필드를 직접 읽습니다.
+		// 이 값은 서버에서 SetRepStepValues()로 설정되어 클라이언트에 복제됩니다.
+		float CurrentStep = TargetPropertyComp.IsValid() ? TargetPropertyComp->GetRepCurrentStep() : 0.0f;
+		float MaxStep     = TargetPropertyComp.IsValid() ? TargetPropertyComp->GetRepMaxStep()     : 0.0f;
+
+		UE_LOG(LogTemp, Verbose, TEXT("[GetProgressRatio][Step] Owner=%s, CurrentStep=%f, MaxStep=%f"),
+			OwnerActor ? *OwnerActor->GetName() : TEXT("?"), CurrentStep, MaxStep);
+
+		if (MaxStep > 0.0f)
+		{
+			CurrentRatio = FMath::Clamp(CurrentStep / MaxStep, 0.0f, 1.0f);
+		}
 	}
 
-	// 종료 시간 가져오기
-	if (const FItemStatValue* EndStat = ContextInterface->FindStat(EndTimeTag))
+	// 2. Time 기반 진행 (기존 연속 방식)
+	else if (StartTimeTag.IsValid() && EndTimeTag.IsValid())
 	{
-		if (EndStat->Type == EItemStatType::Float) EndTime = EndStat->FloatValue;
-		else if (EndStat->Type == EItemStatType::Int) EndTime = EndStat->IntValue;
+		float StartTime = 0.0f;
+		float EndTime = 0.0f;
+
+		if (const FItemStatValue* StartStat = ContextInterface->FindStat(StartTimeTag))
+		{
+			if (StartStat->Type == EItemStatType::Float) StartTime = StartStat->FloatValue;
+			else if (StartStat->Type == EItemStatType::Int) StartTime = StartStat->IntValue;
+		}
+
+		if (const FItemStatValue* EndStat = ContextInterface->FindStat(EndTimeTag))
+		{
+			if (EndStat->Type == EItemStatType::Float) EndTime = EndStat->FloatValue;
+			else if (EndStat->Type == EItemStatType::Int) EndTime = EndStat->IntValue;
+		}
+
+		if (EndTime > StartTime && StartTime > 0.0f)
+		{
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				float CurrentTime = World->GetTimeSeconds();
+				CurrentRatio = FMath::Clamp((CurrentTime - StartTime) / (EndTime - StartTime), 0.0f, 1.0f);
+			}
+		}
 	}
 
-	// 잘못된 시간 범위거나, 아직 시작되지 않은 로직
-	if (EndTime <= StartTime || StartTime <= 0.0f)
+	if (bIsLocked)
 	{
-		return 0.0f;
+		return LockedProgress;
 	}
 
-	// 현재 월드(또는 서버) 타임 구하기
-	// (Network 환경이면 GetServerWorldTimeSeconds 등을 고려해야 하지만 우선 게임 월드 타임 사용)
-	UWorld* World = GetWorld();
-	if (!World)
-	{
-		return 0.0f;
-	}
-	float CurrentTime = World->GetTimeSeconds();
-
-	return FMath::Clamp((CurrentTime - StartTime) / (EndTime - StartTime), 0.0f, 1.0f);
+	return CurrentRatio;
 }
+
+void ULogicProgressWidget::LockProgress()
+{
+	if (!bIsLocked)
+	{
+		LockedProgress = GetProgressRatio();
+		bIsLocked = true;
+	}
+}
+
+void ULogicProgressWidget::UnlockProgress()
+{
+	bIsLocked = false;
+}
+
+void ULogicProgressWidget::ResetProgress()
+{
+	bIsLocked = false;
+	LockedProgress = 0.0f;
+	StartTimeTag = FGameplayTag::EmptyTag;
+	EndTimeTag = FGameplayTag::EmptyTag;
+	CurrentStepTag = FGameplayTag::EmptyTag;
+	MaxStepTag = FGameplayTag::EmptyTag;
+}
+
+

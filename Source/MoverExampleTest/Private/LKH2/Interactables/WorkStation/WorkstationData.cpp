@@ -43,7 +43,7 @@ FVector UWorkstationData::GetEffectiveInteractRelativeLocation() const {
   if (bUseCustomVisuals) {
     return CustomInteractRelativeLocation;
   }
-  return VisualPreset ? VisualPreset->DefaultInteractRelativeLocation
+  return VisualPreset ? VisualPreset->DefaultWorkstationInteractRelativeLocation
                       : FVector::ZeroVector;
 }
 

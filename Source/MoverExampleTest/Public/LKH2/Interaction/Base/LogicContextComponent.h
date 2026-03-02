@@ -14,7 +14,7 @@ struct FGameplayTag;
 
 /**
  * 아이템이나 워크스테이션의 개별적인 상태(Stats 등)를 저장하고 
- * 로직 모듈의 생시주기(초기화)를 전담하는 컴포넌트입니다.
+ * 전담하는 컴포넌트입니다.
  */
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MOVEREXAMPLETEST_API ULogicContextComponent : public UActorComponent {
@@ -26,9 +26,13 @@ public:
   virtual void GetLifetimeReplicatedProps(
       TArray<FLifetimeProperty> &OutLifetimeProps) const override;
 
-  /** 실제 블랙보드 데이터에 접근합니다. */
-  FLogicBlackboard *GetBlackboard() { return &Blackboard; }
-  const FLogicBlackboard *GetBlackboard() const { return &Blackboard; }
+  /** Stats FastArray에 직접 접근합니다. */
+  FLogicBlackboardStatSerializer& GetStats() { return Stats; }
+  const FLogicBlackboardStatSerializer& GetStats() const { return Stats; }
+
+  /** ObjectBlackboard FastArray에 직접 접근합니다. */
+  FLogicBlackboardObjectSerializer& GetObjectBlackboard() { return ObjectBlackboard; }
+  const FLogicBlackboardObjectSerializer& GetObjectBlackboard() const { return ObjectBlackboard; }
 
   /** 초기화 여부를 반환합니다. */
   bool IsLogicInitialized() const { return bLogicInitialized; }
@@ -59,10 +63,33 @@ public:
       EntityData = InData;
   }
 
+  /**
+   * 태그를 키값으로 특정 로직 태스크를 저장합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Task")
+  void SetTask(FGameplayTag TaskTag, class ULogicTaskBase* NewTask);
+
+  /**
+   * 태그로 보관 중인 로직 태스크를 반환합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Task")
+  class ULogicTaskBase* GetTask(FGameplayTag TaskTag) const;
+
+  /**
+   * 태그로 보관 중인 로직 태스크를 초기화(해제)합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Task")
+  void ClearTask(FGameplayTag TaskTag);
+
 protected:
-  /** 로직 상태를 관리하고 멀티플레이 복제를 담당하는 블랙보드입니다. */
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "Logic")
-  FLogicBlackboard Blackboard;
+
+  /** 런타임 수치 Stat을 저장합니다. FastArray 기반으로 클라이언트에 직접 복제됩니다. */
+  UPROPERTY(Replicated)
+  FLogicBlackboardStatSerializer Stats;
+
+  /** 런타임 오브젝트 래퍼런스를 저장합니다. FastArray 기반으로 클라이언트에 직접 복제됩니다. */
+  UPROPERTY(Replicated)
+  FLogicBlackboardObjectSerializer ObjectBlackboard;
 
   /** 이중 초기화 방지용 플래그 */
   UPROPERTY(Transient)
@@ -71,4 +98,8 @@ protected:
   /** 데이터 에셋 참조를 캐싱합니다 (스탯 조회용) */
   UPROPERTY(Transient)
   TObjectPtr<ULogicEntityDataBase> EntityData;
+
+  /** 현재 진행 중인 로직 태스크들 (진행 및 취소 트래킹용) */
+  UPROPERTY(Transient)
+  TMap<FGameplayTag, TObjectPtr<class ULogicTaskBase>> ActiveTasks;
 };

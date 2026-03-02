@@ -53,7 +53,7 @@ bool ULogic_Interactable_Retrieve::PerformInteraction(const FInteractionContext 
 	AItemBase* ItemToRetrieve = TargetProperty->GetStoredItem(SlotTag);
 	if (ItemToRetrieve)
 	{
-		InteractionManager->ExecuteRetrieve(InteractorProperty, TargetProperty, ItemToRetrieve, SlotTag);
+		InteractionManager->SafeRetrieveItem(InteractorProperty, TargetProperty, ItemToRetrieve, SlotTag);
 	}
 
 	return true;

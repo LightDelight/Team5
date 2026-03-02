@@ -26,11 +26,11 @@ public:
   AItemBase();
 
   class UItemData *GetItemData() const { return ItemData; }
+  UItemStateComponent *GetStateComponent() const { return StateComponent.Get(); }
 
   // ILogicContextInterface 구현
   virtual UInteractableComponent *GetInteractableComponent() const override;
   virtual UInteractablePropertyComponent* GetPropertyComponent() const override;
-  virtual FLogicBlackboard *GetLogicBlackboard() override;
   virtual const FItemStatValue *FindStat(const FGameplayTag &Tag) const override;
   virtual void SetStat(const FGameplayTag &Tag,
                        const FItemStatValue &Value) override;

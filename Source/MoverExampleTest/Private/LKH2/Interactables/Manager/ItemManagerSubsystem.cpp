@@ -142,9 +142,8 @@ void UItemManagerSubsystem::StoreItem(const FGuid &InstanceId) {
   if (!Item)
     return;
 
-  // 상태 전이 → Stored (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
+  // 상태 전이 → Stored (물리/콜리전을 비활성화)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
     StateComp->SetItemState(EItemState::Stored);
   }
 }
@@ -154,9 +153,8 @@ void UItemManagerSubsystem::RetrieveItem(const FGuid &InstanceId) {
   if (!Item)
     return;
 
-  // 상태 전이 → Carried (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
+  // 상태 전이 → Carried (물리/콜리전을 비활성화)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
     StateComp->SetItemState(EItemState::Carried);
   }
 }

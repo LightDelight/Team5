@@ -59,6 +59,19 @@ protected:
   FGameplayTag RequiredIntentTag;
 
 public:
+	/** 태스크가 성공적으로 완료되었을 때 호출되는 핸들러입니다. */
+	UFUNCTION()
+	virtual void HandleTaskCompleted(class ULogicTaskBase* TaskInstance) {}
+
+	/** 태스크가 도중에 취소되었을 때 호출되는 핸들러입니다. */
+	UFUNCTION()
+	virtual void HandleTaskCanceled(class ULogicTaskBase* TaskInstance) {}
+
+	/** 태스크로부터 진행도 갱신 신호를 받았을 때 호출되는 핸들러입니다. */
+	UFUNCTION()
+	virtual void HandleTaskProgressUpdated(class ULogicTaskBase* TaskInstance, float CurrentStep, float MaxStep) {}
+
+public:
   virtual void InitializeLogic(AActor *InOwnerActor, const class ULogicEntityDataBase* InEntityData = nullptr) { OwnerActor = InOwnerActor; }
 
   /**

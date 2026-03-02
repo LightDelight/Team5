@@ -19,6 +19,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic|Trash")
 	FGameplayTagContainer RestrictedItemTags;
 
+	// 컨테이너 판별을 위한 태그 (예: Item.Container)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic|Trash")
+	FGameplayTag ContainerTag;
+
 public:
 	// 상호작용 의도(Intent) 확인 및 가능한 상태인지 검사
 	virtual bool PreInteractCheck(const FInteractionContext &Context) override;

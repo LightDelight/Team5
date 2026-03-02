@@ -29,7 +29,8 @@ AWorkStationBase::AWorkStationBase() {
   InteractableComponent->SetupAttachment(RootMesh);
 
   PropertyComponent = CreateDefaultSubobject<UInteractablePropertyComponent>(
-      TEXT("PropertyComponent"));
+      TEXT("InteractablePropertyComp"));
+  PropertyComponent->SetupAttachment(RootMesh);
 
   BlackboardComponent = CreateDefaultSubobject<ULogicContextComponent>(
       TEXT("BlackboardComponent"));
@@ -167,9 +168,6 @@ UInteractablePropertyComponent *AWorkStationBase::GetPropertyComponent() const {
   return PropertyComponent;
 }
 
-FLogicBlackboard *AWorkStationBase::GetLogicBlackboard() {
-  return BlackboardComponent ? BlackboardComponent->GetBlackboard() : nullptr;
-}
 
 const FItemStatValue *AWorkStationBase::FindStat(const FGameplayTag &Tag) const {
   return BlackboardComponent ? BlackboardComponent->FindStat(Tag) : nullptr;

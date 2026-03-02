@@ -60,6 +60,12 @@ public:
                     EditConditionHides))
   FVector DefaultMeshRelativeLocation = FVector::ZeroVector;
 
+  /** 루트(SphereCollision) 기준 InteractableComponent의 상대 위치 오프셋 기본값 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VisualPreset|Item",
+            meta = (EditCondition = "PresetType == EVisualPresetType::Item",
+                    EditConditionHides))
+  FVector DefaultItemInteractRelativeLocation = FVector::ZeroVector;
+
   // ─── Workstation 비주얼 (PresetType == Workstation일 때만 표시) ───
 
   /** 워크스테이션 스폰 시 사용할 Actor 클래스 기본값 */
@@ -95,5 +101,5 @@ public:
       EditAnywhere, BlueprintReadOnly, Category = "VisualPreset|Workstation",
       meta = (EditCondition = "PresetType == EVisualPresetType::Workstation",
               EditConditionHides))
-  FVector DefaultInteractRelativeLocation = FVector::ZeroVector;
+  FVector DefaultWorkstationInteractRelativeLocation = FVector::ZeroVector;
 };

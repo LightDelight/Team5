@@ -179,25 +179,3 @@ struct TStructOpsTypeTraits<FLogicBlackboardObjectSerializer>
   };
 };
 
-/**
- * 최종 활용하게 될 여러 데이터 타입 지원 종합 블랙보드입니다.
- * 컴포넌트 내부 등에 선언하여 사용합니다.
- */
-USTRUCT(BlueprintType)
-struct MOVEREXAMPLETEST_API FLogicBlackboard {
-  GENERATED_BODY()
-
-public:
-  /** 오브젝트 타입 데이터를 담는 동기화 지원 블랙보드 */
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blackboard")
-  FLogicBlackboardObjectSerializer ObjectBlackboard;
-
-  /** 런타임 가변 수치(Stats)를 담는 동기화 지원 블랙보드 */
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blackboard")
-  FLogicBlackboardStatSerializer Stats;
-
-  /**
-   * 필요할 경우 이곳에 Float, Int 기반의 Serializer 도 동일하게 만들어서 넣을
-   * 수 있습니다. 예: FLogicBlackboardFloatSerializer FloatBlackboard;
-   */
-};

@@ -36,8 +36,7 @@ bool ULogic_Interactable_Drop::PerformInteraction(const FInteractionContext &Con
 			
 			if (InteractorProperty && CarriedItem)
 			{
-				// ItemManagerSubsystem의 ThrowTargetItem 로직과 통합하거나, 여기선 단순히 0벡터(그냥 놓기)로 호출
-				InteractionManager->ExecuteDrop(InteractorProperty, CarriedItem, FVector::ZeroVector);
+				InteractionManager->SafeDropItem(InteractorProperty, CarriedItem, FVector::ZeroVector);
 				return true;
 			}
 		}

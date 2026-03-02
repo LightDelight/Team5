@@ -64,7 +64,7 @@ bool ULogic_Interactable_Store::PerformInteraction(const FInteractionContext &Co
 	UInteractablePropertyComponent* TargetProperty = Cast<UInteractablePropertyComponent>(Context.InteractablePropertyComp);
 	AItemBase* CarriedItem = Cast<AItemBase>(InteractorProperty->GetCarriedActor());
 
-	InteractionManager->ExecuteStore(InteractorProperty, TargetProperty, CarriedItem, SlotTag);
+	InteractionManager->SafeStoreHandItem(InteractorProperty, TargetProperty, CarriedItem, SlotTag);
 
 	return true;
 }

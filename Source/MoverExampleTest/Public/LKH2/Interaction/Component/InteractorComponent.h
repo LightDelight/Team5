@@ -12,6 +12,7 @@ class USphereComponent;
 class UInteractorPropertyComponent;
 class AActor;
 class UGridManagerComponent;
+class UCharacterMovementComponent;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MOVEREXAMPLETEST_API UInteractorComponent : public USceneComponent {
@@ -25,6 +26,20 @@ public:
 
   UFUNCTION(Server, Reliable, WithValidation)
   void Server_TryInteract(AActor* Target, FGameplayTag IntentTag);
+
+  /**
+   * 현재 작업(HoldingLogic 등) 진행 중 여부를 설정합니다.
+   * 서버에서만 호출하며, 이동 차단/해제를 함께 처리합니다.
+   * @param bWorking true면 작업 시작, false면 종료
+   * @param InTargetActor 작업 대상 액터 (bWorking==true 시 저장)
+   * @param InCancelTag 타겟 변경 시 보낼 취소 Intent 태그
+   */
+  UFUNCTION(BlueprintCallable, Category = "Interaction")
+  void SetIsWorking(bool bWorking, AActor* InTargetActor = nullptr, FGameplayTag InCancelTag = FGameplayTag());
+
+  /** 현재 작업(HoldingLogic 등) 진행 중인지 반환합니다. */
+  UFUNCTION(BlueprintPure, Category = "Interaction")
+  bool IsWorking() const { return bIsWorking; }
 
   /** 액터 소속 상호작용 속성(예: 들고 있는 아이템)을 보관하는 컴포넌트 */
   UPROPERTY()
@@ -121,4 +136,21 @@ private:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction|Grid",
             meta = (AllowPrivateAccess = "true"))
   float GridTargetPollingInterval = 0.1f;
+
+  /** 작업 진행 중 플래그 (복제) */
+  UPROPERTY(ReplicatedUsing = OnRep_IsWorking)
+  bool bIsWorking = false;
+
+  /** 작업 중인 대상 액터 (타겟 변경 감지용) */
+  UPROPERTY()
+  TWeakObjectPtr<AActor> WorkingTargetActor;
+
+  /** 타겟 변경 시 이전 대상에 보낼 Cancel Intent */
+  FGameplayTag WorkingCancelIntentTag;
+
+  /** 타겟 변경 시 작업 중이면 Cancel Intent를 이전 대상에 발송 */
+  void TryCancelWorkingOnTargetChange(AActor* NewTarget);
+
+  UFUNCTION()
+  void OnRep_IsWorking();
 };

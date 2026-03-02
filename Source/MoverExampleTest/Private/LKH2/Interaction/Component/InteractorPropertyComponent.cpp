@@ -3,6 +3,9 @@
 #include "LKH2/Interaction/Component/InteractorPropertyComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "LKH2/Interaction/Component/InteractorComponent.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values for this component's properties
 UInteractorPropertyComponent::UInteractorPropertyComponent()
@@ -31,6 +34,7 @@ void UInteractorPropertyComponent::GetLifetimeReplicatedProps(TArray<FLifetimePr
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UInteractorPropertyComponent, CarriedActor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UInteractorPropertyComponent, CurrentActionTag, COND_None, REPNOTIFY_Always);
 }
 
 void UInteractorPropertyComponent::OnRep_CarriedActor(AActor* OldCarriedActor)
@@ -120,5 +124,101 @@ void UInteractorPropertyComponent::ForceDrop()
 
 		// 클라이언트 예측 혹은 서버 실행 모두 로컬 부착/탈착을 동기화해야 하므로 무조건 호출
 		OnRep_CarriedActor(OldItem);
+	}
+}
+
+/* ---------------------------------------------------------
+ * Action & Montage 
+ * --------------------------------------------------------- */
+
+void UInteractorPropertyComponent::OnRep_CurrentActionTag(FGameplayTag OldTag)
+{
+	UE_LOG(LogTemp, Log, TEXT("[InteractorProperty] OnRep_CurrentActionTag 호출됨. CompName: %s, OldTag: %s, NewTag: %s, Owner: %s"), *GetName(), *OldTag.ToString(), *CurrentActionTag.ToString(), GetOwner() ? *GetOwner()->GetName() : TEXT("None"));
+
+	if (CurrentActionTag.IsValid())
+	{
+		PlayMontageForTag(CurrentActionTag);
+	}
+	else
+	{
+		StopCurrentMontage();
+	}
+}
+
+void UInteractorPropertyComponent::SetActionTag(FGameplayTag NewTag)
+{
+	UE_LOG(LogTemp, Log, TEXT("[InteractorProperty] SetActionTag 호출됨. (CompName: %s, 요청: %s, 현재: %s, Owner: %s)"), *GetName(), *NewTag.ToString(), *CurrentActionTag.ToString(), GetOwner() ? *GetOwner()->GetName() : TEXT("None"));
+
+	if (CurrentActionTag != NewTag)
+	{
+		FGameplayTag OldTag = CurrentActionTag;
+		CurrentActionTag = NewTag;
+		
+		// 서버에서 직접 호출했을 때도 로컬(호스트) 동작을 위해 OnRep 호출
+		OnRep_CurrentActionTag(OldTag);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("[InteractorProperty] 이미 액션 태그가 일치하므로 무시합니다."));
+	}
+}
+
+void UInteractorPropertyComponent::ClearActionTag()
+{
+	SetActionTag(FGameplayTag::EmptyTag);
+}
+
+void UInteractorPropertyComponent::PlayMontageForTag(FGameplayTag Tag)
+{
+	if (!Tag.IsValid()) return;
+
+	UAnimMontage** MontagePtr = ActionMontageMap.Find(Tag);
+	if (!MontagePtr || !(*MontagePtr))
+	{
+		UE_LOG(LogTemp, Error, TEXT("[InteractorProperty] PlayMontageForTag 실패: Map에 %s에 대한 몽타주가 존재하지 않습니다. (CompName: %s)"), *Tag.ToString(), *GetName());
+		// 등록된 몽타주가 없으면 무시
+		return;
+	}
+
+	UAnimMontage* MontageToPlay = *MontagePtr;
+
+	if (AActor* OwnerActor = GetOwner())
+	{
+		if (USkeletalMeshComponent* MeshComp = OwnerActor->FindComponentByClass<USkeletalMeshComponent>())
+		{
+			if (UAnimInstance* AnimInst = MeshComp->GetAnimInstance())
+			{
+				StopCurrentMontage(); // 혹시 기존 재생 중이던 것이 있다면 정지
+				float Duration = AnimInst->Montage_Play(MontageToPlay);
+				UE_LOG(LogTemp, Log, TEXT("[InteractorProperty] 몽타주 재생 호출 완료! (몽타주: %s, 길이: %f)"), *MontageToPlay->GetName(), Duration);
+				ActiveMontage = MontageToPlay;
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("[InteractorProperty] PlayMontageForTag 실패: AnimInstance를 찾을 수 없습니다."));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("[InteractorProperty] PlayMontageForTag 실패: USkeletalMeshComponent를 찾을 수 없습니다."));
+		}
+	}
+}
+
+void UInteractorPropertyComponent::StopCurrentMontage()
+{
+	if (ActiveMontage)
+	{
+		if (AActor* OwnerActor = GetOwner())
+		{
+			if (USkeletalMeshComponent* MeshComp = OwnerActor->FindComponentByClass<USkeletalMeshComponent>())
+			{
+				if (UAnimInstance* AnimInst = MeshComp->GetAnimInstance())
+				{
+					AnimInst->Montage_Stop(0.2f, ActiveMontage);
+				}
+			}
+		}
+		ActiveMontage = nullptr;
 	}
 }

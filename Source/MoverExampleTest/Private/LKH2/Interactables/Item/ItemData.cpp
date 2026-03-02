@@ -38,6 +38,14 @@ FVector UItemData::GetEffectiveMeshRelativeLocation() const {
                       : FVector::ZeroVector;
 }
 
+FVector UItemData::GetEffectiveInteractRelativeLocation() const {
+  if (bUseCustomVisuals) {
+    return CustomInteractRelativeLocation;
+  }
+  return VisualPreset ? VisualPreset->DefaultItemInteractRelativeLocation
+                      : FVector::ZeroVector;
+}
+
 // ─── Stats 헬퍼 ───
 
 float UItemData::GetEffectiveWeight() const {

@@ -47,31 +47,35 @@ void UInteractableComponent::InitializeLogic(ULogicEntityDataBase *InData,
 }
 
 bool UInteractableComponent::OnInteract(const FInteractionContext &Context) {
-  if (Context.Interactor) {
-    // 자신(Interactable의 Owner)을 TargetActor로 보장하는 Context 사본 생성
-    FInteractionContext ModifiedContext = Context;
-    
-    // 만약 TargetActor가 지정되지 않았다면 자기 자신으로 설정
-    if (ModifiedContext.TargetActor == nullptr) {
-        ModifiedContext.TargetActor = GetOwner();
-    }
+  // 자신(Interactable의 Owner)을 TargetActor로 보장하는 Context 사본 생성
+  FInteractionContext ModifiedContext = Context;
+  
+  // 만약 TargetActor가 지정되지 않았다면 자기 자신으로 설정
+  if (ModifiedContext.TargetActor == nullptr) {
+      ModifiedContext.TargetActor = GetOwner();
+  }
 
-    // 피시도자 측 컴포넌트 세팅
-    if (AActor* OwnerActor = GetOwner()) {
-      ModifiedContext.InteractableComp = this;
-      ModifiedContext.InteractablePropertyComp = OwnerActor->FindComponentByClass<UInteractablePropertyComponent>();
-      ModifiedContext.ContextComp = OwnerActor->FindComponentByClass<ULogicContextComponent>();
-    }
+  // 피시도자 측 컴포넌트 세팅
+  if (AActor* OwnerActor = GetOwner()) {
+    ModifiedContext.InteractableComp = this;
+    ModifiedContext.InteractablePropertyComp = OwnerActor->FindComponentByClass<UInteractablePropertyComponent>();
+    ModifiedContext.ContextComp = OwnerActor->FindComponentByClass<ULogicContextComponent>();
+  }
 
-    // 이제 내부에서 직접 LogicModules 배열을 순회합니다.
-    for (ULogicModuleBase *Module : LogicModules) {
-      if (Module) {
-        if (Module->ExecuteInteraction(ModifiedContext)) {
-          return true; // 처리에 성공하면 흐름을 중단
-        }
+  // 디버그 로그: 어떤 의도가 들어왔는지 확인
+  UE_LOG(LogTemp, Log, TEXT("[%s] OnInteract - Intent: %s, Interactor: %s"), 
+      *GetName(), *ModifiedContext.InteractionTag.ToString(), 
+      ModifiedContext.Interactor ? *ModifiedContext.Interactor->GetName() : TEXT("System(None)"));
+
+  // 이제 내부에서 직접 LogicModules 배열을 순회합니다.
+  for (ULogicModuleBase *Module : LogicModules) {
+    if (Module) {
+      if (Module->ExecuteInteraction(ModifiedContext)) {
+        return true; // 처리에 성공하면 흐름을 중단
       }
     }
   }
+
   return false;
 }
 

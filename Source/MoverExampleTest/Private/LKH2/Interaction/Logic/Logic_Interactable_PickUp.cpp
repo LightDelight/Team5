@@ -35,7 +35,7 @@ bool ULogic_Interactable_PickUp::PerformInteraction(const FInteractionContext &C
 			
 			if (InteractorProperty && ItemToEquip)
 			{
-				InteractionManager->ExecuteEquip(InteractorProperty, ItemToEquip);
+				InteractionManager->SafePickUpItem(InteractorProperty, ItemToEquip);
 				return true;
 			}
 		}

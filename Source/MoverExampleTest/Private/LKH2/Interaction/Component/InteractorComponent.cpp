@@ -13,6 +13,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/GameStateBase.h"
 #include "LKH2/Interaction/Base/LogicContextInterface.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
 
 UInteractorComponent::UInteractorComponent() {
   SetIsReplicatedByDefault(true);
@@ -36,12 +38,102 @@ UInteractorComponent::UInteractorComponent() {
 void UInteractorComponent::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty> &OutLifetimeProps) const {
   Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+  DOREPLIFETIME(UInteractorComponent, bIsWorking);
 }
+
+void UInteractorComponent::SetIsWorking(bool bWorking, AActor* InTargetActor, FGameplayTag InCancelTag)
+{
+  UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetIsWorking(%d) 호출됨. 현재 bIsWorking=%d, Owner=%s"),
+    bWorking, bIsWorking, *GetOwner()->GetName());
+
+  if (bIsWorking == bWorking) 
+  {
+    UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetIsWorking: 이미 같은 값이므로 조기 반환."));
+    return;
+  }
+  bIsWorking = bWorking;
+
+  if (bWorking)
+  {
+    // 작업 대상과 Cancel Intent 태그 저장
+    WorkingTargetActor = InTargetActor;
+    WorkingCancelIntentTag = InCancelTag;
+  }
+  else
+  {
+    // 작업 종료 시 초기화
+    WorkingTargetActor = nullptr;
+    WorkingCancelIntentTag = FGameplayTag();
+  }
+
+  // 이동 차단/해제
+  if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
+  {
+    if (UCharacterMovementComponent* MoveComp = OwnerCharacter->GetCharacterMovement())
+    {
+      if (bWorking)
+      {
+        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] DisableMovement() 호출."));
+        MoveComp->DisableMovement();
+      }
+      else
+      {
+        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetMovementMode(MOVE_Walking) 호출."));
+        MoveComp->SetMovementMode(MOVE_Walking);
+      }
+    }
+    else
+    {
+      UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: CharacterMovementComponent를 찾을 수 없습니다!"));
+    }
+  }
+  else
+  {
+    UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: Owner가 ACharacter가 아닙니다!"));
+  }
+}
+
+// 클라이언트에서 복제된 bIsWorking에 따라 이동 상태를 동기화
+void UInteractorComponent::OnRep_IsWorking()
+{
+  if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
+  {
+    if (UCharacterMovementComponent* MoveComp = OwnerCharacter->GetCharacterMovement())
+    {
+      if (bIsWorking)
+      {
+        MoveComp->DisableMovement();
+      }
+      else
+      {
+        MoveComp->SetMovementMode(MOVE_Walking);
+      }
+    }
+  }
+}
+
 
 void UInteractorComponent::BeginPlay() {
   Super::BeginPlay();
 
-  PropertyComponent = GetOwner() ? GetOwner()->FindComponentByClass<UInteractorPropertyComponent>() : nullptr;
+  PropertyComponent = nullptr;
+  if (AActor* OwnerActor = GetOwner())
+  {
+      TArray<UInteractorPropertyComponent*> PropComps;
+      OwnerActor->GetComponents<UInteractorPropertyComponent>(PropComps);
+      for (UInteractorPropertyComponent* Comp : PropComps)
+      {
+          if (Comp->GetName().Contains(TEXT("InteractorProperty")))
+          {
+              PropertyComponent = Comp;
+              break;
+          }
+      }
+      if (!PropertyComponent && PropComps.Num() > 0)
+      {
+          PropertyComponent = PropComps[0];
+      }
+  }
 
   // 에디터(블루프린트 등)에서 채널 변경을 지원하기 위해 BeginPlay에서도 한번 덮어씌웁니다.
   DetectionSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -186,6 +278,8 @@ void UInteractorComponent::PollGridTarget()
 }
 
 void UInteractorComponent::SetSphereTarget(AActor *NewTarget) {
+  TryCancelWorkingOnTargetChange(NewTarget);
+
   bool bIsLocalPlayer = false;
   if (APawn *OwnerPawn = Cast<APawn>(GetOwner())) {
     bIsLocalPlayer = OwnerPawn->IsLocallyControlled();
@@ -209,6 +303,8 @@ void UInteractorComponent::SetSphereTarget(AActor *NewTarget) {
 }
 
 void UInteractorComponent::SetGridTarget(AActor *NewTarget) {
+  TryCancelWorkingOnTargetChange(NewTarget);
+
   bool bIsLocalPlayer = false;
   if (APawn *OwnerPawn = Cast<APawn>(GetOwner())) {
     bIsLocalPlayer = OwnerPawn->IsLocallyControlled();
@@ -305,9 +401,11 @@ void UInteractorComponent::ProcessInputBuffer(AActor* ServerOverrideTarget) {
     }
 
     // 타겟에게 처리를 못했다면, 들고 있는 아이템에게 전달
+    // BestTarget을 함께 전달하여 CarriedActor(Container 등)가 대상을 인식 가능
     if (!bSuccess && CurrentCarriedActor->Implements<UInteractionContextInterface>()) {
+      AActor* BestTarget = PrimaryTarget ? PrimaryTarget : SecondaryTarget;
       bSuccess = IInteractionContextInterface::Execute_OnInteract(
-          CurrentCarriedActor, CreateInteractionContext(nullptr, BufferedIntentTag));
+          CurrentCarriedActor, CreateInteractionContext(BestTarget, BufferedIntentTag));
     }
   } else {
     // 들고 있는 아이템이 없을 때
@@ -327,4 +425,23 @@ void UInteractorComponent::ProcessInputBuffer(AActor* ServerOverrideTarget) {
 
   BufferedIntentTag = FGameplayTag::EmptyTag;
   InputBufferTimer = 0.f;
+}
+
+void UInteractorComponent::TryCancelWorkingOnTargetChange(AActor* NewTarget)
+{
+  if (!bIsWorking) return;
+
+  AActor* OldTarget = WorkingTargetActor.Get();
+  if (!OldTarget || OldTarget == NewTarget) return;
+  if (!WorkingCancelIntentTag.IsValid()) return;
+
+  UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] 작업 중 타겟 변경 감지! OldTarget=%s → NewTarget=%s, Cancel Intent 발송"),
+    *OldTarget->GetName(), NewTarget ? *NewTarget->GetName() : TEXT("None"));
+
+  // 기존 파이프라인을 통해 Cancel Intent를 이전 타겟에 발송
+  if (OldTarget->Implements<UInteractionContextInterface>())
+  {
+    FInteractionContext CancelContext = CreateInteractionContext(OldTarget, WorkingCancelIntentTag);
+    IInteractionContextInterface::Execute_OnInteract(OldTarget, CancelContext);
+  }
 }
