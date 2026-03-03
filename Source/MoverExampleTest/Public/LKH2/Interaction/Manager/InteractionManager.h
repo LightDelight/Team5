@@ -131,27 +131,34 @@ public:
 	 * 지속 입력(Hold)에 대한 진행 상태를 기록하고 UI를 갱신하도록 요청합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Action|Holding")
-	void StartHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, float RequiredDuration);
+	void StartHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, float RequiredDuration, FGameplayTag SlotTag = FGameplayTag(), FGuid ItemUID = FGuid(), float InitialProgress = 0.0f);
 
 	/**
 	 * 지속 입력(Hold)에 대한 진행 상태 보관을 해제하고 UI를 숨기도록 요청합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Action|Holding")
-	void ClearHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag);
+	void ClearHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, FGameplayTag SlotTag = FGameplayTag(), FGuid ItemUID = FGuid());
+
+	/**
+	 * 진행 중인 홀딩 프로그레스를 고정된 수치(Step)로 변환하여 동결합니다.
+	 * SlotTag 또는 TargetActor(Interactor)를 통해 대상을 정할 수 있습니다.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Action|Holding")
+	void FreezeHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, FGameplayTag SlotTag = FGameplayTag(), FGuid ItemUID = FGuid());
 
 	/**
 	 * 단계별 진행(Step-based) 수치를 업데이트하고 UI를 갱신합니다.
 	 * SlotTag를 전달하면 해당 슬롯의 StoredItem(ItemBase)에 UI를 표시합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Action|Step")
-	void UpdateStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, float CurrentStep, float MaxStep, FGameplayTag SlotTag = FGameplayTag());
+	void UpdateStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, float CurrentStep, float MaxStep, FGameplayTag SlotTag = FGameplayTag(), FGuid ItemUID = FGuid());
 
 	/**
 	 * 단계별 진행(Step-based) 수치를 초기화하고 UI를 숨깁니다.
 	 * SlotTag를 전달하면 해당 슬롯의 StoredItem(ItemBase)에서 UI를 숨깁니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Action|Step")
-	void ClearStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, FGameplayTag SlotTag = FGameplayTag());
+	void ClearStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, FGameplayTag SlotTag = FGameplayTag(), FGuid ItemUID = FGuid());
 
 	/**
 	 * 특정 아이템을 생성하여 플레이어가 즉시 집게 하는 행동 정의 (자판기/뽑기 로직용).
@@ -159,35 +166,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
 	void ExecuteVending(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, FGameplayTag ItemToSpawnTag);
 
-	/**
-	 * 대상의 프로그레스 위젯을 활성화하도록 요청합니다.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Interaction|UI")
-	void ShowProgressUI(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag);
-
-	/**
-	 * 대상의 프로그레스 위젯을 비활성화하도록 요청합니다.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Interaction|UI")
-	void HideProgressUI(UInteractablePropertyComponent* TargetProperty);
-
-	/**
-	 * 대상의 프로그레스 위젯 메터리얼을 고정합니다.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Interaction|UI")
-	void LockProgressUI(UInteractablePropertyComponent* TargetProperty);
-
-	/**
-	 * 대상의 고정된 프로그레스 위젯 상태를 해제합니다.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Interaction|UI")
-	void UnlockProgressUI(UInteractablePropertyComponent* TargetProperty);
-
-	/**
-	 * 대상의 프로그레스 위젯 상태를 모두 초기화합니다.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Interaction|UI")
-	void ResetProgressUI(UInteractablePropertyComponent* TargetProperty);
+	// UI helpers are now managed internally by InteractablePropertyComponent (InternalSetTimerUI, etc.)
 
 	// 향후 확장: 조합된 결과물 생성, 파괴 후 변경 등 다중 액터 상호작용 행동 정의들이 추가될 수 있습니다.
 };

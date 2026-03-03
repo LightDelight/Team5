@@ -17,6 +17,9 @@ public:
 	ULogic_Interactable_Bake();
 
 protected:
+	/** 자율 진행 시작 조건을 체크합니다. (레시피 존재 여부 확인) */
+	virtual bool CanStartProcessing() const override;
+
 	/** 진행 완료 시 실행될 변환 로직 */
 	virtual void OnProcessingCompleted_Implementation(const FInteractionContext& Context) override;
 

@@ -2,6 +2,8 @@
 
 #include "LKH2/Interaction/Manager/InteractionManager.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/GameStateBase.h"
 #include "GameplayTagContainer.h"
 
 #include "LKH2/Interaction/Component/InteractorComponent.h"
@@ -463,171 +465,305 @@ void UInteractionManager::ExecuteVending(UInteractorPropertyComponent* Interacto
 	}
 }
 
-void UInteractionManager::StartHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, float RequiredDuration)
+void UInteractionManager::StartHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, float RequiredDuration, FGameplayTag SlotTag, FGuid ItemUID, float InitialProgress)
 {
 	if (!TargetProperty || !TargetProperty->GetOwner()) return;
 
-	if (ILogicContextInterface* ContextInterface = Cast<ILogicContextInterface>(TargetProperty->GetOwner()))
+	UE_LOG(LogTemp, Log, TEXT("[InteractionManager] StartHoldingProgress - Target: %s, SlotTag: %s, ItemUID: %s, InitialProgress: %f"), 
+		*TargetProperty->GetOwner()->GetName(), *SlotTag.ToString(), *ItemUID.ToString(), InitialProgress);
+
+	float CurrentTime = 0.0f;
+	if (AGameStateBase* GS = TargetProperty->GetWorld()->GetGameState())
 	{
-		float CurrentTime = TargetProperty->GetWorld()->GetTimeSeconds();
-		
-		FItemStatValue StartStat;
-		StartStat.Type = EItemStatType::Float;
-		StartStat.FloatValue = CurrentTime;
-
-		FItemStatValue EndStat;
-		EndStat.Type = EItemStatType::Float;
-		EndStat.FloatValue = CurrentTime + RequiredDuration;
-
-		ContextInterface->SetStat(StartTimeTag, StartStat);
-		ContextInterface->SetStat(EndTimeTag, EndStat);
+		CurrentTime = GS->GetServerWorldTimeSeconds();
+	}
+	else
+	{
+		CurrentTime = TargetProperty->GetWorld()->GetTimeSeconds();
 	}
 
-	ShowProgressUI(TargetProperty, StartTimeTag, EndTimeTag);
-}
+	float EndTime = CurrentTime + (RequiredDuration - InitialProgress);
+	float StartTime = CurrentTime - InitialProgress;
 
-void UInteractionManager::ClearHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag)
-{
-	if (!TargetProperty || !TargetProperty->GetOwner()) return;
+	FItemStatValue StartStat;
+	StartStat.Type = EItemStatType::Float;
+	StartStat.FloatValue = StartTime;
 
-	if (ILogicContextInterface* ContextInterface = Cast<ILogicContextInterface>(TargetProperty->GetOwner()))
-	{
-		FItemStatValue ClearStat;
-		ClearStat.Type = EItemStatType::Float;
-		ClearStat.FloatValue = -1.0f;
+	FItemStatValue EndStat;
+	EndStat.Type = EItemStatType::Float;
+	EndStat.FloatValue = EndTime;
 
-		// 마이너스 값으로 설정하여 진행 비활성화
-		ContextInterface->SetStat(StartTimeTag, ClearStat);
-		ContextInterface->SetStat(EndTimeTag, ClearStat);
-	}
+	// 1. 데이터 저장 (Workstation 또는 Item)
+	ILogicContextInterface* StatTarget = nullptr;
+	UInteractablePropertyComponent* UITarget = TargetProperty;
 
-	HideProgressUI(TargetProperty);
-}
-
-void UInteractionManager::UpdateStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, float CurrentStep, float MaxStep, FGameplayTag SlotTag)
-{
-	if (!TargetProperty || !TargetProperty->GetOwner()) return;
-
-	if (ILogicContextInterface* ContextInterface = Cast<ILogicContextInterface>(TargetProperty->GetOwner()))
-	{
-		FItemStatValue CurrentStat;
-		CurrentStat.Type = EItemStatType::Float;
-		CurrentStat.FloatValue = CurrentStep;
-
-		FItemStatValue MaxStat;
-		MaxStat.Type = EItemStatType::Float;
-		MaxStat.FloatValue = MaxStep;
-
-		ContextInterface->SetStat(CurrentStepTag, CurrentStat);
-		ContextInterface->SetStat(MaxStepTag, MaxStat);
-	}
-
-	// SlotTag로 StoredItem을 찾아 아이템의 PropertyComp에 UI 표시
-	if (SlotTag.IsValid())
-	{
-		AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag);
-
-		if (StoredItem)
-		{
-			if (UInteractablePropertyComponent* ItemPropComp = StoredItem->FindComponentByClass<UInteractablePropertyComponent>())
-			{
-				// Item의 blackboard에도 stat 저장 (Widget은 Item blackboard를 읽음)
-				if (ILogicContextInterface* ItemContext = Cast<ILogicContextInterface>(StoredItem))
-				{
-					FItemStatValue CurrentStat2;
-					CurrentStat2.Type = EItemStatType::Float;
-					CurrentStat2.FloatValue = CurrentStep;
-					FItemStatValue MaxStat2;
-					MaxStat2.Type = EItemStatType::Float;
-					MaxStat2.FloatValue = MaxStep;
-					ItemContext->SetStat(CurrentStepTag, CurrentStat2);
-					ItemContext->SetStat(MaxStepTag, MaxStat2);
-				}
-				// Step 전용 UI (CurrentStepTag/MaxStepTag를 Widget에 정확히 설정)
-				// float 수치는 Replicated 필드로 직접 전달 (Blackboard 복제 우회)
-				ItemPropComp->SetRepStepValues(CurrentStep, MaxStep);
-				ItemPropComp->ShowStepProgressUI(CurrentStepTag, MaxStepTag);
-				return;
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("[UpdateStepProgress] StoredItem에 InteractablePropertyComponent가 없음"));
-			}
-		}
-	}
-
-	// Fallback: SlotTag 없거나 아이템 없으면 Workstation에 표시
-	ShowProgressUI(TargetProperty, CurrentStepTag, MaxStepTag);
-}
-
-void UInteractionManager::ClearStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, FGameplayTag SlotTag)
-{
-	if (!TargetProperty || !TargetProperty->GetOwner()) return;
-
-	if (ILogicContextInterface* ContextInterface = Cast<ILogicContextInterface>(TargetProperty->GetOwner()))
-	{
-		FItemStatValue ClearStat;
-		ClearStat.Type = EItemStatType::Float;
-		ClearStat.FloatValue = -1.0f;
-
-		ContextInterface->SetStat(CurrentStepTag, ClearStat);
-		ContextInterface->SetStat(MaxStepTag, ClearStat);
-	}
-
-	// SlotTag로 StoredItem을 찾아 아이템의 PropertyComp에서 UI 숨김
 	if (SlotTag.IsValid())
 	{
 		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
 		{
-			if (UInteractablePropertyComponent* ItemPropComp = StoredItem->FindComponentByClass<UInteractablePropertyComponent>())
+			StatTarget = Cast<ILogicContextInterface>(StoredItem);
+			UITarget = StoredItem->FindComponentByClass<UInteractablePropertyComponent>();
+			UE_LOG(LogTemp, Log, TEXT("[InteractionManager] Redirection Success - StoredItem: %s, UITarget: %s"), 
+				*StoredItem->GetName(), UITarget ? *UITarget->GetName() : TEXT("None"));
+		}
+	}
+	
+	if (!UITarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
 			{
-				HideProgressUI(ItemPropComp);
-				return;
+				StatTarget = Cast<ILogicContextInterface>(ItemActor);
+				UITarget = ItemActor->FindComponentByClass<UInteractablePropertyComponent>();
+				UE_LOG(LogTemp, Log, TEXT("[InteractionManager] Redirection via ItemUID - Actor: %s"), 
+					*ItemActor->GetName());
+			}
+		}
+	}
+	
+	if (!StatTarget)
+	{
+		StatTarget = Cast<ILogicContextInterface>(TargetProperty->GetOwner());
+	}
+
+	if (StatTarget)
+	{
+		StatTarget->SetStat(StartTimeTag, StartStat);
+		StatTarget->SetStat(EndTimeTag, EndStat);
+	}
+
+	// 2. UI 표시 (InternalSetTimerUI 호출)
+	if (UITarget)
+	{
+		UITarget->InternalSetTimerUI(StartTimeTag, EndTimeTag, ItemUID);
+	}
+}
+
+void UInteractionManager::ClearHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, FGameplayTag SlotTag, FGuid ItemUID)
+{
+	if (!TargetProperty || !TargetProperty->GetOwner()) return;
+
+	UE_LOG(LogTemp, Log, TEXT("[InteractionManager] ClearHoldingProgress - Target: %s, SlotTag: %s, ItemUID: %s"), 
+		*TargetProperty->GetOwner()->GetName(), *SlotTag.ToString(), *ItemUID.ToString());
+
+	FItemStatValue ClearStat;
+	ClearStat.Type = EItemStatType::Float;
+	ClearStat.FloatValue = -1.0f;
+
+	// 1. 데이터 초기화 (도메인 모델의 스탯 초기화)
+	ILogicContextInterface* StatTarget = nullptr;
+	if (SlotTag.IsValid())
+	{
+		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
+		{
+			StatTarget = Cast<ILogicContextInterface>(StoredItem);
+		}
+	}
+	
+	if (!StatTarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
+			{
+				StatTarget = Cast<ILogicContextInterface>(ItemActor);
 			}
 		}
 	}
 
-	// Fallback
-	HideProgressUI(TargetProperty);
-}
-
-void UInteractionManager::ShowProgressUI(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag)
-{
-	if (TargetProperty)
+	if (!StatTarget)
 	{
-		TargetProperty->ShowProgressUI(StartTimeTag, EndTimeTag);
+		StatTarget = Cast<ILogicContextInterface>(TargetProperty->GetOwner());
+	}
+
+	if (StatTarget)
+	{
+		StatTarget->SetStat(StartTimeTag, ClearStat);
+		StatTarget->SetStat(EndTimeTag, ClearStat);
+	}
+
+	// 2. UI 상태 초기화 (InternalClearUI 호출)
+	UInteractablePropertyComponent* UITarget = nullptr;
+	if (SlotTag.IsValid())
+	{
+		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
+		{
+			UITarget = StoredItem->FindComponentByClass<UInteractablePropertyComponent>();
+		}
+	}
+
+	if (!UITarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
+			{
+				UITarget = ItemActor->FindComponentByClass<UInteractablePropertyComponent>();
+				UE_LOG(LogTemp, Log, TEXT("[InteractionManager] ClearHoldingProgress - Redirection via ItemUID: %s"), 
+					*ItemActor->GetName());
+			}
+		}
+	}
+
+	if (!UITarget)
+	{
+		UITarget = TargetProperty;
+	}
+
+	if (UITarget)
+	{
+		UITarget->InternalClearUI();
 	}
 }
 
-void UInteractionManager::HideProgressUI(UInteractablePropertyComponent* TargetProperty)
+void UInteractionManager::FreezeHoldingProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag StartTimeTag, FGameplayTag EndTimeTag, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, FGameplayTag SlotTag, FGuid ItemUID)
 {
-	if (TargetProperty)
+	if (!TargetProperty) return;
+
+	UInteractablePropertyComponent* UITarget = nullptr;
+	if (SlotTag.IsValid())
 	{
-		TargetProperty->HideProgressUI();
+		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
+		{
+			UITarget = StoredItem->FindComponentByClass<UInteractablePropertyComponent>();
+		}
+	}
+
+	if (!UITarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
+			{
+				UITarget = ItemActor->FindComponentByClass<UInteractablePropertyComponent>();
+				UE_LOG(LogTemp, Log, TEXT("[InteractionManager] FreezeHoldingProgress - Redirection via ItemUID: %s"), 
+					*ItemActor->GetName());
+			}
+		}
+	}
+
+	if (!UITarget)
+	{
+		UITarget = TargetProperty;
+	}
+
+	// 컴포넌트 내부 헬퍼 호출 (원자적으로 타이머 → 스텝 상태 전환)
+	if (UITarget)
+	{
+		UITarget->InternalFreezeTimerToStep(CurrentStepTag, MaxStepTag);
 	}
 }
 
-void UInteractionManager::LockProgressUI(UInteractablePropertyComponent* TargetProperty)
+void UInteractionManager::UpdateStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, float CurrentStep, float MaxStep, FGameplayTag SlotTag, FGuid ItemUID)
 {
-	if (TargetProperty)
+	if (!TargetProperty) return;
+
+	UInteractablePropertyComponent* UITarget = nullptr;
+	if (SlotTag.IsValid())
 	{
-		TargetProperty->LockProgressUI();
+		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
+		{
+			UITarget = StoredItem->FindComponentByClass<UInteractablePropertyComponent>();
+		}
+	}
+
+	if (!UITarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
+			{
+				UITarget = ItemActor->FindComponentByClass<UInteractablePropertyComponent>();
+				UE_LOG(LogTemp, Log, TEXT("[InteractionManager] UpdateStepProgress - Redirection via ItemUID: %s"), 
+					*ItemActor->GetName());
+			}
+		}
+	}
+
+	if (!UITarget)
+	{
+		UITarget = TargetProperty;
+	}
+
+	// 컴포넌트 내부 헬퍼 호출
+	if (UITarget)
+	{
+		UITarget->InternalSetStepUI(CurrentStepTag, MaxStepTag, CurrentStep, MaxStep, ItemUID);
 	}
 }
 
-void UInteractionManager::UnlockProgressUI(UInteractablePropertyComponent* TargetProperty)
+void UInteractionManager::ClearStepProgress(UInteractablePropertyComponent* TargetProperty, FGameplayTag CurrentStepTag, FGameplayTag MaxStepTag, FGameplayTag SlotTag, FGuid ItemUID)
 {
-	if (TargetProperty)
+	FItemStatValue ClearStat;
+	ClearStat.Type = EItemStatType::Float;
+	ClearStat.FloatValue = -1.0f;
+
+	// 1. 데이터 초기화 (Blackboard Stat)
+	ILogicContextInterface* StatTarget = nullptr;
+	if (SlotTag.IsValid())
 	{
-		TargetProperty->UnlockProgressUI();
+		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
+		{
+			StatTarget = Cast<ILogicContextInterface>(StoredItem);
+		}
+	}
+
+	if (!StatTarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
+			{
+				StatTarget = Cast<ILogicContextInterface>(ItemActor);
+			}
+		}
+	}
+
+	if (!StatTarget)
+	{
+		StatTarget = Cast<ILogicContextInterface>(TargetProperty->GetOwner());
+	}
+
+	if (StatTarget)
+	{
+		StatTarget->SetStat(CurrentStepTag, ClearStat);
+		StatTarget->SetStat(MaxStepTag, ClearStat);
+	}
+
+	// 컴포넌트 UI 초기화
+	UInteractablePropertyComponent* UITarget = nullptr;
+	if (SlotTag.IsValid())
+	{
+		if (AItemBase* StoredItem = TargetProperty->GetStoredItem(SlotTag))
+		{
+			UITarget = StoredItem->FindComponentByClass<UInteractablePropertyComponent>();
+		}
+	}
+
+	if (!UITarget && ItemUID.IsValid())
+	{
+		if (UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>())
+		{
+			if (AItemBase* ItemActor = ItemManager->GetItemActor(ItemUID))
+			{
+				UITarget = ItemActor->FindComponentByClass<UInteractablePropertyComponent>();
+				UE_LOG(LogTemp, Log, TEXT("[InteractionManager] ClearStepProgress - Redirection via ItemUID: %s"), 
+					*ItemActor->GetName());
+			}
+		}
+	}
+
+	if (!UITarget)
+	{
+		UITarget = TargetProperty;
+	}
+
+	if (UITarget)
+	{
+		UITarget->InternalClearUI();
 	}
 }
 
-void UInteractionManager::ResetProgressUI(UInteractablePropertyComponent* TargetProperty)
-{
-	if (TargetProperty)
-	{
-		TargetProperty->ResetProgressUI();
-	}
-}
+// Redundant UI helpers removed. Managed by InteractablePropertyComponent directly.
 

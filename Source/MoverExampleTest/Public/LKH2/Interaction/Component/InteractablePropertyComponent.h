@@ -13,6 +13,44 @@
 class AItemBase;
 class USceneComponent;
 
+UENUM(BlueprintType)
+enum class EProgressDisplayMode : uint8
+{
+	None,
+	Timer,
+	Step
+};
+
+USTRUCT(BlueprintType)
+struct FProgressUIState
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	EProgressDisplayMode Mode = EProgressDisplayMode::None;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayTag StartTimeTag;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayTag EndTimeTag;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayTag CurrentStepTag;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayTag MaxStepTag;
+
+	UPROPERTY(BlueprintReadOnly)
+	float CurrentStep = 0.0f;
+
+	UPROPERTY(BlueprintReadOnly)
+	float MaxStep = 0.0f;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGuid LinkedItemUID;
+};
+
 /**
  * 액터 수준의 강한 결합을 가진 상호작용 관련 데이터를 관리하는 컴포넌트입니다.
  * (예: 거치되어 있는 아이템 등)
@@ -113,6 +151,14 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Interaction|UI")
 	virtual void HideProgressUI();
+
+	/** 상호작용 매니저 등에서 고수준으로 UI 상태를 동기화하기 위한 헬퍼들 */
+	void InternalSetTimerUI(FGameplayTag InStartTag, FGameplayTag InEndTag, FGuid InItemUID = FGuid());
+	void InternalSetStepUI(FGameplayTag InCurrentTag, FGameplayTag InMaxTag, float InCurrent, float InMax, FGuid InItemUID = FGuid());
+	void InternalFreezeTimerToStep(FGameplayTag InCurrentTag, FGameplayTag InMaxTag);
+	void InternalClearUI();
+
+	const FProgressUIState& GetUIState() const { return UIState; }
 	
 	/**
 	 * 프로그레스 위젯의 진행도를 고정합니다.
@@ -134,40 +180,23 @@ public:
 
 private:
 	/**
-	 * 리플리케이션: ProgressWidget 표시 여부
-	 * OnRep에서 ShowStepProgressUI 또는 HideProgressUI를 호출합니다.
+	 * 리플리케이션: UI 전체 상태
 	 */
-	UPROPERTY(ReplicatedUsing = OnRep_ProgressVisible)
-	bool bProgressVisible = false;
-
-	/** 리플리케이션: Step 현재 태그 */
-	UPROPERTY(Replicated)
-	FGameplayTag RepCurrentStepTag;
-
-	/** 리플리케이션: Step 최대 태그 */
-	UPROPERTY(Replicated)
-	FGameplayTag RepMaxStepTag;
-
-	/** 리플리케이션: 실제 현재 스텝 수치 (Blackboard 우회용) */
-	UPROPERTY(Replicated)
-	float RepCurrentStep = 0.0f;
-
-	/** 리플리케이션: 실제 최대 스텝 수치 (Blackboard 우회용) */
-	UPROPERTY(Replicated)
-	float RepMaxStep = 0.0f;
+	UPROPERTY(ReplicatedUsing = OnRep_UIState)
+	FProgressUIState UIState;
 
 	UFUNCTION()
-	void OnRep_ProgressVisible();
+	void OnRep_UIState();
 
 public:
 	/** 서버 → 클라이언트로 복제될 Step 수치를 설정합니다. */
 	void SetRepStepValues(float CurrentStep, float MaxStep)
 	{
-		RepCurrentStep = CurrentStep;
-		RepMaxStep = MaxStep;
+		UIState.CurrentStep = CurrentStep;
+		UIState.MaxStep = MaxStep;
 	}
 
-	float GetRepCurrentStep() const { return RepCurrentStep; }
-	float GetRepMaxStep()     const { return RepMaxStep;     }
+	float GetRepCurrentStep() const { return UIState.CurrentStep; }
+	float GetRepMaxStep()     const { return UIState.MaxStep;     }
 };
 

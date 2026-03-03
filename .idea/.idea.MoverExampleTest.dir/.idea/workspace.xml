@@ -9,491 +9,22 @@
   <component name="ChangeListManager">
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_StationSpawner.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_ItemTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_ItemTag.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicBlackboardTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicBlackboardTag.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicItemStatsTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicItemStatsTag.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_PlayerIntentTags.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_PlayerIntentTags.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cone.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Cube.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Sphere.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Sphere.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map001.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map001.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/RecipeData/DA_CombineRecipeBook.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/RecipeData/DA_CombineRecipeBook2.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_CuttingBoard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_CuttingBoard.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_VendingMachine_Cone.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Work.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/Preset/DA_Preset_Workstation_Visual_WoodenPalette.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/Preset/DA_Preset_Workstation_Visual_WoodenPalette.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Grill.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Grill.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Docs/Structure.md" beforeDir="false" afterPath="$PROJECT_DIR$/Docs/Structure.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoverExampleTest.uproject.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MoverExampleTest.uproject.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Resources/Icon128.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Resources/checksum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/RiderLink.uplugin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/RD.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/RD.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/RD.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/rd_core_export.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/Lifetime.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/Lifetime.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/LifetimeDefinition.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/LifetimeDefinition.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/LifetimeImpl.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/LifetimeImpl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/SequentialLifetimes.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/lifetime/SequentialLifetimes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/Property.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/ViewableList.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/ViewableMap.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/ViewableSet.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/IProperty.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/IPropertyBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/IViewableList.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/IViewableMap.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/IViewableSet.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/SignalCookie.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/SignalCookie.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/SignalX.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/interfaces.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/reactive/base/viewable_collections.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/std/allocator.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/std/hash.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/std/list.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/std/to_string.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/std/unordered_map.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/std/unordered_set.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/types/DateTime.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/types/DateTime.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/types/Void.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/types/wrapper.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/core_traits.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/core_util.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/enum.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/erase_if.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/gen_util.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/overloaded.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main/util/shared_function.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/rd_framework_export.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IProtocol.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IProtocol.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IRdBindable.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IRdDynamic.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IRdReactive.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IRdWireable.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IRdWireable.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/ISerializersOwner.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/ISerializersOwner.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IUnknownInstance.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IUnknownInstance.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/IWire.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/RdBindableBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/RdBindableBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/RdPropertyBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/RdReactiveBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/RdReactiveBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/WireBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/base/WireBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/ext/ExtWire.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/ext/ExtWire.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/ext/RdExtBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/ext/RdExtBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RName.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RName.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RdList.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RdMap.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RdProperty.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RdSet.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/impl/RdSignal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/intern/InternRoot.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/intern/InternRoot.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/intern/InternScheduler.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/intern/InternScheduler.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/Buffer.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/Buffer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/Identities.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/Identities.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/MessageBroker.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/MessageBroker.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/Protocol.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/Protocol.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/RdId.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/protocol/RdId.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/SimpleScheduler.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/SimpleScheduler.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/SingleThreadScheduler.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/SingleThreadScheduler.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/SynchronousScheduler.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/SynchronousScheduler.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/base/IScheduler.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/base/IScheduler.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/base/SingleThreadSchedulerBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/scheduler/base/SingleThreadSchedulerBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/AbstractPolymorphic.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/ArraySerializer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/DefaultAbstractDeclaration.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/DefaultAbstractDeclaration.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/ISerializable.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/ISerializable.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/InternedAnySerializer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/InternedSerializer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/NullableSerializer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/Polymorphic.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/Polymorphic.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/RdAny.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/RdAny.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/SerializationCtx.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/SerializationCtx.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/Serializers.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/serialization/Serializers.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/RdCall.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/RdEndpoint.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/RdSymmetricCall.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/RdTask.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/RdTaskImpl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/RdTaskResult.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/WiredRdTask.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/task/WiredRdTaskImpl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util/framework_traits.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util/guards.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util/hashing.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util/hashing.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util/thread_util.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util/thread_util.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/ByteBufferAsyncProcessor.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/ByteBufferAsyncProcessor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/PkgInputStream.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/PkgInputStream.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/PumpScheduler.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/PumpScheduler.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/SocketWire.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/SocketWire.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/WireUtil.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/wire/WireUtil.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_gen_cpp/src/RdTextBuffer.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/src/rd_gen_cpp/src/RdTextBuffer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/CTPL/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/CTPL/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/CTPL/include/ctpl_stl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/Host.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/PassiveSocket.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/PassiveSocket.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/SimpleSocket.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/SimpleSocket.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/StatTimer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/countdownlatch/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/countdownlatch/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/countdownlatch/countdownlatch.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/countdownlatch/countdownlatch.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/optional/COPYING" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/optional/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/optional/tl/optional.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/ordered-map/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/ordered-map/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/ordered-map/include/tsl/ordered_hash.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/ordered-map/include/tsl/ordered_map.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/ordered-map/include/tsl/ordered_set.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/ide.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/pch.h.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/spdlog.pc.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/spdlogCPack.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/spdlogConfig.cmake.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/utils.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/cmake/version.rc.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/async.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/async_logger-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/async_logger.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/cfg/argv.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/cfg/env.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/cfg/helpers-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/cfg/helpers.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/cfg/log_levels.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/common-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/common.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/backtracer-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/backtracer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/circular_q.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/console_globals.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/file_helper-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/file_helper.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/fmt_helper.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/log_msg-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/log_msg.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/log_msg_buffer-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/log_msg_buffer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/mpmc_blocking_q.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/null_mutex.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/os-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/os.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/periodic_worker-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/periodic_worker.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/registry-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/registry.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/synchronous_factory.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/tcp_client-windows.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/tcp_client.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/thread_pool-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/thread_pool.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/udp_client-windows.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/udp_client.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/details/windows_include.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bin_to_hex.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/LICENSE.rst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/args.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/chrono.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/color.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/compile.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/core.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/fmt.license.rst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/format-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/format.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/locale.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/os.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/ostream.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/posix.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/printf.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/ranges.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/xchar.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/chrono.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/compile.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/fmt.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/ostr.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/ranges.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/xchar.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/formatter.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fwd.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/logger-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/logger.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/pattern_formatter-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/pattern_formatter.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/android_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/ansicolor_sink-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/ansicolor_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/base_sink-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/base_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/basic_file_sink-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/basic_file_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/daily_file_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/dist_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/dup_filter_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/hourly_file_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/mongo_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/msvc_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/null_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/ostream_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/qt_sinks.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/ringbuffer_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/rotating_file_sink-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/rotating_file_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/sink-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/stdout_color_sinks-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/stdout_color_sinks.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/stdout_sinks-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/stdout_sinks.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/syslog_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/systemd_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/tcp_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/udp_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/win_eventlog_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/wincolor_sink-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/sinks/wincolor_sink.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/spdlog-inl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/spdlog.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/stopwatch.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/tweakme.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/version.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/logos/jetbrains-variant-4.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/scripts/extract_version.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/scripts/format.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/async.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/cfg.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/color_sinks.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/file_sinks.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/fmt.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/spdlog.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/stdout_sinks.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/string-view-lite/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/string-view-lite/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/string-view-lite/cmake/string_view-lite-config.cmake.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/string-view-lite/include/nonstd/string_view.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/thirdparty.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/thirdparty.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/cp_utf16.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/cp_utf32.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/cp_utf8.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/cp_utfw.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/utf_config.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/utf_converters.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/utf_selector.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include/ww898/utf_sizes.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/cmake/mpark_variant-config.cmake.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/include/mpark/config.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/include/mpark/in_place.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/include/mpark/lib.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/include/mpark/variant.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderBlueprint/Private/BlueprintProvider.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderBlueprint/Private/RiderBlueprint.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderBlueprint/Public/BlueprintProvider.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderBlueprint/Public/RiderBlueprint.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderBlueprint/RiderBlueprint.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/BlueprintStackGetter.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/DebugLogger.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/DebugLogger.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/RiderDebuggerSupport.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/RiderDebuggerSupport.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/UnrealFunctions.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/UnrealFunctions.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/WideStringWrapper.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/Private/WideStringWrapper.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderDebuggerSupport/RiderDebuggerSupport.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderGameControl/Private/RiderGameControl.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderGameControl/Public/RiderGameControl.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderGameControl/RiderGameControl.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLC/Private/RiderLC.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLC/Private/RiderLC.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLC/RiderLC.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Private/ProtocolFactory.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Private/ProtocolFactory.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Private/RiderLink.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Private/RiderLink.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Private/UE4TypesMarshallers.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/IRiderLink.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/BlueprintFunction.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/BlueprintFunction.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/BlueprintHighlighter.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/BlueprintHighlighter.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/BlueprintReference.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/BlueprintReference.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ConnectionInfo.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ConnectionInfo.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/EmptyScriptCallStack.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/EmptyScriptCallStack.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptCallStack.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptCallStack.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptCallStack_Unknown.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptCallStack_Unknown.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptMsg.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptMsg.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptMsg_Unknown.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/IScriptMsg_Unknown.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/LogMessageInfo.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/LogMessageInfo.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/NotificationType.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/NotificationType.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/PlayState.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/PlayState.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestFailed.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestFailed.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestResultBase.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestResultBase.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestResultBase_Unknown.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestResultBase_Unknown.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestSucceed.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/RequestSucceed.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptCallStack.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptCallStack.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptCallStackFrame.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptCallStackFrame.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptMsgCallStack.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptMsgCallStack.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptMsgException.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/ScriptMsgException.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/StringRange.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/StringRange.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UClass.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UClass.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UE4Library.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UE4Library.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UnableToDisplayScriptCallStack.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UnableToDisplayScriptCallStack.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UnrealLogEvent.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/UE4Library/UnrealLogEvent.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/instantiations_UE4Library.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/Library/instantiations_UE4Library.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/LiveCodingModel/LiveCodingModel.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/LiveCodingModel/LiveCodingModel.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/RdEditorModel/RdEditorModel.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/RdEditorModel/RdEditorModel.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/RdEditorRoot/RdEditorRoot.Pregenerated.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/RdEditorRoot/RdEditorRoot.Pregenerated.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/instantiations_RdEditorRoot.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/Model/RdEditorProtocol/instantiations_RdEditorRoot.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/Public/UE4TypesMarshallers.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLink/RiderLink.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLogging/Private/RiderLogging.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLogging/Private/RiderLogging.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLogging/Private/RiderOutputDevice.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLogging/Private/RiderOutputDevice.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderLogging/RiderLogging.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.Build.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemData.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemSmoothingComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemSmoothingComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkStationBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkStationBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkstationData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkstationData.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicContextComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicContextComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractableComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractableComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicTaskBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicTaskBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/ProcessingLogicModuleBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/ProcessingLogicModuleBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractablePropertyComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractablePropertyComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorPropertyComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorPropertyComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Holding/HoldingLogicModuleBase.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Drop.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Drop.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_PickUp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_PickUp.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Recipe_Combine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Recipe_Combine.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Retrieve.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Retrieve.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Store.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Store.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Throw.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Throw.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Trash.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Trash.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Bake.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Bake.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Manager/InteractionManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Manager/InteractionManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Recipe/CombineRecipeBook.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Recipe/RecipeLogicModuleBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Task/LogicTask_Wait.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Task/LogicTask_Wait.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/UI/Widget/LogicProgressWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/UI/Widget/LogicProgressWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/MapData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/MapData.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Data/VisualPresetData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Data/VisualPresetData.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemData.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemSmoothingComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemSmoothingComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/WorkStation/WorkStationBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/WorkStation/WorkStationBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicBlackboard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicBlackboard.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextInterface.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicModuleBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/ProcessingLogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/ProcessingLogicModuleBase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractablePropertyComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractablePropertyComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractorComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractorComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractorPropertyComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractorPropertyComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Holding/HoldingLogicModuleBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Recipe_Combine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Recipe_Combine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Trash.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Trash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Bake.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Bake.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Manager/InteractionManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Manager/InteractionManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Recipe/CombineRecipeBook.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Recipe/RecipeBookBase.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Recipe/RecipeLogicModuleBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Task/LogicTask_Wait.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Task/LogicTask_Wait.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/UI/Widget/LogicProgressWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/UI/Widget/LogicProgressWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -518,16 +49,14 @@
     &quot;assignee&quot;: &quot;LightDelight&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/LightDelight/Team5.git&quot;,
-    &quot;accountId&quot;: &quot;2f3dc1a0-1c7e-43c4-8537-0e7b3d69a197&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/LightDelight/Team5.git",
+    "accountId": "eab0cb9d-ff5e-4d4b-9ac0-d4145a91a121"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
-    <setting file="cidr-memory-view://1" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/Core/Public/UObject/WeakObjectPtrTemplates.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/CoreUObject/Public/Templates/Casts.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -573,10 +102,10 @@
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\Neighbor\Git\Team5\MoverExampleTest.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\kga\Documents\Unreal Projects\Team5\MoverExampleTest.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -589,7 +118,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest-Win64-DebugGame.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -599,10 +128,10 @@
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\Neighbor\Git\Team5\MoverExampleTest.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\kga\Documents\Unreal Projects\Team5\MoverExampleTest.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -615,7 +144,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -628,7 +157,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest-Win64-Shipping.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -660,6 +189,7 @@
       <workItem from="1772286591969" duration="1394000" />
       <workItem from="1772338779434" duration="35810000" />
       <workItem from="1772436058493" duration="26852000" />
+      <workItem from="1772501344912" duration="17643000" />
     </task>
     <task id="LOCAL-00001" summary="ss">
       <option name="closed" value="true" />

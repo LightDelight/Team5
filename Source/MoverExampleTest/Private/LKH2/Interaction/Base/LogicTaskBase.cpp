@@ -12,12 +12,11 @@ ULogicTaskBase::ULogicTaskBase(const FObjectInitializer& ObjectInitializer)
 
 ULogicTaskBase* ULogicTaskBase::CreateLogicTask(ULogicModuleBase* OwningModule, TSubclassOf<ULogicTaskBase> TaskClass, const FInteractionContext& Context)
 {
-	if (!OwningModule || !TaskClass)
-	{
-		return nullptr;
-	}
-
-	ULogicTaskBase* NewTask = NewObject<ULogicTaskBase>(OwningModule, TaskClass);
+	// ContextComp가 존재하면 이를 Outer로 지정하여 World(TimerManager) 접근 및 수명 주기 관리 보장
+	UObject* TaskOuter = Context.ContextComp.Get();
+	if (!TaskOuter) TaskOuter = OwningModule;
+	
+	ULogicTaskBase* NewTask = NewObject<ULogicTaskBase>(TaskOuter, TaskClass);
 	NewTask->OwningLogicModule = OwningModule;
 	NewTask->CachedContext = Context;
 	return NewTask;

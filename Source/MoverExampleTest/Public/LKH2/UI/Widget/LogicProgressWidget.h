@@ -53,26 +53,11 @@ public:
 
 	/**
 	 * 프로퍼티 컴포넌트의 액터가 가진 블랙보드(또는 Context)에서 조회할 [시작 월드 시간] 태그
+	 * (이제 TargetPropertyComp->GetUIState()를 통해 가져옵니다)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Progress")
 	FGameplayTag StartTimeTag;
-
-	/**
-	 * 프로퍼티 컴포넌트의 액터가 가진 블랙보드(또는 Context)에서 조회할 [완료 예상 월드 시간] 태그
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Progress")
 	FGameplayTag EndTimeTag;
-
-	/**
-	 * 프로퍼티 컴포넌트의 액터가 가진 블랙보드에서 조회할 [현재 진행 단계(Step)] 태그
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Progress")
 	FGameplayTag CurrentStepTag;
-
-	/**
-	 * 프로퍼티 컴포넌트의 액터가 가진 블랙보드에서 조회할 [최대 진행 단계(Step)] 태그
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Progress")
 	FGameplayTag MaxStepTag;
 
 protected:

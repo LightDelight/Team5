@@ -6,9 +6,10 @@ ULogicTask_Wait::ULogicTask_Wait(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-ULogicTask_Wait* ULogicTask_Wait::Wait(ULogicModuleBase* OwningModule, float WaitTime, const FInteractionContext& Context)
+ULogicTask_Wait* ULogicTask_Wait::Wait(ULogicModuleBase* OwningModule, float WaitTime, const FInteractionContext& Context, UObject* InOuter)
 {
-	ULogicTask_Wait* MyTask = NewObject<ULogicTask_Wait>();
+	UObject* TaskOuter = InOuter ? InOuter : OwningModule;
+	ULogicTask_Wait* MyTask = NewObject<ULogicTask_Wait>(TaskOuter);
 	MyTask->OwningLogicModule = OwningModule;
 	MyTask->RequiredTime = WaitTime;
 	MyTask->CachedContext = Context;
@@ -33,6 +34,7 @@ void ULogicTask_Wait::TickTask(float DeltaTime)
 	// Super::TickTask에서 이미 ElapsedTime을 증가시킴
 	if (ElapsedTime >= RequiredTime)
 	{
+		UE_LOG(LogTemp, Log, TEXT("[%s] TickTask - Wait Finished! (Elapsed: %f, Required: %f) Broadcasting OnCompleted."), *GetName(), ElapsedTime, RequiredTime);
 		OnCompleted.Broadcast(this);
 		EndTask();
 	}

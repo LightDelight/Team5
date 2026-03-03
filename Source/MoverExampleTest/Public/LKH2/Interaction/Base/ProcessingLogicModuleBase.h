@@ -48,6 +48,26 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Processing|Task")
 	FGameplayTag ProcessingTaskTag;
 
+	/** 진행도 UI를 표시할 슬롯 키 (비워두면 TargetSlotTag와 동일하게 동작) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	FGameplayTag UISlotTag;
+
+	/** 프로그레스 고정(동결) 시 사용할 현재 수치 태그 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	FGameplayTag CurrentStepTag;
+
+	/** 프로그레스 고정(동결) 시 사용할 최대 수치 태그 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	FGameplayTag MaxStepTag;
+	
+	/** 컨테이너임을 식별하는 데 사용하는 태그 (기본값: Type.Item.Container) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	FGameplayTag ContainerTypeTag;
+
+	/** 취소 시 UI를 제거하지 않고 유지할지 여부 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Processing|UI")
+	bool bMaintainUIOnCancel = false;
+
 protected:
 	/** 자율 진행 시작 조건을 체크합니다. */
 	virtual bool CanStartProcessing() const;
@@ -67,4 +87,10 @@ protected:
 
 	/** 상호작용 취소 시 처리 */
 	virtual void HandleTaskCanceled(class ULogicTaskBase* TaskInstance) override;
+
+	/** 
+	 * 슬롯이나 컨텍스트에서 실제 가공 대상 아이템을 찾습니다. 
+	 * 가공 대상이 컨테이너라면 내부의 첫 번째 유효 아이템을 반환할 수 있습니다.
+	 */
+	virtual class AItemBase* GetTargetItemDeep(const FInteractionContext& Context, class UInteractablePropertyComponent* PropComp, FGameplayTag SlotTag) const;
 };

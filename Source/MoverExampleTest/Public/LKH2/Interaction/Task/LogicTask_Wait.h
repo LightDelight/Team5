@@ -20,7 +20,7 @@ public:
 	 * 지정된 시간(WaitTime)만큼 대기하는 태스크를 생성합니다. 
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Logic|Task", meta = (DefaultToSelf = "OwningModule", HidePin = "OwningModule", BlueprintInternalUseOnly = "true"))
-	static ULogicTask_Wait* Wait(class ULogicModuleBase* OwningModule, float WaitTime, const FInteractionContext& Context);
+	static ULogicTask_Wait* Wait(class ULogicModuleBase* OwningModule, float WaitTime, const FInteractionContext& Context, UObject* InOuter = nullptr);
 
 	virtual void ReadyForActivation() override;
 
