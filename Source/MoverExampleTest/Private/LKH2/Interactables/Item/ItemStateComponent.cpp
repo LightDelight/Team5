@@ -4,6 +4,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "LKH2/Interactables/Item/ItemSmoothingComponent.h"
+#include "LKH2/Interaction/Component/InteractableComponent.h"
 
 // Sets default values for this component's properties
 UItemStateComponent::UItemStateComponent() {
@@ -73,7 +74,7 @@ void UItemStateComponent::SetItemState(EItemState NewState) {
     }
     // 레벨에 놓여있으므로 서버-클라이언트 위치 동기화 필요
     Owner->SetReplicateMovement(true);
-    // Carried 상태에서 NoCollision이었으므로 범위 안 DetectionSphere의
+    // Carried 상태에서 NoCollision이었으로범위 안 DetectionSphere의
     // BeginOverlap이 발동하지 않을 수 있음. UpdateOverlaps로 강제 재계산.
     Owner->UpdateOverlaps();
     break;
@@ -87,13 +88,38 @@ void UItemStateComponent::SetItemState(EItemState NewState) {
       RootPrim->SetPhysicsLinearVelocity(FVector::ZeroVector);
       RootPrim->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
     }
-    // 부착 상태에서는 스무딩(Dead Reckoning) 설정을 켭니다. 
+    // 부착 상태에서는 스무딩(Dead Reckoning) 설정을 켕니다. 
     // (실제 비주얼 분리는 Smoothing 컴포넌트 내부에서 Simulated Proxy인 경우에만 작동함)
     if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {
       SmoothingComp->SetSmoothingEnabled(true);
     }
     // 부착된 상태에서도 위치 동기화(Attachment Replication 포함)가 원활하도록 ReplicateMovement를 유지합니다.
     Owner->SetReplicateMovement(true);
+    break;
+  case EItemState::Spilled:
+    if (RootPrim) {
+      // 얭취로서 전복 시 취야하는 동작
+      // 물리 켜기: 로컬 시뮬레이션으로 굴마다님
+      RootPrim->SetSimulatePhysics(true);
+      RootPrim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+      // 초경량 설정: 진짜 아이템에 물리 영향을 주지 않도록
+      RootPrim->SetMassScale(NAME_None, 0.001f);
+      // 관성 속도 초기화
+      RootPrim->SetPhysicsLinearVelocity(FVector::ZeroVector);
+      RootPrim->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+    }
+    // 아웃라인 비활성화: Spilled 아이템은 상호작용 불가이므로 시각적 피드백 제거
+    // (클라이언트에서도 OnRep_ItemState로 호출되므로 서버-클라이언트 동일 동작)
+    if (UInteractableComponent* IC = Owner->FindComponentByClass<UInteractableComponent>())
+    {
+      IC->SetOutlineEnabled(false);
+    }
+    // 스무딩 끄기: 로컬에서만 연산하므로 서버 보간 불필요
+    if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {
+      SmoothingComp->SetSmoothingEnabled(false);
+    }
+    // 위치 복제 끊기: 클라이언트마다 독립적으로 굴리도록
+    Owner->SetReplicateMovement(false);
     break;
   }
 }

@@ -44,6 +44,22 @@ void ULogicContextComponent::SetStat(const FGameplayTag& Tag, const FItemStatVal
   }
 }
 
+void ULogicContextComponent::RemoveStat(FGameplayTag Tag) {
+  Stats.RemoveStat(Tag);
+}
+
+void ULogicContextComponent::ClearAllStats() {
+  Stats.ClearStats();
+}
+
+void ULogicContextComponent::RemoveObject(FGameplayTag Tag) {
+  ObjectBlackboard.RemoveObject(Tag);
+}
+
+void ULogicContextComponent::ClearAllObjects() {
+  ObjectBlackboard.ClearObjects();
+}
+
 FGameplayTag ULogicContextComponent::ResolveKey(const FGameplayTag& Key) const
 {
 	if (const FItemStatValue* Found = FindStat(Key)) {

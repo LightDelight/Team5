@@ -50,6 +50,30 @@ public:
   void SetStat(const FGameplayTag& Tag, const FItemStatValue& Value);
 
   /**
+   * 블랙보드(런타임)에서 특정 스탯을 제거합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Blackboard")
+  void RemoveStat(FGameplayTag Tag);
+
+  /**
+   * 블랙보드(런타임)의 모든 스탯을 제거합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Blackboard")
+  void ClearAllStats();
+
+  /**
+   * 블랙보드(런타임)에서 특정 오브젝트를 제거합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Blackboard")
+  void RemoveObject(FGameplayTag Tag);
+
+  /**
+   * 블랙보드(런타임)의 모든 오브젝트를 제거합니다.
+   */
+  UFUNCTION(BlueprintCallable, Category = "Logic|Blackboard")
+  void ClearAllObjects();
+
+  /**
    * 키 태그를 실제 스탯 태그로 해소합니다.
    */
   FGameplayTag ResolveKey(const FGameplayTag& Key) const;

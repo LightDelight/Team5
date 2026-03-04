@@ -10,6 +10,10 @@
 class UInteractorComponent;
 class UInteractableCategoryComponent; // 임시: 대상 워크스테이션 식별용 또는 향후 확장용
 class AItemBase;
+class AWorkStationBase;
+class UWorkstationData;
+class AMarkerBase;
+class UMarkerData;
 
 /**
  * 아이템의 물리적 상태(PropertyComponent)와 논리적 상태(ItemManagerSubsystem)를
@@ -84,6 +88,20 @@ public:
 	bool SafeRetrieveItem(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, AItemBase* ItemToRetrieve, FGameplayTag SlotTag);
 
 	// ─── 행동(Action) 스켈레톤 API (기존 유지, 점진적 이관 예정) ───
+
+	/**
+	 * 고정형 상호작용 마커(AMarkerBase)를 스폰하고 DA를 적용합니다.
+	 * @param DA        MarkerData 에셋 (Niagara 이펙트, 위젯, 모듈 포함)
+	 * @param Transform 스폰할 월드 Transform
+	 * @return 스폰된 AMarkerBase 포인터 (실패 시 nullptr)
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Safe")
+	AMarkerBase* SafeSpawnMarker(UMarkerData* DA, const FTransform& Transform);
+
+	/** @deprecated SafeSpawnMarker를 사용하세요. 하위 호환성 유지 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Safe",
+	          meta = (DeprecatedFunction, DeprecationMessage = "Use SafeSpawnMarker instead."))
+	AWorkStationBase* SafeSpawnCleanupWorkstation(UWorkstationData* DA, const FTransform& Transform);
 
 	/**
 	 * 플레이어가 아이템을 줍거나 장착할 때 호출되는 행동 정의.

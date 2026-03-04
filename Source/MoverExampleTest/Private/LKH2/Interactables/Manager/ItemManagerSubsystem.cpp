@@ -198,6 +198,28 @@ void UItemManagerSubsystem::ThrowTargetItem(const FGuid &InstanceId, const FVect
   }
 }
 
+void UItemManagerSubsystem::SpillItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // UID를 Spilled 집합에 등록 → 상호작용 필터링에 사용
+  SpilledItemIds.Add(InstanceId);
+
+  // 상태 전이 → Spilled (위치 복제 끄기 + 로컬 물리 시뮬레이션 시작)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
+    StateComp->SetItemState(EItemState::Spilled);
+  }
+}
+
+void UItemManagerSubsystem::UnspillItem(const FGuid &InstanceId) {
+  SpilledItemIds.Remove(InstanceId);
+}
+
+bool UItemManagerSubsystem::IsSpilledItem(const FGuid &InstanceId) const {
+  return SpilledItemIds.Contains(InstanceId);
+}
+
 // ─── 내부 헬퍼 ───
 
 UClass *UItemManagerSubsystem::ResolveSpawnClass(

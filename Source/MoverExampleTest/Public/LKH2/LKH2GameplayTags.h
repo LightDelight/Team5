@@ -32,6 +32,11 @@ public:
 	FGameplayTag Intent_Workstation_ItemAdd;
 	FGameplayTag Intent_Workstation_ItemRemove;
 
+	// ─── [Intents] 카트 전용 ───
+	FGameplayTag Intent_Cart_ItemOverlap;   // Box Collision Overlap 감지 시
+	FGameplayTag Intent_Cart_Overturn;      // 전복 감지 시
+	FGameplayTag Intent_Cart_SpillCleanup;  // 정리 워크스테이션에 UID 등록 시
+
 private:
 	static FLKH2GameplayTags Instance;
 };

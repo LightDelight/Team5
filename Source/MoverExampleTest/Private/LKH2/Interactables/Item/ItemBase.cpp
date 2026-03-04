@@ -148,6 +148,14 @@ bool AItemBase::OnInteract_Implementation(const FInteractionContext &Context) {
 }
 
 void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled) {
+  if (ItemData) {
+    if (bEnabled) {
+      UE_LOG(LogTemp, Warning, TEXT("[ItemBase_DEBUG] 💡 아웃라인 켜짐: 액터=%s, DataAsset=%s"), *GetName(), *ItemData->GetName());
+    } else {
+      UE_LOG(LogTemp, Warning, TEXT("[ItemBase_DEBUG] 🌑 아웃라인 꺼짐: 액터=%s, DataAsset=%s"), *GetName(), *ItemData->GetName());
+    }
+  }
+
   if (InteractableComponent) {
     InteractableComponent->SetOutlineEnabled(bEnabled);
   }

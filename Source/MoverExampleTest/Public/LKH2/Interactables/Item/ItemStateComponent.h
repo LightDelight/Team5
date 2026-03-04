@@ -11,7 +11,8 @@ enum class EItemState : uint8 {
   Placed UMETA(DisplayName = "Placed"),
   Carried UMETA(DisplayName = "Carried"),
   Dropped UMETA(DisplayName = "Dropped"),
-  Stored UMETA(DisplayName = "Stored")
+  Stored UMETA(DisplayName = "Stored"),
+  Spilled UMETA(DisplayName = "Spilled") // 카트 전복 시 쏟아진 상태. 상호작용 불가, 로컬 물리 시뮬레이션.
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))

@@ -17,6 +17,10 @@
 #include "Engine/World.h"
 #include "LKH2/Interactables/Item/ItemStateComponent.h"
 #include "LKH2/Interactables/Item/ItemSmoothingComponent.h"
+#include "LKH2/Interactables/WorkStation/WorkStationBase.h"
+#include "LKH2/Interactables/WorkStation/WorkstationData.h"
+#include "LKH2/Interactables/Marker/MarkerBase.h"
+#include "LKH2/Interactables/Marker/MarkerData.h"
 
 void UInteractionManager::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -335,6 +339,9 @@ void UInteractionManager::ExecuteCombine(UInteractorPropertyComponent* Interacto
 {
 	if (!InteractorProperty || !TargetProperty || !MaterialA || !MaterialB) return;
 
+	// 클라이언트에서 임의로 액터를 스폰/파괴하면 유령 아이템이 생기므로 서버에서만 시뮬레이션합니다.
+	if (GetWorld()->GetNetMode() == NM_Client) return;
+
 	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
 	if (!ItemManager) return;
 
@@ -382,6 +389,9 @@ void UInteractionManager::ExecuteCombine(UInteractorPropertyComponent* Interacto
 void UInteractionManager::ExecuteTransformItem(UInteractablePropertyComponent* TargetProperty, AItemBase* OriginalItem, FGameplayTag ResultItemTag, FGameplayTag TargetSlotTag)
 {
 	if (!TargetProperty || !OriginalItem) return;
+
+	// 클라이언트에서 임의로 액터를 스폰/파괴하면 유령 아이템이 생기므로 서버에서만 처리합니다.
+	if (GetWorld()->GetNetMode() == NM_Client) return;
 
 	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
 	if (!ItemManager) return;
@@ -444,6 +454,9 @@ void UInteractionManager::ExecuteTrash(UInteractorPropertyComponent* InteractorP
 void UInteractionManager::ExecuteVending(UInteractorPropertyComponent* InteractorProperty, UInteractablePropertyComponent* TargetProperty, FGameplayTag ItemToSpawnTag)
 {
 	if (!InteractorProperty || !TargetProperty) return;
+
+	// 클라이언트에서 임의로 액터를 스폰하면 유령 아이템(Replication 되지 않는 로컬 복사본)이 생기므로 서버에서만 생성합니다.
+	if (GetWorld()->GetNetMode() == NM_Client) return;
 
 	UItemManagerSubsystem* ItemManager = GetWorld()->GetSubsystem<UItemManagerSubsystem>();
 	if (!ItemManager) return;
@@ -767,3 +780,43 @@ void UInteractionManager::ClearStepProgress(UInteractablePropertyComponent* Targ
 
 // Redundant UI helpers removed. Managed by InteractablePropertyComponent directly.
 
+AWorkStationBase* UInteractionManager::SafeSpawnCleanupWorkstation(UWorkstationData* DA, const FTransform& Transform)
+{
+	if (!DA) return nullptr;
+
+	UWorld* World = GetWorld();
+	if (!World) return nullptr;
+
+	// Deferred 스폰 → DA 적용 → FinishSpawning
+	AWorkStationBase* NewWS = World->SpawnActorDeferred<AWorkStationBase>(
+		AWorkStationBase::StaticClass(), Transform);
+	if (!NewWS) return nullptr;
+
+	NewWS->SetWorkstationDataAndApply(DA);
+	NewWS->FinishSpawning(Transform);
+
+	return NewWS;
+}
+
+AMarkerBase* UInteractionManager::SafeSpawnMarker(UMarkerData* DA, const FTransform& Transform)
+{
+	if (!DA) return nullptr;
+
+	UWorld* World = GetWorld();
+	if (!World) return nullptr;
+
+	// DA에 클래스가 지정되어 있으면 해당 클래스 사용, 없으면 기본 AMarkerBase
+	UClass* SpawnClass = DA->MarkerClass
+		? DA->MarkerClass.Get()
+		: AMarkerBase::StaticClass();
+
+	// Deferred 스폰 → DA 적용 → FinishSpawning
+	AMarkerBase* NewMarker = World->SpawnActorDeferred<AMarkerBase>(
+		SpawnClass, Transform);
+	if (!NewMarker) return nullptr;
+
+	NewMarker->SetMarkerDataAndApply(DA);
+	NewMarker->FinishSpawning(Transform);
+
+	return NewMarker;
+}

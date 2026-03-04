@@ -90,6 +90,28 @@ struct FLogicBlackboardObjectSerializer : public FFastArraySerializer {
     }
     return nullptr;
   }
+
+  /** 주어진 GameplayTag 키에 해당하는 오브젝트 포인터를 제거합니다. */
+  bool RemoveObject(const FGameplayTag &Key) {
+    if (!Key.IsValid()) return false;
+
+    for (int32 i = 0; i < Items.Num(); ++i) {
+      if (Items[i].Key == Key) {
+        Items.RemoveAt(i);
+        MarkArrayDirty();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** 모든 오브젝트 포인터를 제거합니다. */
+  void ClearObjects() {
+    if (Items.Num() > 0) {
+      Items.Empty();
+      MarkArrayDirty();
+    }
+  }
 };
 
 /**
@@ -155,6 +177,28 @@ struct FLogicBlackboardStatSerializer : public FFastArraySerializer {
       }
     }
     return nullptr;
+  }
+
+  /** 주어진 GameplayTag 키에 해당하는 스탯을 제거합니다. */
+  bool RemoveStat(const FGameplayTag &Key) {
+    if (!Key.IsValid()) return false;
+
+    for (int32 i = 0; i < Items.Num(); ++i) {
+      if (Items[i].Key == Key) {
+        Items.RemoveAt(i);
+        MarkArrayDirty();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** 모든 스탯을 제거합니다. */
+  void ClearStats() {
+    if (Items.Num() > 0) {
+      Items.Empty();
+      MarkArrayDirty();
+    }
   }
 };
 

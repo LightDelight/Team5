@@ -84,13 +84,6 @@ LogicProgressWidget
 
 
 
-Task Architecture
-로직의 비동기 작업 관리 패턴
-단일성 및 단순 로직: Task 인스턴스화 없이 LogicModule 내부에서 즉시 처리 (성능 최적화).
-지연 및 가변 로직: 시간이 필요하거나 상태(몽타주, 게이지 등)가 필요한 경우에만 LogicTaskBase를 인스턴스화하여 사용.
-데이터 주입 및 통신: LogicModule은 생성한 Task에 설정값을 주입하고, 해당 Task의 포인터는 GameplayTag를 키로 하여 LogicContextComponent에 저장.
-재호출 및 중단: 키 뗌(Release) 등의 추가 Intent가 발생하면, 다시 기존의 로직 호출 흐름을 따라가며, 해당 모듈의 사전 로직에서 Intent 검사와 Tag를 통해 현재 Task 존재 여부를 통해 분기를 만들어 추가 작업 진행.
-
 LogicTaskBase
 로직의 비동기 작업을 위한 베이스.
 로직 모듈의 인스턴스를 생성하지 않으면서 지속적인 상태 보관이 필요한 로직에 사용한다.
@@ -141,15 +134,6 @@ ItemRegistryData
 
 
 
-Item 부착 클라이언트 이동 동기화 문제
-캐릭터 부착이 잘 되는 이유: InteractorPropertyComponent가 OnRep_CarriedActor를 통해 클라이언트에서 수동으로 AttachToComponent를 호출해주고 있기 때문입니다.
-컨테이너 부착이 안 되는 이유: InteractablePropertyComponent는 아이템 보관 맵을 리플리케이션하지 않으며, 클라이언트에서의 수동 부착 로직이 없습니다. 언리얼 기본 액터 부착 리플리케이션에만 의존하고 있는데, 액터-액터 간의 중첩 부착은 매우 불안정하여 클라이언트에서 누락되는 경우가 많습니다.
-해결 방안 (수동 동기화):
-아이템 스스로 부모를 알게 함: ItemStateComponent에 리플리케이션 변수(RepParentActor, RepAttachComponent)를 추가합니다.
-클라이언트 부착 강제: 클라이언트에서 OnRep이 발생할 때, 서버가 알려준 부모 액터/컴포넌트에 강제로 AttachToComponent를 수행하여 캐릭터 부착과 동일한 수준의 신뢰성을 확보합니다.
-
-
-
 Workstation : InteractionContextInterface, ILogicContextInterface
 작업대의 베이스 클래스.
 
@@ -173,12 +157,28 @@ MapData
 
 
 
-구조 원칙
+핵심 구조
+Interaction System
+모든 기능은 로직 모듈의 형태로 하나의 메시지를 통한다.
+메시지는 전달 과정에서 로직 처리에 필요한 모든 정보를 담는다. (Context Payload)
+모듈은 사전 로직에서 메시지 의도 검사를 통해 자신이 수행되어야 하는지 판단한다.
+플레이어 입력뿐 아니라, 컴포넌트 스스로 혹은 모듈 스스로도 메시지를 발송해 모듈을 작동시킴으로써 모든 로직 모듈이 동일한 흐름을 타게 된다.
+
+Task Architecture
+로직의 비동기 작업 관리 패턴
+단일성 및 단순 로직: Task 인스턴스화 없이 LogicModule 내부에서 즉시 처리 (성능 최적화).
+지연 및 가변 로직: 시간이 필요하거나 상태(몽타주, 게이지 등)가 필요한 경우에만 LogicTaskBase를 인스턴스화하여 사용.
+데이터 주입 및 통신: LogicModule은 생성한 Task에 설정값을 주입하고, 해당 Task의 포인터는 GameplayTag를 키로 하여 LogicContextComponent에 저장.
+재호출 및 중단: 키 뗌(Release) 등의 추가 Intent가 발생하면, 다시 기존의 로직 호출 흐름을 따라가며, 해당 모듈의 사전 로직에서 Intent 검사와 Tag를 통해 현재 Task 존재 여부를 통해 분기를 만들어 추가 작업 진행.
+
+
+
+설계 원칙
 모든 객체는 서로의 역할을 침범하지 않는다.
 PropertyComponent 는 아이템의 스냅을 담당하면서 아이템의 상태는 신경쓰지 않는다.
 ItemManagerSubsystem 은 아이템의 상태를 관리하며 실제로 그 상태에 있는지는 신경쓰지 않는다.
 LogicModule 은 Context를 기반으로 작업의 진행 여부를 판단하며 실제로 그 작업을 수행하지 않는다.
-InteractionManager 는 헬퍼 함수들을 조합해 실제 행동을 정의하나 그 내용을 알지 못한다. 아는 것은 개발자다.
+InteractionManager 는 헬퍼 함수들을 조합해 실제 행동을 정의하나 그 내용을 알지 못한다.
 
 모든 구현은 철저히 역할을 나누어 분리한다.
 던지기가 있다면, State에 논리적인 던지기 상태와 힘을 주는 헬퍼가 정의되어야 한다.
@@ -206,16 +206,21 @@ ItemStateComp에서 ItemSmoothingComp를 직접 참조함.
 
 
 이슈 목록
-클라이언트에서 아이템이 겹쳐있을 때 외곽선 대상과 상호작용 대상이 간헐적으로 어긋나는 경우 발생.
-Container Processing이 내부 아이템에 관련 데이터가 저장되어 Container UI가 진행도를 제대로 반영 안함.
+클라이언트에서 아이템이 겹쳐있을 때 외곽선 대상과 상호작용 대상이 간헐적으로 어긋나는 버그 (해결)
+이미 C++ 내부에서 RPC였던 함수를 블루프린트에서도 RPC로 호출해서 서버 기준으로 판정이 잡혀서 발생했음.
+
+Item 부착 클라이언트 이동 동기화 문제 (해결)
+캐릭터 부착이 잘 되는 이유: InteractorPropertyComponent가 OnRep_CarriedActor를 통해 클라이언트에서 수동으로 AttachToComponent를 호출해주고 있기 때문입니다.
+컨테이너 부착이 안 되는 이유: InteractablePropertyComponent는 아이템 보관 맵을 리플리케이션하지 않으며, 클라이언트에서의 수동 부착 로직이 없습니다. 언리얼 기본 액터 부착 리플리케이션에만 의존하고 있는데, 액터-액터 간의 중첩 부착은 매우 불안정하여 클라이언트에서 누락되는 경우가 많습니다.
+해결 방안 (수동 동기화):
+아이템 스스로 부모를 알게 함: ItemStateComponent에 리플리케이션 변수(RepParentActor, RepAttachComponent)를 추가합니다.
+클라이언트 부착 강제: 클라이언트에서 OnRep이 발생할 때, 서버가 알려준 부모 액터/컴포넌트에 강제로 AttachToComponent를 수행하여 캐릭터 부착과 동일한 수준의 신뢰성을 확보합니다.
 
 
 
 진행해야 하는 작업
-메인 작업 로직 (예 : 요리, 재료 손질 등)
 Throw 로직의 던지는 힘을 캐릭터 Stats로 이동
-상호작용 가능 환경 세팅 워크플로우 만들기.
-Container Workstation 동시 사용 로직 제작
+상호작용 가능 환경 세팅 워크플로우 만들기. (Post Process, Overlap Channel)
 
 
 
@@ -226,9 +231,7 @@ Container Workstation 동시 사용 로직 제작
 
 
 추가 예정
-LogicalPreset
-모듈 배열과 스탯을 미리 정의해 반복 작업을 피하는 프리셋.
-
+LogicalPreset : 모듈 배열과 스탯을 미리 정의해 반복 작업을 피하는 프리셋.
 PropertyComp의 필드도 태그로 받아올 수 있게 (UI용)
 
 
@@ -239,4 +242,19 @@ PropertyComp의 필드도 태그로 받아올 수 있게 (UI용)
 접시에 무엇이 담겼는지 확인할 수 있는 아이콘 표시?
 
 컨테이너 비워질 경우 스스로에게 블랙보드 초기화 메시지 전송.
-모듈들도 스스로에게 메시지를 전송하는 방식으로 다음 단계 진행?
+모듈들도 스스로에게 메시지를 전송하는 방식으로 다음 단계 진행하는 방식으로 확장? 델리게이트 없이?
+
+
+
+게임모드
+UI에 제한 시간과 목표 아이템 목록 표시.
+카트에 목표 아이템 담기면 체크해서 UI에 표시.
+쏟아질 경우 UI 초기화.
+계산대 통과 시 목표 달성. 결과 표시 후 대기 화면으로 돌아가기.
+
+카트 인벤토리
+Box Overlap 시 아이템 스냅.
+전복 감지 시 아이템 쏟기, 에디터에서 꽂은 DataAsset을 통해 Workstation 생성.
+Workstation은 홀딩 로직 모듈 하나를 가짐. 생성 후 Context에 아이템 UID와 Intent를 담아 전송해줌.
+로직 모듈은 Context를 받아 아이템을 보관. 상호작용 시 해당 아이템들을 쓰레기 봉투에 모으고 작업대는 삭제.
+쏟아진 아이템은 로컬 시뮬레이션으로 굴린다. 상호작용 불가. 카트도 해당 상호작용을 통해 일으켜 세운다.

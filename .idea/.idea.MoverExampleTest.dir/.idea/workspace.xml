@@ -8,24 +8,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/shelf/26__2__24___7_00__________.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/shelf/26__2__24__오후_7_00,_업데이트_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Construction_VOL1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Construction_VOL2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/ArcadeKart/BP_ArcadeKart.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/ArcadeKart/BP_ArcadeKart.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestChara.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Grill.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Grill.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicBlackboardTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicBlackboardTag.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Plate.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/L_Item.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Docs/Structure.md" beforeDir="false" afterPath="$PROJECT_DIR$/Docs/Structure.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicTaskBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicTaskBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/ProcessingLogicModuleBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/ProcessingLogicModuleBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractablePropertyComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractablePropertyComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Bake.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Interactable_Bake.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicContextComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Base/LogicContextComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Manager/InteractionManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Manager/InteractionManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Task/LogicTask_Wait.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Task/LogicTask_Wait.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/UI/Widget/LogicProgressWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/UI/Widget/LogicProgressWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/ProcessingLogicModuleBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/ProcessingLogicModuleBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractablePropertyComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractablePropertyComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Bake.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Logic/Logic_Interactable_Bake.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/LKH2GameplayTags.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/LKH2GameplayTags.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicBlackboard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicBlackboard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Base/LogicContextComponent.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Manager/InteractionManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Manager/InteractionManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Task/LogicTask_Wait.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Task/LogicTask_Wait.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/UI/Widget/LogicProgressWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/UI/Widget/LogicProgressWidget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/LKH2GameplayTags.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/LKH2GameplayTags.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,12 +56,12 @@
     &quot;assignee&quot;: &quot;LightDelight&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/LightDelight/Team5.git",
-    "accountId": "eab0cb9d-ff5e-4d4b-9ac0-d4145a91a121"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LightDelight/Team5.git&quot;,
+    &quot;accountId&quot;: &quot;eab0cb9d-ff5e-4d4b-9ac0-d4145a91a121&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/CoreUObject/Public/Templates/Casts.h" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -189,7 +196,8 @@
       <workItem from="1772286591969" duration="1394000" />
       <workItem from="1772338779434" duration="35810000" />
       <workItem from="1772436058493" duration="26852000" />
-      <workItem from="1772501344912" duration="17643000" />
+      <workItem from="1772501344912" duration="17896000" />
+      <workItem from="1772585240004" duration="20190000" />
     </task>
     <task id="LOCAL-00001" summary="ss">
       <option name="closed" value="true" />
@@ -223,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771837566638</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="aa">
+      <option name="closed" value="true" />
+      <created>1772529029346</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1772529029346</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -260,7 +276,8 @@
     <MESSAGE value="ff" />
     <MESSAGE value="tt" />
     <MESSAGE value="kk" />
-    <option name="LAST_COMMIT_MESSAGE" value="kk" />
+    <MESSAGE value="aa" />
+    <option name="LAST_COMMIT_MESSAGE" value="aa" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
