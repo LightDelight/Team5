@@ -26,12 +26,12 @@ void UOnlineGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collecti
 	// this later be changed deledate handling. this is just for basic test purpose. 
 	// addhandle before call and remove after call. 
 	// removal is caller's responsibility. i don't know how to handle this automatically
-	SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnCreateSessionComplete);
+	//SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnCreateSessionComplete);
 	SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnDestorySessionComplete);
 	//SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnFindSessionComplete);
 	SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnJoinSessionComplete);
 	SessionInterface->OnUpdateSessionCompleteDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnUpdateSessionComplete);
-
+	
 	//SessionInterface->OnSessionParticipantJoinedDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnSessionParticipantJoined);
 	//SessionInterface->OnSessionParticipantLeftDelegates.AddUObject(this, &UOnlineGameInstanceSubsystem::OnSessionParticipantLeft);
 
@@ -118,7 +118,7 @@ void UOnlineGameInstanceSubsystem::OnCreateSessionComplete(FName SessionName, bo
 	LOG_FUNCTION_NAME;
 	check(GetWorld() != nullptr);
 	if (!GetWorld()) return;
-	GetWorld()->ServerTravel("/Game/ThirdPerson/PhysicsActorTest/PhysicsActorTest?listen");
+	GetWorld()->ServerTravel("/Game/Levels/TestEnvironment2?listen");
 }
 
 void UOnlineGameInstanceSubsystem::OnDestorySessionComplete(FName SessionName, bool bWasSuccessful)

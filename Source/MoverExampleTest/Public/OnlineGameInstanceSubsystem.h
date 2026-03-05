@@ -30,7 +30,7 @@ class MOVEREXAMPLETEST_API UOnlineGameInstanceSubsystem : public UGameInstanceSu
 public:
 	/**
 	 * @param	bool			true if succcess
-	 * @param	RoomName		room name to create session
+	 * @param	RoomName		room name to create session 
 	 * @param	AllowedPlayers	maximum allowed players
 	 */
 	bool CreateSession(const FString& RoomName, int32 AllowedPlayers);
@@ -59,5 +59,5 @@ private:
 	const TSharedRef<FOnlineSessionSearch> SessionSearch = MakeShared<FOnlineSessionSearch>();
 
 	FDelegateHandle OnFindSessionsHandle;
-
+	
 };

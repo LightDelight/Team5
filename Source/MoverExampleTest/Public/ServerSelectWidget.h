@@ -12,13 +12,13 @@ DECLARE_DYNAMIC_DELEGATE(FButtonUpdateDelegate);
 class UOnlineGameInstanceSubsystem;
 class UServerSearchRowWidget;
 /**
- *
+ * 
  */
 UCLASS()
 class MOVEREXAMPLETEST_API UServerSelectWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
+	
 public:
 	UServerSelectWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -48,7 +48,10 @@ private:
 	void OnPlayerCountSet(const FText& Text);
 
 	UFUNCTION()
-	void OnServerRefreshed(bool bWasSuccessful);
+	void OnSessionCreated(FName SessionName, bool bWasSuccessful);
+
+	UFUNCTION()
+	void OnSessionRefreshed(bool bWasSuccessful);
 
 private:
 
@@ -128,11 +131,15 @@ private:
 	UServerSearchRowWidget* SelectedRow;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool IsRefreshing = false;
+	bool bActionBlockFence = false;
 
 	UPROPERTY(BlueprintReadWrite, Meta = (AllowprivateAccess = true));
 	FButtonUpdateDelegate UpdateServerButtonDelegate;
 
-	FDelegateHandle OnServerRefreshedDelegate_Handle;
+	FDelegateHandle OnSessionCreatedDelegate_Handle;
+	FDelegateHandle OnSessionRefreshedDelegate_Handle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Level")
+	TSoftObjectPtr<UWorld> LevelToCreate = nullptr;
 
 };

@@ -12,7 +12,7 @@ class FOnlineSessionSearchResult;
 DECLARE_DYNAMIC_DELEGATE(FButtonClicked);
 
 /**
- *
+ * 
  */
 UCLASS()
 class MOVEREXAMPLETEST_API UServerSearchRowWidget : public UUserWidget
@@ -57,7 +57,7 @@ private:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool Select{ false };
 
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess=true))
 	FButtonClicked UpdateSelection;
 
 };

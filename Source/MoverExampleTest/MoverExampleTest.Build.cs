@@ -15,7 +15,8 @@ public class MoverExampleTest : ModuleRules
 			, "InputCore"
 			, "EnhancedInput"
 			, "Chaos"
-			}
+            , "Mover"
+            }
 		);
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

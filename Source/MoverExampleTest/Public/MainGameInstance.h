@@ -9,7 +9,7 @@
 #include "MainGameInstance.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
 class MOVEREXAMPLETEST_API UMainGameInstance : public UGameInstance
@@ -21,13 +21,13 @@ class MOVEREXAMPLETEST_API UMainGameInstance : public UGameInstance
 
 protected:
 	UFUNCTION(Exec)
-	void CreateSession(FString Name = FString("DEFAULT NAME"), int32 Players = 3) { OnlineSubsystem->CreateSession(Name, Players); }
-	UFUNCTION(Exec)
 	void DestroySession() { OnlineSubsystem->DestroySession(FName(NAME_GameSession)); }
+	/*UFUNCTION(Exec)
+	void CreateSession(FString Name = FString("DEFAULT NAME"),int32 Players = 3) { OnlineSubsystem->CreateSession(Name, Players); }
 	UFUNCTION(Exec)
 	void FindSessions() { OnlineSubsystem->FindSessions(); }
 	UFUNCTION(Exec)
-	void JoinSession(uint32 Index) { OnlineSubsystem->JoinSession(Index); }
+	void JoinSession(uint32 Index) { OnlineSubsystem->JoinSession(Index); }*/
 
 private:
 	TObjectPtr<UOnlineGameInstanceSubsystem> OnlineSubsystem = nullptr;

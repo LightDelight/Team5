@@ -14,9 +14,9 @@
 #	error PRINT_FUNCATION_NAME already defined
 #else
 #	if UE_BUILD_DEVELOPMENT
-#		define PRINT_FUNCATION_NAME check(GEngine); GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Orange,FString::Printf(TEXT("%hs"),__FUNCTION__);
+#		define PRINT_FUNCTION_NAME check(GEngine); GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Orange,FString::Printf(TEXT("%hs"),__FUNCTION__));
 #	else 
-#		define PRINT_FUNCATION_NAME
+#		define PRINT_FUNCTION_NAME
 #	endif
 #endif
 
@@ -45,5 +45,5 @@
 //DEFINE_LOG_CATEGORY(LogOnlineSubsystem)
 
 /**
- *
+ * 
  */

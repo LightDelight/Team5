@@ -10,7 +10,7 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "ServerSearchRowWidget.h"
 #include "OnlineGameInstanceSubsystem.h"
-
+#include "MyCommonMacros.h"
 
 UServerSelectWidget::UServerSelectWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -22,6 +22,7 @@ void UServerSelectWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	check(ServerSearchRowWidgetClass);
+	check(!LevelToCreate.IsNull());
 
 	if (GetGameInstance()) { // editor null access crash prevention
 		OnlineSubsystem = GetGameInstance()->GetSubsystem<UOnlineGameInstanceSubsystem>();
@@ -83,6 +84,7 @@ void UServerSelectWidget::RoomSelected(UServerSearchRowWidget* Widget, int32 Ind
 
 void UServerSelectWidget::OpenMainMenu()
 {
+	if (bActionBlockFence == true) { return; }
 	MenuSwitcher->SetActiveWidget(MainMenuWidget);
 
 }
@@ -111,6 +113,12 @@ void UServerSelectWidget::HostServer()
 		return;
 	}
 	if (OnlineSubsystem) {
+		if (bActionBlockFence == true) { return; }
+		bActionBlockFence = true;
+		PRINT(TEXT("blockfence %hs"),bActionBlockFence?"True": "False");
+		check(!OnSessionCreatedDelegate_Handle.IsValid());
+		check(OnlineSubsystem && OnlineSubsystem->GetSessionInterface());
+		OnSessionCreatedDelegate_Handle = OnlineSubsystem->GetSessionInterface()->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnSessionCreated);
 		OnlineSubsystem->CreateSession(*RoomNameEText->GetText().ToString(), Players);
 		return;
 	}
@@ -119,16 +127,16 @@ void UServerSelectWidget::HostServer()
 
 void UServerSelectWidget::RefreshServer()
 {
-	if (IsRefreshing == true) return;
-	IsRefreshing = true;
+	if (bActionBlockFence == true) return;
+	bActionBlockFence = true;
 	check(UpdateServerButtonDelegate.IsBound());
 	UpdateServerButtonDelegate.Execute();
 	RefreshServerText->SetText(FText::FromString("Refreshing Server..."));
 	SelectedRowIndex = -1;
 	RoomList->ClearChildren();
-	check(!OnServerRefreshedDelegate_Handle.IsValid());
+	check(!OnSessionRefreshedDelegate_Handle.IsValid());
 	check(OnlineSubsystem && OnlineSubsystem->GetSessionInterface());
-	OnServerRefreshedDelegate_Handle = OnlineSubsystem->GetSessionInterface()->OnFindSessionsCompleteDelegates.AddUObject(this, &ThisClass::OnServerRefreshed);
+	OnSessionRefreshedDelegate_Handle = OnlineSubsystem->GetSessionInterface()->OnFindSessionsCompleteDelegates.AddUObject(this, &ThisClass::OnSessionRefreshed);
 	OnlineSubsystem->FindSessions();
 }
 
@@ -152,20 +160,28 @@ void UServerSelectWidget::OnPlayerCountSet(const FText& Text)
 	}
 }
 
-void UServerSelectWidget::OnServerRefreshed(bool bWasSuccessful)
+void UServerSelectWidget::OnSessionCreated(FName SessionName, bool bWasSuccessful)
+{
+	check(OnSessionCreatedDelegate_Handle.IsValid());
+	check(OnlineSubsystem && OnlineSubsystem->GetSessionInterface());
+	if (!bWasSuccessful) { check(bWasSuccessful); bActionBlockFence = false; return; }
+	OnlineSubsystem->GetSessionInterface()->ClearOnCreateSessionCompleteDelegate_Handle(OnSessionCreatedDelegate_Handle);
+
+	check(GetWorld() != nullptr);
+	if (!GetWorld()) return;
+	GetWorld()->ServerTravel(LevelToCreate.GetLongPackageName() + FString{TEXT("?listen")});
+}
+
+void UServerSelectWidget::OnSessionRefreshed(bool bWasSuccessful)	
 {
 
-	IsRefreshing = false;
+	bActionBlockFence = false;
 	check(UpdateServerButtonDelegate.IsBound());
 	UpdateServerButtonDelegate.Execute();
 	RefreshServerText->SetText(FText::FromString("Refresh Server"));
-	check(OnServerRefreshedDelegate_Handle.IsValid());
+	check(OnSessionRefreshedDelegate_Handle.IsValid());
 	check(OnlineSubsystem && OnlineSubsystem->GetSessionInterface());
-	OnlineSubsystem->GetSessionInterface()->ClearOnFindSessionsCompleteDelegate_Handle(OnServerRefreshedDelegate_Handle);
-
-#if UE_BUILD_DEVELOPMENT
-	OnServerRefreshedDelegate_Handle.Reset();
-#endif
+	OnlineSubsystem->GetSessionInterface()->ClearOnFindSessionsCompleteDelegate_Handle(OnSessionRefreshedDelegate_Handle);
 
 	if (!bWasSuccessful) {
 		RoomList->ClearChildren();
