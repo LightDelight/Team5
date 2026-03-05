@@ -6,6 +6,7 @@
 #include "LKH2/Interactables/Item/ItemBase.h"
 #include "LKH2/Interactables/Item/ItemStateComponent.h"
 #include "LKH2/LKH2GameplayTags.h"
+#include "LKH2/Core/CartGameComponent.h"
 
 ULogic_Cart_Snap::ULogic_Cart_Snap()
 {
@@ -89,6 +90,22 @@ bool ULogic_Cart_Snap::PerformInteraction(const FInteractionContext& Context)
             continue;
 
         bool bSuccess = InteractionManager->SafeStoreWorldItem(CartProperty, Item, CandidateSlot);
+
+        if (bSuccess)
+        {
+            if (AActor* CartActor = CartProperty->GetOwner())
+            {
+                if (UCartGameComponent* CGC = CartActor->FindComponentByClass<UCartGameComponent>())
+                {
+                    UE_LOG(LogTemp, Log, TEXT("[Logic_Cart_Snap] %s → CartGameComponent::HandleItemAdded 호출 시작"), *Item->GetName());
+                    CGC->HandleItemAdded(Item);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("[Logic_Cart_Snap] %s (CartActor)에 UCartGameComponent가 없습니다!"), *CartActor->GetName());
+                }
+            }
+        }
 
         UE_LOG(LogTemp, Log, TEXT("[Logic_Cart_Snap] %s → 카트 스냅 %s (SlotTag: %s)"),
             *Item->GetName(),

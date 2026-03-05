@@ -4,6 +4,7 @@
 #include "LKH2/Interaction/Manager/InteractionManager.h"
 #include "LKh2/Interaction/Manager/ItemRecipeManager.h"
 #include "LKH2/Interaction/Component/InteractablePropertyComponent.h"
+#include "LKH2/Interaction/Component/InteractorPropertyComponent.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
 #include "LKH2/Interactables/Item/ItemData.h"
 #include "Engine/World.h"
@@ -18,7 +19,43 @@ ULogic_Interactable_Holding_Chop::ULogic_Interactable_Holding_Chop()
 	RequiredIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Intent.Holding.Chop"));
 	ProgressIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Event.Montage.Hit"));
 	CancelIntentTag   = FGameplayTag::RequestGameplayTag(TEXT("Intent.Cancel"));
+	RequiredItemTag   = FGameplayTag::EmptyTag; // 기본적으로 비워둠
 	MaxStep           = 5.0f;
+}
+
+bool ULogic_Interactable_Holding_Chop::PreInteractCheck(const FInteractionContext& Context)
+{
+	// 1. 기본 홀딩 로직의 사전 검사 통과 여부 확인
+	if (!Super::PreInteractCheck(Context))
+	{
+		return false;
+	}
+
+	// 2. 시작 의도(RequiredIntentTag)일 때만 필수 아이템 검사 수행
+	if (Context.InteractionTag == RequiredIntentTag)
+	{
+		UInteractablePropertyComponent* TargetProp = Cast<UInteractablePropertyComponent>(Context.InteractablePropertyComp);
+		if (!TargetProp) return false;
+
+		// 필수 아이템 태그가 지정되어 있다면, 플레이어가 들고 있는 아이템이 태그를 가지는지 확인
+		if (RequiredItemTag.IsValid())
+		{
+			UInteractorPropertyComponent* InteractorProp = Cast<UInteractorPropertyComponent>(Context.InteractorPropertyComp);
+			if (!InteractorProp) return false;
+
+			AItemBase* CarriedItem = Cast<AItemBase>(InteractorProp->GetCarriedActor());
+			if (!CarriedItem || !CarriedItem->GetItemData()) return false;
+
+			if (!CarriedItem->GetItemData()->ItemTag.MatchesTag(RequiredItemTag))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[ChopLogic] 필수 아이템 조건 불만족. (요구: %s, 현재: %s)"), 
+					*RequiredItemTag.ToString(), *CarriedItem->GetItemData()->ItemTag.ToString());
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 void ULogic_Interactable_Holding_Chop::OnHoldingCompleted_Implementation(const FInteractionContext& Context)

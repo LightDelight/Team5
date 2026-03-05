@@ -140,6 +140,14 @@ public:
   bool IsSpilledItem(const FGuid &InstanceId) const;
 
   /**
+   * 아이템을 전시(Display) 상태로 갱신합니다.
+   *
+   * @param InstanceId 전시할 아이템 인스턴스 ID
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void DisplayItem(const FGuid &InstanceId);
+
+  /**
    * 놓여진 아이템에 물리적인 던지기 힘을 가합니다.
    *
    * @param InstanceId 아이템 인스턴스 ID

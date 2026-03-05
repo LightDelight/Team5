@@ -96,6 +96,21 @@ void UItemStateComponent::SetItemState(EItemState NewState) {
     // 부착된 상태에서도 위치 동기화(Attachment Replication 포함)가 원활하도록 ReplicateMovement를 유지합니다.
     Owner->SetReplicateMovement(true);
     break;
+  case EItemState::Display:
+    // 전시 상태: 스냅되어 있으므로 물리는 끄되, 상호작용(오버랩/트레이스)이 가능하도록 충돌은 켭니다.
+    if (RootPrim) {
+      RootPrim->SetSimulatePhysics(false);
+      RootPrim->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+      
+      RootPrim->SetPhysicsLinearVelocity(FVector::ZeroVector);
+      RootPrim->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+    }
+    if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {
+      SmoothingComp->SetSmoothingEnabled(true);
+    }
+    Owner->SetReplicateMovement(true);
+    Owner->UpdateOverlaps();
+    break;
   case EItemState::Spilled:
     if (RootPrim) {
       // 얭취로서 전복 시 취야하는 동작

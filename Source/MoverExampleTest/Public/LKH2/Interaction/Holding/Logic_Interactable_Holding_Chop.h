@@ -15,6 +15,11 @@ class MOVEREXAMPLETEST_API ULogic_Interactable_Holding_Chop : public UHoldingSte
 public:
 	ULogic_Interactable_Holding_Chop();
 
+	/** 상호작용 가능한 필수 아이템 태그 (설정 시 해당 태그를 가진 아이템만 상호작용 가능) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic|Holding|Tag")
+	FGameplayTag RequiredItemTag;
+
 protected:
+	virtual bool PreInteractCheck(const FInteractionContext& Context) override;
 	virtual void OnHoldingCompleted_Implementation(const FInteractionContext& Context) override;
 };

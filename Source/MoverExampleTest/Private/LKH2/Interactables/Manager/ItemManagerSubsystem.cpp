@@ -212,6 +212,17 @@ void UItemManagerSubsystem::SpillItem(const FGuid &InstanceId) {
   }
 }
 
+void UItemManagerSubsystem::DisplayItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // 상태 전이 → Display (물리/콜리전 끄기)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
+    StateComp->SetItemState(EItemState::Display);
+  }
+}
+
 void UItemManagerSubsystem::UnspillItem(const FGuid &InstanceId) {
   SpilledItemIds.Remove(InstanceId);
 }

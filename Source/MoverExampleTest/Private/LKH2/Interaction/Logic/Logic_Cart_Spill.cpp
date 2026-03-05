@@ -9,6 +9,7 @@
 #include "LKH2/Interactables/Marker/MarkerBase.h"
 #include "LKH2/Interactables/Marker/MarkerData.h"
 #include "LKH2/LKH2GameplayTags.h"
+#include "LKH2/Core/CartGameComponent.h"
 #include "Components/PrimitiveComponent.h"
 
 ULogic_Cart_Spill::ULogic_Cart_Spill()
@@ -163,6 +164,11 @@ bool ULogic_Cart_Spill::PerformInteraction(const FInteractionContext& Context)
         UIDContext.InteractionTag = FLKH2GameplayTags::Get().Intent_Cart_SpillCleanup;
         UIDContext.ItemUID = UID;
         MarkerInteractable->OnInteract(UIDContext);
+    }
+
+    if (UCartGameComponent* CGC = CartActor->FindComponentByClass<UCartGameComponent>())
+    {
+        CGC->HandleCartSpilled();
     }
 
     UE_LOG(LogTemp, Log, TEXT("[Logic_Cart_Spill] ── 카트 전복 처리 완료 ──"));
