@@ -345,12 +345,22 @@ void UInteractorComponent::PollGridTarget()
     FVector ForwardVector = GetOwner()->GetActorForwardVector();
     FVector CheckLocation = MyLoc + (ForwardVector * GridTargetCheckDistance);
     
-    BestGridTarget = CachedGridManager->GetActorAtWorldLocation(CheckLocation);
-
-    // 자신이나 들고 있는 아이템, 상호작용할 수 없는 대상은 제외
-    if (BestGridTarget == GetOwner() || BestGridTarget == CurrentCarriedActor ||
-       (BestGridTarget && !BestGridTarget->Implements<UInteractionContextInterface>())) {
-      BestGridTarget = nullptr;
+    TArray<AActor*> NearbyActors = CachedGridManager->GetNearbyActors(CheckLocation, 1);
+    
+    float MinDistSq = MAX_FLT;
+    
+    for (AActor* Actor : NearbyActors) {
+      // 자신이나 들고 있는 아이템, 상호작용할 수 없는 대상은 제외
+      if (!Actor || Actor == GetOwner() || Actor == CurrentCarriedActor ||
+          !Actor->Implements<UInteractionContextInterface>()) {
+        continue;
+      }
+      
+      float DistSq = FVector::DistSquared(MyLoc, Actor->GetActorLocation());
+      if (DistSq < MinDistSq) {
+        MinDistSq = DistSq;
+        BestGridTarget = Actor;
+      }
     }
   }
 

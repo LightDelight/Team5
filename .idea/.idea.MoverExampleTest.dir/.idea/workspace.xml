@@ -10,17 +10,18 @@
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/ABP_Cat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/ABP_Cat.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01_Montage.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01_Montage.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp_Montage.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp_Montage.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGameState.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGameState.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map_Megastore.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MapData/DA_Map_Megastore.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/Animation/ABP_DriverPlayerPawn.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/Animation/ABP_DriverPlayerPawn.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/Animation/ABP_PedestrianPlayerPawn.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/Animation/ABP_PedestrianPlayerPawn.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UserWidget/WBP_GunnerUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UserWidget/WBP_GunnerUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UserWidget/WBP_ServerSelect.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UserWidget/WBP_ServerSelect.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UserWidget/WBP_TestSpeedUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UserWidget/WBP_TestSpeedUI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gamemodes/BP_MainGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gamemodes/BP_MainGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Levels/TestEnvironment2.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/TestEnvironment2.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/BP_PlayerCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Pawns/ShoppingCart/BP_ShoppingCart.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Pawns/ShoppingCart/BP_ShoppingCart.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Grid/GridManagerComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/GridManagerComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/GridManagerComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/MapData.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Grid/MapData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -40,8 +40,13 @@ void UGridManagerComponent::InitializeGrid() {
   Cells.Empty();
   Cells.Reserve(GridWidth * GridHeight);
 
-  for (int32 Y = 0; Y < GridHeight; ++Y) {
-    for (int32 X = 0; X < GridWidth; ++X) {
+  int32 StartX = -FMath::FloorToInt32(GridWidth / 2.0f);
+  int32 EndX = StartX + GridWidth;
+  int32 StartY = -FMath::FloorToInt32(GridHeight / 2.0f);
+  int32 EndY = StartY + GridHeight;
+
+  for (int32 Y = StartY; Y < EndY; ++Y) {
+    for (int32 X = StartX; X < EndX; ++X) {
       FIntPoint Coord(X, Y);
       FVector Center = GridToWorld(Coord);
       Cells.Add(Coord, FGridCell(Coord, Center));
@@ -68,8 +73,13 @@ FVector UGridManagerComponent::GridToWorld(const FIntPoint &GridCoord) const {
 // ── 유효성 검사 ──
 
 bool UGridManagerComponent::IsValidCoord(const FIntPoint &GridCoord) const {
-  return GridCoord.X >= 0 && GridCoord.X < GridWidth && GridCoord.Y >= 0 &&
-         GridCoord.Y < GridHeight;
+  int32 StartX = -FMath::FloorToInt32(GridWidth / 2.0f);
+  int32 EndX = StartX + GridWidth;
+  int32 StartY = -FMath::FloorToInt32(GridHeight / 2.0f);
+  int32 EndY = StartY + GridHeight;
+
+  return GridCoord.X >= StartX && GridCoord.X < EndX && 
+         GridCoord.Y >= StartY && GridCoord.Y < EndY;
 }
 
 bool UGridManagerComponent::IsCellEmpty(const FIntPoint &GridCoord) const {
