@@ -75,14 +75,14 @@ void AShoppingCartBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AShoppingCartBase::On_MovementInput(const FInputActionInstance& Instance)
 {
-	MY_PRT(FString::Printf(TEXT("%s Executing"),*FString(__func__)));
+	
 	FVector Input = Instance.GetValue().Get<FVector>();
 	FVector RotatedInput = GetActorRotation().RotateVector(Input);
 }
 
 void AShoppingCartBase::On_CrabInputInput(const FInputActionInstance& Instance)
 {
-	MY_PRT(FString::Printf(TEXT("%s Executing"), *FString(__func__)));
+
 }
 
 #pragma region NetInput

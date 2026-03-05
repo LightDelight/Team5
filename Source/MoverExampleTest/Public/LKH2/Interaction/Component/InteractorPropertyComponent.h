@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "InteractorPropertyComponent.generated.h"
 
 // Forward declaration
 class AActor;
+class UAnimMontage;
 
 /**
  * 플레이어(조작 액터) 수준의 강한 결합을 가진 상호작용 관련 데이터를 관리하는 컴포넌트입니다.
@@ -57,4 +59,48 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Interaction|Storage")
 	void ForceDrop();
+
+	/* ---------------------------------------------------------
+	 * Action & Montage 
+	 * --------------------------------------------------------- */
+public:
+	/** 특정 ActionTag가 설정되었을 때 자동으로 재생할 몽타주 매핑 정보 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Action")
+	TMap<FGameplayTag, UAnimMontage*> ActionMontageMap;
+
+	/** 플레이어가 현재 수행 중인 상호작용 행동 태그 (예: Action.Chop) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_CurrentActionTag, Category = "Interaction|Action")
+	FGameplayTag CurrentActionTag;
+
+	UFUNCTION()
+	void OnRep_CurrentActionTag(FGameplayTag OldTag);
+
+	/**
+	 * 플레이어의 현재 행동 태그를 설정하고, 매핑된 몽타주가 있다면 재생합니다.
+	 * 서버에서 호출해야만 Replicated되어 클라이언트에서도 몽타주가 재생됩니다.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
+	void SetActionTag(FGameplayTag NewTag);
+
+	/**
+	 * 플레이어의 현재 행동 태그를 초기화하고 재생 중인 몽타주를 정지합니다.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Interaction|Action")
+	void ClearActionTag();
+
+	/** 플레이어의 현재 행동 태그 반환 */
+	UFUNCTION(BlueprintPure, Category = "Interaction|Action")
+	FGameplayTag GetActionTag() const { return CurrentActionTag; }
+
+protected:
+	/** 내부용: 태그에 매핑된 몽타주를 스켈레탈 메시에 재생 요청 */
+	void PlayMontageForTag(FGameplayTag Tag);
+
+	/** 내부용: 현재 스켈레탈 메시에서 재생 중인 몽타주 정지 요청 */
+	void StopCurrentMontage();
+
+	/** 내부적으로 재생 중인 몽타주의 캐싱용 참조 */
+	UPROPERTY(Transient)
+	UAnimMontage* ActiveMontage = nullptr;
+
 };

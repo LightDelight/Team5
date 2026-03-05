@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "LKH2/Interaction/Component/InteractorComponent.h"
 #include "LKH2/Interaction/Component/InteractableComponent.h"
+#include "LKH2/Interaction/Component/InteractablePropertyComponent.h"
 #include "LKH2/Interactables/Item/ItemData.h"
 #include "LKH2/Interactables/Item/ItemSmoothingComponent.h"
 #include "LKH2/Interactables/Item/ItemStateComponent.h"
@@ -39,9 +40,6 @@ UInteractablePropertyComponent *AItemBase::GetPropertyComponent() const {
   return PropertyComponent;
 }
 
-FLogicBlackboard *AItemBase::GetLogicBlackboard() {
-  return BlackboardComponent ? BlackboardComponent->GetBlackboard() : nullptr;
-}
 
 const FItemStatValue *AItemBase::FindStat(const FGameplayTag &Tag) const {
   return BlackboardComponent ? BlackboardComponent->FindStat(Tag) : nullptr;
@@ -104,8 +102,12 @@ AItemBase::AItemBase() {
       TEXT("SmoothingComponent"));
   InteractableComponent =
       CreateDefaultSubobject<UInteractableComponent>(TEXT("InteractableComponent"));
+  InteractableComponent->SetupAttachment(SphereCollision);
   BlackboardComponent = CreateDefaultSubobject<ULogicContextComponent>(
       TEXT("BlackboardComponent"));
+  PropertyComponent = CreateDefaultSubobject<UInteractablePropertyComponent>(
+      TEXT("InteractablePropertyComp"));
+  PropertyComponent->SetupAttachment(SphereCollision);
 }
 
 // 게임이 시작되거나 스폰될 때 호출됩니다
@@ -146,6 +148,14 @@ bool AItemBase::OnInteract_Implementation(const FInteractionContext &Context) {
 }
 
 void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled) {
+  if (ItemData) {
+    if (bEnabled) {
+      UE_LOG(LogTemp, Warning, TEXT("[ItemBase_DEBUG] 💡 아웃라인 켜짐: 액터=%s, DataAsset=%s"), *GetName(), *ItemData->GetName());
+    } else {
+      UE_LOG(LogTemp, Warning, TEXT("[ItemBase_DEBUG] 🌑 아웃라인 꺼짐: 액터=%s, DataAsset=%s"), *GetName(), *ItemData->GetName());
+    }
+  }
+
   if (InteractableComponent) {
     InteractableComponent->SetOutlineEnabled(bEnabled);
   }
@@ -167,6 +177,10 @@ void AItemBase::SetItemDataAndApply(UItemData *InData) {
     if (VisualMesh) {
       VisualMesh->SetRelativeLocation(
           ItemData->GetEffectiveMeshRelativeLocation());
+    }
+    if (InteractableComponent) {
+      InteractableComponent->SetRelativeLocation(
+          ItemData->GetEffectiveInteractRelativeLocation());
     }
 
     // [Decoupling] 이제 컴포넌트들이 Pull 패턴을 사용하여 직접 조회하므로

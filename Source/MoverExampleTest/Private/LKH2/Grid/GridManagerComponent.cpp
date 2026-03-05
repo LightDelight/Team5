@@ -192,7 +192,7 @@ void UGridManagerComponent::BakeCurrentLevel() {
 
     FMapWorkstationEntry Entry;
     Entry.GridCoord = WorldToGrid(Station->GetActorLocation());
-    Entry.StationClass = Station->GetClass();
+
     Entry.Rotation = Station->GetActorRotation();
 
     // WorkstationData 접근 (Reflection으로 안전하게)
@@ -260,8 +260,11 @@ void UGridManagerComponent::LoadFromMapData() {
 
   // 4. 워크스테이션 스폰 및 등록 (SpawnWorkstation API 활용)
   for (const FMapWorkstationEntry &Entry : MapData->Workstations) {
-    SpawnWorkstation(Entry.StationClass, Entry.StationData, Entry.GridCoord,
-                     Entry.Rotation);
+    if (Entry.StationData) {
+      TSubclassOf<AWorkStationBase> StationClass = Entry.StationData->GetEffectiveWorkstationClass();
+      SpawnWorkstation(StationClass, Entry.StationData, Entry.GridCoord,
+                       Entry.Rotation);
+    }
   }
 
   UE_LOG(LogTemp, Log,

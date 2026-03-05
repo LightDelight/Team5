@@ -49,8 +49,8 @@ bool ULogic_Interactable_Throw::PerformInteraction(const FInteractionContext& Co
 				
 				FVector ComputedImpulse = ThrowDir * ThrowForce;
 				
-				// ExecuteDrop을 통해 물리적 해제 + State 변경 후 Impulse 적용
-				InteractionManager->ExecuteDrop(InteractorProperty, CarriedItem, ComputedImpulse);
+				// SafeDropItem을 통해 물리적 해제 + State 변경 후 Impulse 적용
+				InteractionManager->SafeDropItem(InteractorProperty, CarriedItem, ComputedImpulse);
 				return true;
 			}
 		}
