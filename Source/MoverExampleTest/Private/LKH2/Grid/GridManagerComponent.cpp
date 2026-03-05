@@ -192,7 +192,7 @@ void UGridManagerComponent::BakeCurrentLevel() {
 
     FMapWorkstationEntry Entry;
     Entry.GridCoord = WorldToGrid(Station->GetActorLocation());
-
+    Entry.WorldLocation = Station->GetActorLocation();
     Entry.Rotation = Station->GetActorRotation();
 
     // WorkstationData 접근 (Reflection으로 안전하게)
@@ -263,7 +263,7 @@ void UGridManagerComponent::LoadFromMapData() {
     if (Entry.StationData) {
       TSubclassOf<AWorkStationBase> StationClass = Entry.StationData->GetEffectiveWorkstationClass();
       SpawnWorkstation(StationClass, Entry.StationData, Entry.GridCoord,
-                       Entry.Rotation);
+                       Entry.Rotation, Entry.WorldLocation);
     }
   }
 
@@ -277,7 +277,7 @@ void UGridManagerComponent::LoadFromMapData() {
 AWorkStationBase *UGridManagerComponent::SpawnWorkstation(
     TSubclassOf<AWorkStationBase> StationClass,
     UWorkstationData *StationData, const FIntPoint &GridCoord,
-    const FRotator &Rotation) {
+    const FRotator &Rotation, const FVector &OverrideWorldLocation) {
   if (!StationClass) {
     UE_LOG(LogTemp, Warning,
            TEXT("GridManager::SpawnWorkstation - StationClass가 nullptr입니다."));
@@ -304,7 +304,10 @@ AWorkStationBase *UGridManagerComponent::SpawnWorkstation(
   if (!World)
     return nullptr;
 
-  FVector SpawnLocation = GridToWorld(GridCoord);
+  // bUseGridCenter: true → 셀 중심 위치, false → 베이크 당시 절대 위치
+  FVector SpawnLocation = bUseGridCenter
+                              ? GridToWorld(GridCoord)
+                              : OverrideWorldLocation;
   FTransform SpawnTransform(Rotation, SpawnLocation);
 
   AWorkStationBase *NewStation = nullptr;

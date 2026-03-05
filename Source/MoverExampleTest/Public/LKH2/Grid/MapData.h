@@ -28,6 +28,10 @@ struct MOVEREXAMPLETEST_API FMapWorkstationEntry {
   /** 워크스테이션의 월드 회전 (베이크 시 캡처) */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map")
   FRotator Rotation = FRotator::ZeroRotator;
+
+  /** 베이크 당시 워크스테이션의 원래 월드 위치 (절대 좌표 모드용) */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map")
+  FVector WorldLocation = FVector::ZeroVector;
 };
 
 /**
