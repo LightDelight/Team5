@@ -53,9 +53,17 @@ struct FInteractionContext
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
   TObjectPtr<UActorComponent> ContextComp;
 
+  /** 통환 관리를 위한 아이템 고유 ID */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+  FGuid ItemUID;
+
+  /** 슬롯 상호작용 시 특정 슬롯 태그 */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+  FGameplayTag SlotTag;
+
   FInteractionContext() {}
   FInteractionContext(AActor *InInteractor, FGameplayTag InTag)
-      : Interactor(InInteractor), InteractionTag(InTag) {}
+      : Interactor(InInteractor), InteractionTag(InTag), ItemUID(FGuid()) {}
 };
 
 /**

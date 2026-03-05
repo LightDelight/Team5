@@ -6,6 +6,7 @@
 #include "LKH2/Interaction/Interface/InteractionContextInterface.h"
 #include "LKH2/Interaction/Component/InteractorPropertyComponent.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
+#include "LKH2/Interactables/Item/ItemStateComponent.h"
 #include "Math/UnrealMathUtility.h"
 #include "Net/UnrealNetwork.h"
 #include "GameplayTagContainer.h"
@@ -13,6 +14,26 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/GameStateBase.h"
 #include "LKH2/Interaction/Base/LogicContextInterface.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
+#include "LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h"
+#include "GameplayTagContainer.h"
+#include "LKH2/Interactables/Item/ItemBase.h"
+
+static FString GetItemDataName(AActor* Actor)
+{
+  if (!Actor) return TEXT("None");
+
+  if (AItemBase* Item = Cast<AItemBase>(Actor))
+  {
+    FGuid InstanceId = Item->GetInstanceId();
+    if (InstanceId.IsValid())
+    {
+      return FString::Printf(TEXT("%s(%s)"), *Actor->GetName(), *InstanceId.ToString());
+    }
+  }
+  return Actor->GetName();
+}
 
 UInteractorComponent::UInteractorComponent() {
   SetIsReplicatedByDefault(true);
@@ -36,12 +57,102 @@ UInteractorComponent::UInteractorComponent() {
 void UInteractorComponent::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty> &OutLifetimeProps) const {
   Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+  DOREPLIFETIME(UInteractorComponent, bIsWorking);
 }
+
+void UInteractorComponent::SetIsWorking(bool bWorking, AActor* InTargetActor, FGameplayTag InCancelTag)
+{
+  UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetIsWorking(%d) 호출됨. 현재 bIsWorking=%d, Owner=%s"),
+    bWorking, bIsWorking, *GetOwner()->GetName());
+
+  if (bIsWorking == bWorking) 
+  {
+    UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetIsWorking: 이미 같은 값이므로 조기 반환."));
+    return;
+  }
+  bIsWorking = bWorking;
+
+  if (bWorking)
+  {
+    // 작업 대상과 Cancel Intent 태그 저장
+    WorkingTargetActor = InTargetActor;
+    WorkingCancelIntentTag = InCancelTag;
+  }
+  else
+  {
+    // 작업 종료 시 초기화
+    WorkingTargetActor = nullptr;
+    WorkingCancelIntentTag = FGameplayTag();
+  }
+
+  // 이동 차단/해제
+  if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
+  {
+    if (UCharacterMovementComponent* MoveComp = OwnerCharacter->GetCharacterMovement())
+    {
+      if (bWorking)
+      {
+        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] DisableMovement() 호출."));
+        MoveComp->DisableMovement();
+      }
+      else
+      {
+        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetMovementMode(MOVE_Walking) 호출."));
+        MoveComp->SetMovementMode(MOVE_Walking);
+      }
+    }
+    else
+    {
+      UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: CharacterMovementComponent를 찾을 수 없습니다!"));
+    }
+  }
+  else
+  {
+    UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: Owner가 ACharacter가 아닙니다!"));
+  }
+}
+
+// 클라이언트에서 복제된 bIsWorking에 따라 이동 상태를 동기화
+void UInteractorComponent::OnRep_IsWorking()
+{
+  if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
+  {
+    if (UCharacterMovementComponent* MoveComp = OwnerCharacter->GetCharacterMovement())
+    {
+      if (bIsWorking)
+      {
+        MoveComp->DisableMovement();
+      }
+      else
+      {
+        MoveComp->SetMovementMode(MOVE_Walking);
+      }
+    }
+  }
+}
+
 
 void UInteractorComponent::BeginPlay() {
   Super::BeginPlay();
 
-  PropertyComponent = GetOwner() ? GetOwner()->FindComponentByClass<UInteractorPropertyComponent>() : nullptr;
+  PropertyComponent = nullptr;
+  if (AActor* OwnerActor = GetOwner())
+  {
+      TArray<UInteractorPropertyComponent*> PropComps;
+      OwnerActor->GetComponents<UInteractorPropertyComponent>(PropComps);
+      for (UInteractorPropertyComponent* Comp : PropComps)
+      {
+          if (Comp->GetName().Contains(TEXT("InteractorProperty")))
+          {
+              PropertyComponent = Comp;
+              break;
+          }
+      }
+      if (!PropertyComponent && PropComps.Num() > 0)
+      {
+          PropertyComponent = PropComps[0];
+      }
+  }
 
   // 에디터(블루프린트 등)에서 채널 변경을 지원하기 위해 BeginPlay에서도 한번 덮어씌웁니다.
   DetectionSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -63,10 +174,16 @@ void UInteractorComponent::OnDetectionBeginOverlap(
     UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep,
     const FHitResult &SweepResult) {
   if (OtherActor && OtherActor->Implements<UInteractionContextInterface>()) {
+    // Spilled 아이템은 상호작용 대상에서 제외 (Replicated 상태 기반)
+    if (AItemBase* AsItem = Cast<AItemBase>(OtherActor))
+    {
+      if (UItemStateComponent* StateComp = AsItem->FindComponentByClass<UItemStateComponent>())
+      {
+        if (StateComp->CurrentState == EItemState::Spilled)
+          return;
+      }
+    }
     OverlappingActors.AddUnique(OtherActor);
-
-    // 대상 액터가 감지되었을 경우만 세부 Trace 및 메시지 발송 기능 ON (Tick
-    // 켜기)
     SetComponentTickEnabled(true);
   }
 }
@@ -135,20 +252,77 @@ void UInteractorComponent::UpdateTargetInteractable()
   }
 
   if (bCachedShouldSearchSphere) {
+    
+    // 시야 기반 타겟팅을 위한 방향 계산
+    FVector CameraLocation = MyLoc;
+    FVector CameraForward = GetOwner()->GetActorForwardVector();
+    
+    // 플레이어 컨트롤러의 카메라(뷰포인트)가 있다면 그 시점을 사용
+    if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+    {
+      if (APlayerController* PC = Cast<APlayerController>(OwnerPawn->GetController()))
+      {
+        FRotator CameraRotation;
+        PC->GetPlayerViewPoint(CameraLocation, CameraRotation);
+        CameraForward = CameraRotation.Vector();
+      }
+    }
+
+    float BestScore = -MAX_FLT; // 점수 기반 시스템 (높을수록 좋음)
+
     for (AActor *Actor : OverlappingActors) {
-      if (Actor && Actor != CurrentCarriedActor) { // 들고 있는 아이템은 제외
-        float Dist = FVector::Distance(MyLoc, Actor->GetActorLocation());
-        if (Dist < MinDist) {
-          MinDist = Dist;
-          BestSphereTarget = Actor;
+      if (Actor && Actor != CurrentCarriedActor) {
+        // Spilled 아이템은 타겟 대상에서 제외 (Replicated 상태 기반)
+        if (AItemBase* AsItem = Cast<AItemBase>(Actor))
+        {
+          if (UItemStateComponent* StateComp = AsItem->FindComponentByClass<UItemStateComponent>())
+          {
+            if (StateComp->CurrentState == EItemState::Spilled)
+              continue;
+          }
+        }
+        
+        FVector DirToTarget = (Actor->GetActorLocation() - CameraLocation);
+        float Dist = DirToTarget.Size();
+        
+        // 정규화된 방향 벡터
+        DirToTarget.Normalize();
+        
+        // 시선 방향과 타겟 방향의 내적 (Angle)
+        float DotProduct = FVector::DotProduct(CameraForward, DirToTarget);
+        
+        // 거리 범위(최대 감지 제한) 확인
+        if (Dist > 0.0f)
+        {
+          // 점수 = (시선의 일치도 가중치) - (거리 가중치)
+          // 내적이 1.0(완벽히 쳐다봄)에 가까울수록 점수가 기하급수적으로 폭증하도록 설계 (시야 최우선)
+          // 0.8 이하의 내적은 화면 가장자리이므로 점수를 대폭 깎음
+          float AngleScore = FMath::Clamp(DotProduct, 0.0f, 1.0f) * 1000.f;  
+          float DistPenalty = Dist * 0.5f; // 거리가 멀어질수록 감점
+          
+          float FinalScore = AngleScore - DistPenalty;
+
+          // Hysteresis (깜빡임 방지 타겟 유지 보너스)
+          // 기존 타겟에게는 추가 점수를 부여하여 점수가 비슷할 때 타겟이 요동치는 것을 방지합니다.
+          if (Actor == CurrentSphereTarget.Get())
+          {
+            FinalScore += 50.0f; // 보너스 수치는 테스트하며 조정 가능
+          }
+          
+          if (FinalScore > BestScore) {
+            BestScore = FinalScore;
+            BestSphereTarget = Actor;
+          }
         }
       }
     }
   }
 
-  if (CurrentSphereTarget != BestSphereTarget) {
+if (CurrentSphereTarget != BestSphereTarget)
+{
+
     SetSphereTarget(BestSphereTarget);
-  }
+}
 
 }
 
@@ -180,55 +354,68 @@ void UInteractorComponent::PollGridTarget()
     }
   }
 
-  if (CurrentGridTarget != BestGridTarget) {
+  if (CurrentGridTarget != BestGridTarget)
+  {
     SetGridTarget(BestGridTarget);
   }
 }
 
-void UInteractorComponent::SetSphereTarget(AActor *NewTarget) {
-  bool bIsLocalPlayer = false;
-  if (APawn *OwnerPawn = Cast<APawn>(GetOwner())) {
-    bIsLocalPlayer = OwnerPawn->IsLocallyControlled();
-  }
+void UInteractorComponent::SetSphereTarget(AActor* NewTarget)
+{
+    TryCancelWorkingOnTargetChange(NewTarget);
 
-  if (CurrentSphereTarget != nullptr &&
-      CurrentSphereTarget->Implements<UInteractionContextInterface>()) {
-    if (bIsLocalPlayer && CurrentSphereTarget != CurrentGridTarget) {
-      IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, false);
+    bool bIsLocalPlayer = false;
+    if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+        bIsLocalPlayer = OwnerPawn->IsLocallyControlled();
+
+    if (CurrentSphereTarget != nullptr &&
+        CurrentSphereTarget->Implements<UInteractionContextInterface>())
+    {
+        if (bIsLocalPlayer && CurrentSphereTarget != CurrentGridTarget)
+        {
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, false);
+        }
     }
-  }
 
-  CurrentSphereTarget = NewTarget;
+    CurrentSphereTarget = NewTarget;
 
-  if (CurrentSphereTarget != nullptr &&
-      CurrentSphereTarget->Implements<UInteractionContextInterface>()) {
-    if (bIsLocalPlayer) {
-      IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, true);
+    if (CurrentSphereTarget != nullptr &&
+        CurrentSphereTarget->Implements<UInteractionContextInterface>())
+    {
+        if (bIsLocalPlayer)
+        {
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, true);
+        }
     }
-  }
 }
 
-void UInteractorComponent::SetGridTarget(AActor *NewTarget) {
-  bool bIsLocalPlayer = false;
-  if (APawn *OwnerPawn = Cast<APawn>(GetOwner())) {
-    bIsLocalPlayer = OwnerPawn->IsLocallyControlled();
-  }
+void UInteractorComponent::SetGridTarget(AActor* NewTarget)
+{
+    TryCancelWorkingOnTargetChange(NewTarget);
 
-  if (CurrentGridTarget != nullptr &&
-      CurrentGridTarget->Implements<UInteractionContextInterface>()) {
-    if (bIsLocalPlayer && CurrentGridTarget != CurrentSphereTarget) {
-      IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, false);
+    bool bIsLocalPlayer = false;
+    if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+        bIsLocalPlayer = OwnerPawn->IsLocallyControlled();
+
+    if (CurrentGridTarget != nullptr &&
+        CurrentGridTarget->Implements<UInteractionContextInterface>())
+    {
+        if (bIsLocalPlayer && CurrentGridTarget != CurrentSphereTarget)
+        {
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, false);
+        }
     }
-  }
 
-  CurrentGridTarget = NewTarget;
+    CurrentGridTarget = NewTarget;
 
-  if (CurrentGridTarget != nullptr &&
-      CurrentGridTarget->Implements<UInteractionContextInterface>()) {
-    if (bIsLocalPlayer) {
-      IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, true);
+    if (CurrentGridTarget != nullptr &&
+        CurrentGridTarget->Implements<UInteractionContextInterface>())
+    {
+        if (bIsLocalPlayer)
+        {
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, true);
+        }
     }
-  }
 }
 
 void UInteractorComponent::TryInteract(FGameplayTag IntentTag) {
@@ -238,6 +425,12 @@ void UInteractorComponent::TryInteract(FGameplayTag IntentTag) {
   // 로컬 예측(ProcessInputBuffer) 과정에서 타겟의 물리가 꺼지며 Overlap이 해제되어
   // CurrentSphereTarget이 변경될 수 있으므로, 실행 전에 미리 보낼 타겟을 캐싱해 둡니다.
   AActor* BestTarget = CurrentSphereTarget ? CurrentSphereTarget.Get() : CurrentGridTarget.Get();
+
+  UE_LOG(LogTemp, Log, TEXT("[InteractorComp] TryInteract: Intent=%s, SphereTarget=%s, GridTarget=%s, Authority=%s"),
+    *IntentTag.ToString(),
+    CurrentSphereTarget ? *GetItemDataName(CurrentSphereTarget.Get()) : TEXT("None"),
+    CurrentGridTarget ? *GetItemDataName(CurrentGridTarget.Get()) : TEXT("None"),
+    GetOwner()->HasAuthority() ? TEXT("Server") : TEXT("Client"));
 
   ProcessInputBuffer();
 
@@ -292,39 +485,67 @@ void UInteractorComponent::ProcessInputBuffer(AActor* ServerOverrideTarget) {
      SecondaryTarget = nullptr;
   }
 
+  AActor* ActualInteractedTarget = nullptr;
+
   if (CurrentCarriedActor) {
     // 들고 있는 아이템이 있을 때
     if (PrimaryTarget && PrimaryTarget->Implements<UInteractionContextInterface>()) {
       bSuccess = IInteractionContextInterface::Execute_OnInteract(
           PrimaryTarget, CreateInteractionContext(PrimaryTarget, BufferedIntentTag));
+      if (bSuccess) ActualInteractedTarget = PrimaryTarget;
     }
     
     if (!bSuccess && SecondaryTarget && SecondaryTarget->Implements<UInteractionContextInterface>()) {
       bSuccess = IInteractionContextInterface::Execute_OnInteract(
           SecondaryTarget, CreateInteractionContext(SecondaryTarget, BufferedIntentTag));
+      if (bSuccess) ActualInteractedTarget = SecondaryTarget;
     }
 
     // 타겟에게 처리를 못했다면, 들고 있는 아이템에게 전달
+    // BestTarget을 함께 전달하여 CarriedActor(Container 등)가 대상을 인식 가능
     if (!bSuccess && CurrentCarriedActor->Implements<UInteractionContextInterface>()) {
+      AActor* BestTarget = PrimaryTarget ? PrimaryTarget : SecondaryTarget;
       bSuccess = IInteractionContextInterface::Execute_OnInteract(
-          CurrentCarriedActor, CreateInteractionContext(nullptr, BufferedIntentTag));
+          CurrentCarriedActor, CreateInteractionContext(BestTarget, BufferedIntentTag));
+      if (bSuccess) ActualInteractedTarget = CurrentCarriedActor;
     }
   } else {
     // 들고 있는 아이템이 없을 때
     if (PrimaryTarget && PrimaryTarget->Implements<UInteractionContextInterface>()) {
       bSuccess = IInteractionContextInterface::Execute_OnInteract(
           PrimaryTarget, CreateInteractionContext(PrimaryTarget, BufferedIntentTag));
+      if (bSuccess) ActualInteractedTarget = PrimaryTarget;
     }
 
     if (!bSuccess && SecondaryTarget && SecondaryTarget->Implements<UInteractionContextInterface>()) {
       bSuccess = IInteractionContextInterface::Execute_OnInteract(
           SecondaryTarget, CreateInteractionContext(SecondaryTarget, BufferedIntentTag));
+      if (bSuccess) ActualInteractedTarget = SecondaryTarget;
     }
   }
-
-  // 성공 여부에 따라 캐시 해제는 생략하거나 타겟 업데이트 시점에 리셋되도록 둠
-  // SetTarget(nullptr) 대신, 상태가 변경되어 타겟 목록에서 빠지면 UpdateTargetInteractable에서 자동으로 리셋됨
+  if (!bSuccess) {
+    UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] 상호작용 실패 (모든 타겟에서 OnInteract가 false 반환됨)"));
+  }
 
   BufferedIntentTag = FGameplayTag::EmptyTag;
   InputBufferTimer = 0.f;
+}
+
+void UInteractorComponent::TryCancelWorkingOnTargetChange(AActor* NewTarget)
+{
+  if (!bIsWorking) return;
+
+  AActor* OldTarget = WorkingTargetActor.Get();
+  if (!OldTarget || OldTarget == NewTarget) return;
+  if (!WorkingCancelIntentTag.IsValid()) return;
+
+  UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] 작업 중 타겟 변경 감지! OldTarget=%s → NewTarget=%s, Cancel Intent 발송"),
+    *OldTarget->GetName(), NewTarget ? *NewTarget->GetName() : TEXT("None"));
+
+  // 기존 파이프라인을 통해 Cancel Intent를 이전 타겟에 발송
+  if (OldTarget->Implements<UInteractionContextInterface>())
+  {
+    FInteractionContext CancelContext = CreateInteractionContext(OldTarget, WorkingCancelIntentTag);
+    IInteractionContextInterface::Execute_OnInteract(OldTarget, CancelContext);
+  }
 }

@@ -63,6 +63,11 @@ public:
             meta = (EditCondition = "bUseCustomVisuals"))
   FVector CustomMeshRelativeLocation = FVector::ZeroVector;
 
+  /** [커스텀] 루트(SphereCollision) 기준 InteractableComponent의 상대 위치 오프셋 */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item|Visual",
+            meta = (EditCondition = "bUseCustomVisuals"))
+  FVector CustomInteractRelativeLocation = FVector::ZeroVector;
+
   // ─── 헬퍼 ───
 
   /** 유효 스폰 클래스 반환 (Custom → VisualPreset → nullptr) */
@@ -80,6 +85,10 @@ public:
   /** 유효 메쉬 오프셋 반환 */
   UFUNCTION(BlueprintCallable, Category = "Item|Visual")
   FVector GetEffectiveMeshRelativeLocation() const;
+
+  /** 유효 InteractComponent 오프셋 반환 */
+  UFUNCTION(BlueprintCallable, Category = "Item|Visual")
+  FVector GetEffectiveInteractRelativeLocation() const;
 
   /** Stats에서 무게를 조회 (Tag: Item.Weight, 기본값 10.0f) */
   UFUNCTION(BlueprintCallable, Category = "Item|Stats")

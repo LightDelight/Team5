@@ -8,7 +8,6 @@
 #include "LogicContextInterface.generated.h"
 
 class UInteractableComponent;
-struct FLogicBlackboard;
 struct FItemStatValue;
 class ULogicModuleBase;
 
@@ -31,9 +30,6 @@ public:
 
   /** 액터와 강하게 결합된 상호작용 관련 프라퍼티 컴포넌트를 반환합니다. */
   virtual class UInteractablePropertyComponent* GetPropertyComponent() const { return nullptr; }
-
-  /** 실제 런타임 상태 데이터를 보관하는 블랙보드 포인터를 반환합니다. */
-  virtual FLogicBlackboard *GetLogicBlackboard() = 0;
 
   /**
    * 이 액터를 정의하는 DataAsset의 ItemStats 맵에서

@@ -3,6 +3,8 @@
 #include "LKH2/Interactables/Item/ItemStateComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "LKH2/Interactables/Item/ItemSmoothingComponent.h"
+#include "LKH2/Interaction/Component/InteractableComponent.h"
 
 // Sets default values for this component's properties
 UItemStateComponent::UItemStateComponent() {
@@ -36,6 +38,10 @@ void UItemStateComponent::GetLifetimeReplicatedProps(
 
   DOREPLIFETIME_CONDITION_NOTIFY(UItemStateComponent, CurrentState, COND_None,
                                  REPNOTIFY_Always);
+  DOREPLIFETIME_CONDITION_NOTIFY(UItemStateComponent, RepParentActor, COND_None,
+                                 REPNOTIFY_Always);
+  DOREPLIFETIME_CONDITION_NOTIFY(UItemStateComponent, RepAttachComponent, COND_None,
+                                 REPNOTIFY_Always);
 }
 
 void UItemStateComponent::OnRep_ItemState() {
@@ -44,12 +50,12 @@ void UItemStateComponent::OnRep_ItemState() {
 }
 
 void UItemStateComponent::SetItemState(EItemState NewState) {
-  CurrentState = NewState;
-
   AActor *Owner = GetOwner();
   if (!Owner)
     return;
 
+  CurrentState = NewState;
+  
   // 상태에 따른 물리 토글 및 캐리 컴포넌트 감지 여부(Collision Channel) 처리
   UPrimitiveComponent *RootPrim =
       Cast<UPrimitiveComponent>(Owner->GetRootComponent());
@@ -62,27 +68,57 @@ void UItemStateComponent::SetItemState(EItemState NewState) {
       RootPrim->SetSimulatePhysics(true);
       RootPrim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     }
+    // 월드에 놓인 상태에서는 다시 스무딩을 켜서 지터를 방지합니다.
+    if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {
+      SmoothingComp->SetSmoothingEnabled(true);
+    }
     // 레벨에 놓여있으므로 서버-클라이언트 위치 동기화 필요
     Owner->SetReplicateMovement(true);
+    // Carried 상태에서 NoCollision이었으로범위 안 DetectionSphere의
+    // BeginOverlap이 발동하지 않을 수 있음. UpdateOverlaps로 강제 재계산.
+    Owner->UpdateOverlaps();
     break;
   case EItemState::Carried:
-    if (RootPrim) {
-      // 캐릭터가 들고 있으므로 아이템 자체 물리/충돌 끄기
-      RootPrim->SetSimulatePhysics(false);
-      RootPrim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    }
-    // Carrier의 트랜스폼에 종속되므로 ReplicateMovement를 꺼서
-    // 서버의 절대 좌표 갱신이 클라이언트의 로컬 부착 상태를 방해하지 않도록 합니다.
-    Owner->SetReplicateMovement(false);
-    break;
   case EItemState::Stored:
     if (RootPrim) {
-      // 워크스테이션 같은 곳에 거치된 상태이므로 물리/충돌 끄기
+      // 캐릭터가 들고 있거나 보관된 상태이므로 아이템 자체 물리/충돌 끄기
       RootPrim->SetSimulatePhysics(false);
       RootPrim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+      // 관성에 의한 이동 예측(Extrapolation)을 방지하기 위해 속도 초기화
+      RootPrim->SetPhysicsLinearVelocity(FVector::ZeroVector);
+      RootPrim->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
     }
-    // 부착 상태를 클라이언트에 동기화하기 위해 SetReplicateMovement를 끕니다.
-    // (물리적 종속이 확실한 경우)
+    // 부착 상태에서는 스무딩(Dead Reckoning) 설정을 켕니다. 
+    // (실제 비주얼 분리는 Smoothing 컴포넌트 내부에서 Simulated Proxy인 경우에만 작동함)
+    if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {
+      SmoothingComp->SetSmoothingEnabled(true);
+    }
+    // 부착된 상태에서도 위치 동기화(Attachment Replication 포함)가 원활하도록 ReplicateMovement를 유지합니다.
+    Owner->SetReplicateMovement(true);
+    break;
+  case EItemState::Spilled:
+    if (RootPrim) {
+      // 얭취로서 전복 시 취야하는 동작
+      // 물리 켜기: 로컬 시뮬레이션으로 굴마다님
+      RootPrim->SetSimulatePhysics(true);
+      RootPrim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+      // 초경량 설정: 진짜 아이템에 물리 영향을 주지 않도록
+      RootPrim->SetMassScale(NAME_None, 0.001f);
+      // 관성 속도 초기화
+      RootPrim->SetPhysicsLinearVelocity(FVector::ZeroVector);
+      RootPrim->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+    }
+    // 아웃라인 비활성화: Spilled 아이템은 상호작용 불가이므로 시각적 피드백 제거
+    // (클라이언트에서도 OnRep_ItemState로 호출되므로 서버-클라이언트 동일 동작)
+    if (UInteractableComponent* IC = Owner->FindComponentByClass<UInteractableComponent>())
+    {
+      IC->SetOutlineEnabled(false);
+    }
+    // 스무딩 끄기: 로컬에서만 연산하므로 서버 보간 불필요
+    if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {
+      SmoothingComp->SetSmoothingEnabled(false);
+    }
+    // 위치 복제 끊기: 클라이언트마다 독립적으로 굴리도록
     Owner->SetReplicateMovement(false);
     break;
   }
@@ -92,6 +128,9 @@ void UItemStateComponent::ThrowItem(const FVector &Impulse) {
   // 상태 변경 및 물리 활성화
   SetItemState(EItemState::Dropped);
 
+  // 부착 해제 정보 갱신
+  UpdateAttachmentReplication();
+
   if (Impulse.IsZero())
     return;
 
@@ -99,5 +138,45 @@ void UItemStateComponent::ThrowItem(const FVector &Impulse) {
     if (UPrimitiveComponent *RootPrim = Cast<UPrimitiveComponent>(Owner->GetRootComponent())) {
       RootPrim->AddImpulse(Impulse, NAME_None, true);
     }
+  }
+}
+
+void UItemStateComponent::UpdateAttachmentReplication() {
+  if (GetOwnerRole() != ROLE_Authority)
+    return;
+
+  AActor *OwnerActor = GetOwner();
+  if (!OwnerActor)
+    return;
+
+  RepParentActor = OwnerActor->GetAttachParentActor();
+  if (USceneComponent* Root = OwnerActor->GetRootComponent())
+  {
+      RepAttachComponent = Root->GetAttachParent();
+  }
+  else
+  {
+      RepAttachComponent = nullptr;
+  }
+}
+
+void UItemStateComponent::OnRep_AttachmentData() {
+  AActor *OwnerActor = GetOwner();
+  if (!OwnerActor)
+    return;
+
+  if (RepParentActor) {
+    // 클라이언트 강제 부착
+    FAttachmentTransformRules Rules =
+        FAttachmentTransformRules::SnapToTargetNotIncludingScale;
+
+    if (RepAttachComponent) {
+      OwnerActor->AttachToComponent(RepAttachComponent, Rules);
+    } else {
+      OwnerActor->AttachToActor(RepParentActor, Rules);
+    }
+  } else {
+    // 부모가 없으면 분리 (월드 위치 유지)
+    OwnerActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
   }
 }

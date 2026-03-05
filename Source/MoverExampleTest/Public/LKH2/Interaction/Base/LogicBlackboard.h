@@ -90,6 +90,28 @@ struct FLogicBlackboardObjectSerializer : public FFastArraySerializer {
     }
     return nullptr;
   }
+
+  /** 주어진 GameplayTag 키에 해당하는 오브젝트 포인터를 제거합니다. */
+  bool RemoveObject(const FGameplayTag &Key) {
+    if (!Key.IsValid()) return false;
+
+    for (int32 i = 0; i < Items.Num(); ++i) {
+      if (Items[i].Key == Key) {
+        Items.RemoveAt(i);
+        MarkArrayDirty();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** 모든 오브젝트 포인터를 제거합니다. */
+  void ClearObjects() {
+    if (Items.Num() > 0) {
+      Items.Empty();
+      MarkArrayDirty();
+    }
+  }
 };
 
 /**
@@ -156,6 +178,28 @@ struct FLogicBlackboardStatSerializer : public FFastArraySerializer {
     }
     return nullptr;
   }
+
+  /** 주어진 GameplayTag 키에 해당하는 스탯을 제거합니다. */
+  bool RemoveStat(const FGameplayTag &Key) {
+    if (!Key.IsValid()) return false;
+
+    for (int32 i = 0; i < Items.Num(); ++i) {
+      if (Items[i].Key == Key) {
+        Items.RemoveAt(i);
+        MarkArrayDirty();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** 모든 스탯을 제거합니다. */
+  void ClearStats() {
+    if (Items.Num() > 0) {
+      Items.Empty();
+      MarkArrayDirty();
+    }
+  }
 };
 
 /**
@@ -179,25 +223,3 @@ struct TStructOpsTypeTraits<FLogicBlackboardObjectSerializer>
   };
 };
 
-/**
- * 최종 활용하게 될 여러 데이터 타입 지원 종합 블랙보드입니다.
- * 컴포넌트 내부 등에 선언하여 사용합니다.
- */
-USTRUCT(BlueprintType)
-struct MOVEREXAMPLETEST_API FLogicBlackboard {
-  GENERATED_BODY()
-
-public:
-  /** 오브젝트 타입 데이터를 담는 동기화 지원 블랙보드 */
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blackboard")
-  FLogicBlackboardObjectSerializer ObjectBlackboard;
-
-  /** 런타임 가변 수치(Stats)를 담는 동기화 지원 블랙보드 */
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blackboard")
-  FLogicBlackboardStatSerializer Stats;
-
-  /**
-   * 필요할 경우 이곳에 Float, Int 기반의 Serializer 도 동일하게 만들어서 넣을
-   * 수 있습니다. 예: FLogicBlackboardFloatSerializer FloatBlackboard;
-   */
-};

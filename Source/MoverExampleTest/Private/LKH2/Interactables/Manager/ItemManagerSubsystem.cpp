@@ -142,9 +142,8 @@ void UItemManagerSubsystem::StoreItem(const FGuid &InstanceId) {
   if (!Item)
     return;
 
-  // 상태 전이 → Stored (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
+  // 상태 전이 → Stored (물리/콜리전을 비활성화)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
     StateComp->SetItemState(EItemState::Stored);
   }
 }
@@ -154,9 +153,8 @@ void UItemManagerSubsystem::RetrieveItem(const FGuid &InstanceId) {
   if (!Item)
     return;
 
-  // 상태 전이 → Carried (OnRep이 물리/콜리전을 자동 처리)
-  if (UItemStateComponent *StateComp =
-          Item->FindComponentByClass<UItemStateComponent>()) {
+  // 상태 전이 → Carried (물리/콜리전을 비활성화)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
     StateComp->SetItemState(EItemState::Carried);
   }
 }
@@ -198,6 +196,28 @@ void UItemManagerSubsystem::ThrowTargetItem(const FGuid &InstanceId, const FVect
           Item->FindComponentByClass<UItemStateComponent>()) {
     StateComp->ThrowItem(Impulse);
   }
+}
+
+void UItemManagerSubsystem::SpillItem(const FGuid &InstanceId) {
+  AItemBase *Item = GetItemActor(InstanceId);
+  if (!Item)
+    return;
+
+  // UID를 Spilled 집합에 등록 → 상호작용 필터링에 사용
+  SpilledItemIds.Add(InstanceId);
+
+  // 상태 전이 → Spilled (위치 복제 끄기 + 로컬 물리 시뮬레이션 시작)
+  if (UItemStateComponent *StateComp = Item->GetStateComponent()) {
+    StateComp->SetItemState(EItemState::Spilled);
+  }
+}
+
+void UItemManagerSubsystem::UnspillItem(const FGuid &InstanceId) {
+  SpilledItemIds.Remove(InstanceId);
+}
+
+bool UItemManagerSubsystem::IsSpilledItem(const FGuid &InstanceId) const {
+  return SpilledItemIds.Contains(InstanceId);
 }
 
 // ─── 내부 헬퍼 ───

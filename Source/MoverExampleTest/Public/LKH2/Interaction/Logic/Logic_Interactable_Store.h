@@ -19,4 +19,12 @@ public:
 
 	virtual bool PreInteractCheck(const FInteractionContext &Context) override;
 	virtual bool PerformInteraction(const FInteractionContext &Context) override;
+
+	// 수납할 슬롯 태그 (예: Slot.Left)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Store")
+	FGameplayTag SlotTag;
+
+	// 수납 불가능한 아이템 태그 목록
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Store")
+	FGameplayTagContainer RestrictedItemTags;
 };

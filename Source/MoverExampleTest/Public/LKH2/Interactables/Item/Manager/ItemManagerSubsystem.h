@@ -118,6 +118,28 @@ public:
   void DropItem(const FGuid &InstanceId);
 
   /**
+   * 아이템을 쏟아진(Spilled) 상태로 전환합니다.
+   * Spilled 아이템은 상호작용 불가, 위치 복제 없이 로컬에서만 물리 시뮬레이션됩니다.
+   *
+   * @param InstanceId 아이템 인스턴스 ID
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void SpillItem(const FGuid &InstanceId);
+
+  /**
+   * 아이템의 Spilled 상태를 해제합니다. (정리 완료 시 호출)
+   */
+  UFUNCTION(BlueprintCallable, Category = "ItemManager|State")
+  void UnspillItem(const FGuid &InstanceId);
+
+  /**
+   * 해당 UID의 아이템이 Spilled 상태인지 반환합니다.
+   * InteractorComponent에서 상호작용 대상 필터링에 사용됩니다.
+   */
+  UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ItemManager|State")
+  bool IsSpilledItem(const FGuid &InstanceId) const;
+
+  /**
    * 놓여진 아이템에 물리적인 던지기 힘을 가합니다.
    *
    * @param InstanceId 아이템 인스턴스 ID
@@ -140,6 +162,9 @@ private:
 
   /** 월드 내 활성 아이템 레지스트리 맵 */
   TMap<FGuid, TWeakObjectPtr<AItemBase>> ActiveItemsMap;
+
+  /** Spilled 상태 아이템 UID 집합 – 상호작용 필터링에 사용 */
+  TSet<FGuid> SpilledItemIds;
 
   /** 기본 아이템 스폰 클래스 (레지스트리에 없을 때 폴백) */
   UPROPERTY()
