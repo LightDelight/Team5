@@ -116,7 +116,8 @@ public:
   AWorkStationBase *SpawnWorkstation(TSubclassOf<AWorkStationBase> StationClass,
                                      UWorkstationData *StationData,
                                      const FIntPoint &GridCoord,
-                                     const FRotator &Rotation = FRotator::ZeroRotator);
+                                     const FRotator &Rotation = FRotator::ZeroRotator,
+                                     const FVector &OverrideWorldLocation = FVector::ZeroVector);
 
   /**
    * 지정 그리드 좌표의 워크스테이션을 파괴하고 그리드에서 해제합니다.
@@ -152,6 +153,13 @@ protected:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid|Setup",
             meta = (ClampMin = "1"))
   int32 GridHeight = 10;
+
+  /**
+   * true이면 셀 중심(상대 좌표)에 스폰, false이면 베이크 당시 절대 위치에 스폰.
+   * 기본값 true는 기존 동작을 유지합니다.
+   */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid|Setup")
+  bool bUseGridCenter = true;
 
   /** 로드/베이크 대상 맵 데이터 에셋 */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid|Baking")
