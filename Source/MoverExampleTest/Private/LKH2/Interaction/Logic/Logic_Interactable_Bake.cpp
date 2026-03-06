@@ -9,19 +9,16 @@
 
 ULogic_Interactable_Bake::ULogic_Interactable_Bake()
 {
-	// 기본값 설정
-	TargetSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Slot.Main"));
-	BakeActionTag = FGameplayTag::RequestGameplayTag(TEXT("Interaction.Action.Bake"));
-
-	// 시작/중단 의도 설정 (상태 컴포넌트의 가공 의도와 정렬)
-	StartIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Intent.Workstation.ItemAdd"));
-	StopIntentTag  = FGameplayTag::RequestGameplayTag(TEXT("Intent.Workstation.ItemRemove"));
-
-	// UI 설정: 아이템 위에 표시하고 취소 시에도 유지 (진행도 동결)
-	UISlotTag = TargetSlotTag;
+	// UI 설정 유지
 	bMaintainUIOnCancel = true;
-	CurrentStepTag = FGameplayTag::RequestGameplayTag(TEXT("Stat.Interaction.Progress"));
-	MaxStepTag = FGameplayTag::RequestGameplayTag(TEXT("Stat.Interaction.MaxProgress"));
+
+	// 태그 설정
+	if (!HasAnyFlags(RF_ClassDefaultObject))
+	{
+		// 시작/중단 의도 설정 (상태 컴포넌트의 가공 의도와 정렬)
+		StartIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Intent.Workstation.ItemAdd"));
+		StopIntentTag  = FGameplayTag::RequestGameplayTag(TEXT("Intent.Workstation.ItemRemove"));
+	}
 }
 
 bool ULogic_Interactable_Bake::CanStartProcessing() const

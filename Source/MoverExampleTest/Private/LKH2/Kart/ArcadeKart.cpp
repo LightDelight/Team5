@@ -34,7 +34,10 @@ AArcadeKart::AArcadeKart()
 
     BoxCollision->SetBoxExtent(FVector(40.f, 30.f, 30.f));
     BoxCollision->SetSimulatePhysics(true);
-    BoxCollision->SetMassOverrideInKg(NAME_None, 80.0f, true);
+    if (!HasAnyFlags(RF_ClassDefaultObject))
+    {
+        BoxCollision->SetMassOverrideInKg(NAME_None, 80.0f, true);
+    }
     BoxCollision->SetLinearDamping(0.5f);
     BoxCollision->SetAngularDamping(3.0f);
     BoxCollision->BodyInstance.bUseCCD = true;

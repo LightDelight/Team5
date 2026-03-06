@@ -148,6 +148,8 @@ bool AItemBase::OnInteract_Implementation(const FInteractionContext &Context) {
 }
 
 void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue) {
+  if (StencilValue == 0) StencilValue = 1;
+
   if (ItemData) {
     if (bEnabled) {
       UE_LOG(LogTemp, Warning, TEXT("[ItemBase_DEBUG] 💡 아웃라인 켜짐: 액터=%s, DataAsset=%s"), *GetName(), *ItemData->GetName());
@@ -157,7 +159,7 @@ void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilVal
   }
 
   if (InteractableComponent) {
-    InteractableComponent->SetOutlineEnabled(bEnabled, 1);
+    InteractableComponent->SetOutlineEnabled(bEnabled, StencilValue);
   }
 }
 
@@ -169,9 +171,12 @@ void AItemBase::SetItemDataAndApply(UItemData *InData) {
       VisualMesh->SetStaticMesh(Mesh);
     }
     if (SphereCollision) {
-      SphereCollision->SetMassOverrideInKg(NAME_None,
-                                           ItemData->GetEffectiveWeight(),
-                                           true);
+      if (!HasAnyFlags(RF_ClassDefaultObject))
+      {
+        SphereCollision->SetMassOverrideInKg(NAME_None,
+                                             ItemData->GetEffectiveWeight(),
+                                             true);
+      }
       SphereCollision->SetSphereRadius(ItemData->GetEffectiveSphereRadius());
     }
     if (VisualMesh) {

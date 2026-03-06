@@ -15,8 +15,6 @@
 UHoldingStepLogicModuleBase::UHoldingStepLogicModuleBase()
 {
 	TaskClass = ULogicTask_PlayMontageAndWait::StaticClass();
-	ProgressStatTag = FGameplayTag::RequestGameplayTag(TEXT("Stat.Interaction.Progress"));
-	MaxProgressStatTag = FGameplayTag::RequestGameplayTag(TEXT("Stat.Interaction.MaxProgress"));
 }
 
 bool UHoldingStepLogicModuleBase::PreInteractCheck(const FInteractionContext& Context)

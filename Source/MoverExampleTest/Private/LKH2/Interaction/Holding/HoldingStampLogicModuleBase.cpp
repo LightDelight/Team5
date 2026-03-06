@@ -14,8 +14,10 @@
 
 UHoldingStampLogicModuleBase::UHoldingStampLogicModuleBase()
 {
-    StartIntentTag  = FGameplayTag::RequestGameplayTag(TEXT("Interactor.Intent.Interact"));
-    CancelIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Interactor.Intent.Release"));
+    if (!HasAnyFlags(RF_ClassDefaultObject))
+    {
+        StartIntentTag  = FGameplayTag::RequestGameplayTag(TEXT("Interactor.Intent.Interact"));
+    }
 }
 
 // ─────────────────────────────────────────

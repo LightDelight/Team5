@@ -197,6 +197,8 @@ bool AWorkStationBase::OnInteract_Implementation(const FInteractionContext &Cont
 }
 
 void AWorkStationBase::SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue) {
+  if (StencilValue == 0) StencilValue = 2;
+  
   if (InteractableComponent) {
     InteractableComponent->SetOutlineEnabled(bEnabled, StencilValue);
   }

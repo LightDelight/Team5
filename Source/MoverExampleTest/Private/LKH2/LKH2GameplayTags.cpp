@@ -12,6 +12,12 @@ UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Cart_ItemOverlap, "Intent.Cart.ItemO
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Cart_Overturn, "Intent.Cart.Overturn", "Intent from CartPropertyComponent when cart overturn is detected.");
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Cart_SpillCleanup, "Intent.Cart.SpillCleanup", "Intent sent to cleanup workstation to register a spilled item UID.");
 
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Interactor_Carry, "Interactor.Intent.Carry", "Intent for carrying.");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Interactor_Throw, "Interactor.Intent.Throw", "Intent for throwing.");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Interactor_Interact, "Interactor.Intent.Interact", "Intent for general interaction.");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(NativeIntent_Interactor_Complete, "Interactor.Intent.Complete", "Intent for completing an action.");
+
+
 FLKH2GameplayTags FLKH2GameplayTags::Instance;
 
 FLKH2GameplayTags::FLKH2GameplayTags()
@@ -23,6 +29,12 @@ FLKH2GameplayTags::FLKH2GameplayTags()
 	Type_Item_Container = NativeType_Container.GetTag();
 	Intent_Workstation_ItemAdd = NativeIntent_ItemAdd.GetTag();
 	Intent_Workstation_ItemRemove = NativeIntent_ItemRemove.GetTag();
+	
+	Intent_Interactor_Carry = NativeIntent_Interactor_Carry.GetTag();
+	Intent_Interactor_Throw = NativeIntent_Interactor_Throw.GetTag();
+	Intent_Interactor_Interact = NativeIntent_Interactor_Interact.GetTag();
+	Intent_Interactor_Complete = NativeIntent_Interactor_Complete.GetTag();
+	
 	Intent_Cart_ItemOverlap = NativeIntent_Cart_ItemOverlap.GetTag();
 	Intent_Cart_Overturn = NativeIntent_Cart_Overturn.GetTag();
 	Intent_Cart_SpillCleanup = NativeIntent_Cart_SpillCleanup.GetTag();
