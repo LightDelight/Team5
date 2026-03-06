@@ -421,7 +421,7 @@ void UInteractorComponent::SetSphereTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer && CurrentSphereTarget != CurrentGridTarget)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, false, 2);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, false, 0);
         }
     }
 
@@ -432,7 +432,7 @@ void UInteractorComponent::SetSphereTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, true, 2);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, true, 0);
         }
     }
 }
@@ -450,7 +450,7 @@ void UInteractorComponent::SetGridTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer && CurrentGridTarget != CurrentSphereTarget)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, false, 2);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, false, 0);
         }
     }
 
@@ -461,7 +461,7 @@ void UInteractorComponent::SetGridTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, true, 2);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, true, 0);
         }
     }
 }

@@ -32,6 +32,12 @@ public:
 	FGameplayTag Intent_Workstation_ItemAdd;
 	FGameplayTag Intent_Workstation_ItemRemove;
 
+	// ─── [Intents] 인터랙터 전용 ───
+	FGameplayTag Intent_Interactor_Carry;
+	FGameplayTag Intent_Interactor_Throw;
+	FGameplayTag Intent_Interactor_Interact;
+	FGameplayTag Intent_Interactor_Complete;
+
 	// ─── [Intents] 카트 전용 ───
 	FGameplayTag Intent_Cart_ItemOverlap;   // Box Collision Overlap 감지 시
 	FGameplayTag Intent_Cart_Overturn;      // 전복 감지 시

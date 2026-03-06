@@ -12,16 +12,19 @@
 
 UProcessingLogicModuleBase::UProcessingLogicModuleBase()
 {
-	const FLKH2GameplayTags& Tags = FLKH2GameplayTags::Get();
+	if (!HasAnyFlags(RF_ClassDefaultObject))
+	{
+		const FLKH2GameplayTags& Tags = FLKH2GameplayTags::Get();
 
-	// 기본 태그 설정: 에디터에서 비워둘 경우 이 태그들이 사용됩니다.
-	CurrentStepTag = Tags.Stat_Common_CurrentProgress;
-	MaxStepTag = Tags.Stat_Common_MaxProgress;
-	StartTimeTag = Tags.Time_Common_StartTime;
-	EndTimeTag = Tags.Time_Common_EndTime;
+		// 기본 태그 설정: 에디터에서 비워둘 경우 이 태그들이 사용됩니다.
+		CurrentStepTag = Tags.Stat_Common_CurrentProgress;
+		MaxStepTag = Tags.Stat_Common_MaxProgress;
+		StartTimeTag = Tags.Time_Common_StartTime;
+		EndTimeTag = Tags.Time_Common_EndTime;
 
-	StartIntentTag = Tags.Intent_Workstation_ItemAdd;
-	StopIntentTag = Tags.Intent_Workstation_ItemRemove;
+		StartIntentTag = Tags.Intent_Workstation_ItemAdd;
+		StopIntentTag = Tags.Intent_Workstation_ItemRemove;
+	}
 }
 
 bool UProcessingLogicModuleBase::CanStartProcessing() const
@@ -60,7 +63,7 @@ void UProcessingLogicModuleBase::StartProcessing(const FInteractionContext& Cont
 	FGuid UISyncUID = Context.ItemUID; // UI 동기화에 사용할 UID (컨테이너인 경우 컨테이너 UID)
 	
 	UInteractablePropertyComponent* PropComp = OwnerActor->FindComponentByClass<UInteractablePropertyComponent>();
-	FGameplayTag TargetLookupTag = UISlotTag.IsValid() ? UISlotTag : (Context.SlotTag.IsValid() ? Context.SlotTag : FGameplayTag::RequestGameplayTag(TEXT("Slot.Main")));
+	FGameplayTag TargetLookupTag = UISlotTag.IsValid() ? UISlotTag : Context.SlotTag;
 
 	if (PropComp)
 	{
@@ -147,7 +150,7 @@ void UProcessingLogicModuleBase::StopProcessing(const FInteractionContext& Conte
 	{
 		if (UInteractablePropertyComponent* PropComp = OwnerActor->FindComponentByClass<UInteractablePropertyComponent>())
 		{
-			FGameplayTag TargetLookupTag = UISlotTag.IsValid() ? UISlotTag : (Context.SlotTag.IsValid() ? Context.SlotTag : FGameplayTag::RequestGameplayTag(TEXT("Slot.Main")));
+			FGameplayTag TargetLookupTag = UISlotTag.IsValid() ? UISlotTag : Context.SlotTag;
 			
 			// UI가 붙어있는 실제 겉표면 아이템 (컨테이너 등)
 			AItemBase* SlotItem = PropComp->GetStoredItem(TargetLookupTag);
@@ -242,7 +245,7 @@ void UProcessingLogicModuleBase::HandleTaskCompleted(ULogicTaskBase* TaskInstanc
 		{
 			if (UInteractablePropertyComponent* PropComp = OwnerActor->FindComponentByClass<UInteractablePropertyComponent>())
 			{
-				FGameplayTag TargetLookupTag = UISlotTag.IsValid() ? UISlotTag : (Context.SlotTag.IsValid() ? Context.SlotTag : FGameplayTag::RequestGameplayTag(TEXT("Slot.Main")));
+				FGameplayTag TargetLookupTag = UISlotTag.IsValid() ? UISlotTag : Context.SlotTag;
 				
 				// UI가 연동된 실제 겉표면 아이템 (컨테이너 등)
 				AItemBase* SlotItem = PropComp->GetStoredItem(TargetLookupTag);

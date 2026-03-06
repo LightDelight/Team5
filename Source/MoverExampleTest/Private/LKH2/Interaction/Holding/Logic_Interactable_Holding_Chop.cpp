@@ -13,12 +13,6 @@
 ULogic_Interactable_Holding_Chop::ULogic_Interactable_Holding_Chop()
 {
 	// 기본값 설정 (에디터에서 덮어쓰기 가능)
-	RecipeTag         = FGameplayTag::RequestGameplayTag(TEXT("Interaction.Chop"));
-	SlotTag           = FGameplayTag::RequestGameplayTag(TEXT("Slot.ChoiceBoard.Primary"));
-	ActionTag         = FGameplayTag::RequestGameplayTag(TEXT("Action.Chop"));
-	RequiredIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Intent.Holding.Chop"));
-	ProgressIntentTag = FGameplayTag::RequestGameplayTag(TEXT("Event.Montage.Hit"));
-	CancelIntentTag   = FGameplayTag::RequestGameplayTag(TEXT("Intent.Cancel"));
 	RequiredItemTag   = FGameplayTag::EmptyTag; // 기본적으로 비워둠
 	MaxStep           = 5.0f;
 }
