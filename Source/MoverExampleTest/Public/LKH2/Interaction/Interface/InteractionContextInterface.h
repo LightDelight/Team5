@@ -81,5 +81,5 @@ public:
 
   // 아웃라인(외곽선) 표시 여부를 설정합니다.
   UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-  void SetOutlineEnabled(bool bEnabled);
+  void SetOutlineEnabled(bool bEnabled, int32 StencilValue);
 };

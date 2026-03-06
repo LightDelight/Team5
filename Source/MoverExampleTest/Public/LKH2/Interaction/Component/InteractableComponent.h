@@ -20,7 +20,7 @@ public:
 
   // 부모 액터(인터페이스)로부터 전달받은 메시지 처리
   bool OnInteract(const FInteractionContext &Context);
-  void SetOutlineEnabled(bool bEnabled);
+  void SetOutlineEnabled(bool bEnabled, int32 StencilValue);
 
   /**
    * 데이터 에셋 기반으로 로직 모듈들을 초기화합니다.

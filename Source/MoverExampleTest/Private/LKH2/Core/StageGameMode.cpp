@@ -95,6 +95,9 @@ void AStageGameMode::OnCrossedFinishLine()
 			return;
 		}
 
+		// 성공적으로 통과했을 때만 이벤트 발생
+		OnCrossedFinishLineEvent.Broadcast();
+
 		// 다 모인 채로 통과했으므로 성공 처리
 		EndStage(true);
 	}

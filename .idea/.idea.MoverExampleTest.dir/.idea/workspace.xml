@@ -9,48 +9,29 @@
   <component name="ChangeListManager">
     <list default="true" id="e38c63da-d0c6-467f-96fb-ac9440d354f0" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MoverExampleTest.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/BP_PCtest.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/BP_PCtest.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/ABP_Cat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/ABP_Cat.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/ABP_DrivingCat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/ABP_DrivingCat.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/AS_Gunner_LowerBody.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/AS_Gunner_LowerBody.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01_Montage.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Chop_Lp01_Montage.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp_Montage.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Anim_Sweap_Lp_Montage.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/BP_Chibi_Cat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/BP_Chibi_Cat.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Lifting_Object_Anim2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Lifting_Object_Anim2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Lifting_Object_Anim2_Montage.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Lifting_Object_Anim2_Montage.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Rock_Throw.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Rock_Throw.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Rock_Throw_Montage.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LHJ/NewFolder/Rock_Throw_Montage.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGameState.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_LKHTestGameState.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemBase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultGame.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGame.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_StageGM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/BP_StageGM.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Marker.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Marker.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_Workstation.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_ActionTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_ActionTag.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/BP_ItemSpawner2.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_ItemTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_ItemTag.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicItemStatsTag.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/GameplayTag/DT_LogicItemStatsTag.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Hamburger.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/DA_Hamburger.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/ItemRegistry/DA_ItemRegistry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/ItemData/ItemRegistry/DA_ItemRegistry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MarkerData/DA_SpilledMarker.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/MarkerData/DA_SpilledMarker.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Combiner.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_CuttingBoard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_CuttingBoard.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Grill.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_Grill.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/WorkStationData/DA_TrashCan.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Gamemodes/BP_TestGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gamemodes/BP_TestGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/RecipeData/DT_Recipe.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Collaborators/LKH/Product/RecipeData/DT_Recipe.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Pawns/PlayerCharacter/BP_PlayerCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Pawns/ShoppingCart/BP_ShoppingCart.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Pawns/ShoppingCart/BP_ShoppingCart.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/BP_PCtest.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/BP_PCtest.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Docs/ArchitecturePrinciples.md" beforeDir="false" afterPath="$PROJECT_DIR$/Docs/ArchitecturePrinciples.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Docs/Structure.md" beforeDir="false" afterPath="$PROJECT_DIR$/Docs/Structure.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UserWidget/WBP_ServerSelect.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UserWidget/WBP_ServerSelect.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Core/StageGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Core/StageGameMode.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Item/ItemStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Manager/ItemManagerSubsystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Holding/Logic_Interactable_Holding_Chop.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Holding/Logic_Interactable_Holding_Chop.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Cart_Snap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Cart_Snap.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Cart_Spill.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Logic/Logic_Cart_Spill.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Holding/Logic_Interactable_Holding_Chop.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Holding/Logic_Interactable_Holding_Chop.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Marker/MarkerBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/Marker/MarkerBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkStationBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interactables/WorkStation/WorkStationBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractableComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractableComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Private/LKH2/Interaction/Component/InteractorComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Core/StageGameMode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Core/StageGameMode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Item/ItemBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Marker/MarkerBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/Marker/MarkerBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/WorkStation/WorkStationBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interactables/WorkStation/WorkStationBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractableComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Component/InteractableComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MoverExampleTest/Public/LKH2/Interaction/Interface/InteractionContextInterface.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,12 +55,12 @@
     &quot;assignee&quot;: &quot;LightDelight&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/LightDelight/Team5.git",
-    "accountId": "2f3dc1a0-1c7e-43c4-8537-0e7b3d69a197"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LightDelight/Team5.git&quot;,
+    &quot;accountId&quot;: &quot;eab0cb9d-ff5e-4d4b-9ac0-d4145a91a121&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Source/Runtime/CoreUObject/Public/Templates/Casts.h" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -127,10 +108,10 @@
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\Neighbor\Git\Team5\MoverExampleTest.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\kga\Documents\Unreal Projects\Team5\MoverExampleTest.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -143,7 +124,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest-Win64-DebugGame.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -153,10 +134,10 @@
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\Neighbor\Git\Team5\MoverExampleTest.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\kga\Documents\Unreal Projects\Team5\MoverExampleTest.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -169,7 +150,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -182,7 +163,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/MoverExampleTest-Win64-Shipping.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="E:\Program Files\Epic Games\UE_5.7" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -218,6 +199,7 @@
       <workItem from="1772585240004" duration="20309000" />
       <workItem from="1772687300550" duration="2205000" />
       <workItem from="1772713679011" duration="14040000" />
+      <workItem from="1772757180796" duration="4151000" />
     </task>
     <task id="LOCAL-00001" summary="ss">
       <option name="closed" value="true" />

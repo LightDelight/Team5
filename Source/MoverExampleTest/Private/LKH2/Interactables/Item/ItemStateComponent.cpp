@@ -127,7 +127,7 @@ void UItemStateComponent::SetItemState(EItemState NewState) {
     // (클라이언트에서도 OnRep_ItemState로 호출되므로 서버-클라이언트 동일 동작)
     if (UInteractableComponent* IC = Owner->FindComponentByClass<UInteractableComponent>())
     {
-      IC->SetOutlineEnabled(false);
+      IC->SetOutlineEnabled(false, 2);
     }
     // 스무딩 끄기: 로컬에서만 연산하므로 서버 보간 불필요
     if (UItemSmoothingComponent* SmoothingComp = Owner->FindComponentByClass<UItemSmoothingComponent>()) {

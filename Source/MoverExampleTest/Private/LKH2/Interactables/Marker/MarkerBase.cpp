@@ -212,7 +212,7 @@ bool AMarkerBase::OnInteract_Implementation(const FInteractionContext& Context)
     return false;
 }
 
-void AMarkerBase::SetOutlineEnabled_Implementation(bool bEnabled)
+void AMarkerBase::SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue)
 {
     TArray<UPrimitiveComponent*> PrimitiveComps;
     GetComponents<UPrimitiveComponent>(PrimitiveComps);

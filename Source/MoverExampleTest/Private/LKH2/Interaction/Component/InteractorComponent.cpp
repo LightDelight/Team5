@@ -16,6 +16,8 @@
 #include "LKH2/Interaction/Base/LogicContextInterface.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "LKH2/Interactables/Item/Manager/ItemManagerSubsystem.h"
 #include "GameplayTagContainer.h"
 #include "LKH2/Interactables/Item/ItemBase.h"
@@ -106,9 +108,30 @@ void UInteractorComponent::SetIsWorking(bool bWorking, AActor* InTargetActor, FG
       UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: CharacterMovementComponent를 찾을 수 없습니다!"));
     }
   }
+  else if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+  {
+    if (UPawnMovementComponent* MoveComp = OwnerPawn->GetMovementComponent())
+    {
+      if (bWorking)
+      {
+        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] PawnMovementComponent Deactivate() 호출."));
+        MoveComp->StopActiveMovement();
+        MoveComp->Deactivate();
+      }
+      else
+      {
+        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] PawnMovementComponent Activate() 호출."));
+        MoveComp->Activate(true);
+      }
+    }
+    else
+    {
+      UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: PawnMovementComponent를 찾을 수 없습니다!"));
+    }
+  }
   else
   {
-    UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: Owner가 ACharacter가 아닙니다!"));
+    UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: Owner가 Character나 Pawn이 아닙니다!"));
   }
 }
 
@@ -126,6 +149,21 @@ void UInteractorComponent::OnRep_IsWorking()
       else
       {
         MoveComp->SetMovementMode(MOVE_Walking);
+      }
+    }
+  }
+  else if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+  {
+    if (UPawnMovementComponent* MoveComp = OwnerPawn->GetMovementComponent())
+    {
+      if (bIsWorking)
+      {
+        MoveComp->StopActiveMovement();
+        MoveComp->Deactivate();
+      }
+      else
+      {
+        MoveComp->Activate(true);
       }
     }
   }
@@ -383,7 +421,7 @@ void UInteractorComponent::SetSphereTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer && CurrentSphereTarget != CurrentGridTarget)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, false);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, false, 2);
         }
     }
 
@@ -394,7 +432,7 @@ void UInteractorComponent::SetSphereTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, true);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentSphereTarget, true, 2);
         }
     }
 }
@@ -412,7 +450,7 @@ void UInteractorComponent::SetGridTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer && CurrentGridTarget != CurrentSphereTarget)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, false);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, false, 2);
         }
     }
 
@@ -423,7 +461,7 @@ void UInteractorComponent::SetGridTarget(AActor* NewTarget)
     {
         if (bIsLocalPlayer)
         {
-            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, true);
+            IInteractionContextInterface::Execute_SetOutlineEnabled(CurrentGridTarget, true, 2);
         }
     }
 }

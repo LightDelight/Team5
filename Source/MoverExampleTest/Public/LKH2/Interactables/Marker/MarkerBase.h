@@ -52,7 +52,7 @@ protected:
 
     // ─── IInteractionContextInterface 구현 ───
     virtual bool OnInteract_Implementation(const FInteractionContext& Context) override;
-    virtual void SetOutlineEnabled_Implementation(bool bEnabled) override;
+    virtual void SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue = 2) override;
 
 protected:
     /** 감지용 Sphere Collision (InteractorComponent의 DetectionSphere가 Overlap 감지) */

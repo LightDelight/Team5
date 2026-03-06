@@ -147,7 +147,7 @@ bool AItemBase::OnInteract_Implementation(const FInteractionContext &Context) {
   return InteractableComponent->OnInteract(Context);
 }
 
-void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled) {
+void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue) {
   if (ItemData) {
     if (bEnabled) {
       UE_LOG(LogTemp, Warning, TEXT("[ItemBase_DEBUG] 💡 아웃라인 켜짐: 액터=%s, DataAsset=%s"), *GetName(), *ItemData->GetName());
@@ -157,7 +157,7 @@ void AItemBase::SetOutlineEnabled_Implementation(bool bEnabled) {
   }
 
   if (InteractableComponent) {
-    InteractableComponent->SetOutlineEnabled(bEnabled);
+    InteractableComponent->SetOutlineEnabled(bEnabled, 1);
   }
 }
 

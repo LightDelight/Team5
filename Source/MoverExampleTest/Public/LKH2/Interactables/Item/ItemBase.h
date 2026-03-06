@@ -79,7 +79,7 @@ protected:
 
   // IInteractionContextInterface
   virtual bool OnInteract_Implementation(const FInteractionContext &Context) override;
-  virtual void SetOutlineEnabled_Implementation(bool bEnabled) override;
+  virtual void SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue = 1) override;
 
 public:
   UFUNCTION(BlueprintCallable, Category = "Item|Data")

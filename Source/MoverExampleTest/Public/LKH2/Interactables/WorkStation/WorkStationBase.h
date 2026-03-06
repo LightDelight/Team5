@@ -85,7 +85,7 @@ protected:
   // 고정형이므로 들거나 던져지지는 않지만, 인터랙션(OnInteract) 및
   // 아웃라인(SetOutlineEnabled)로직에 사용
   virtual bool OnInteract_Implementation(const FInteractionContext &Context) override;
-  virtual void SetOutlineEnabled_Implementation(bool bEnabled) override;
+  virtual void SetOutlineEnabled_Implementation(bool bEnabled, int32 StencilValue = 2) override;
 
   // ── 그리드 스냅 (에디터 전용) ──
 

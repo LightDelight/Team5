@@ -80,14 +80,14 @@ bool UInteractableComponent::OnInteract(const FInteractionContext &Context) {
 }
 
 
-void UInteractableComponent::SetOutlineEnabled(bool bEnabled) {
+void UInteractableComponent::SetOutlineEnabled(bool bEnabled, int32 StencilValue) {
   if (AActor *OwnerActor = GetOwner()) {
     TArray<UPrimitiveComponent *> PrimitiveComps;
     OwnerActor->GetComponents<UPrimitiveComponent>(PrimitiveComps);
     for (UPrimitiveComponent *Comp : PrimitiveComps) {
       if (Comp) {
         Comp->SetRenderCustomDepth(bEnabled);
-        Comp->SetCustomDepthStencilValue(1); // 외곽선을 위한 스텐실 값
+        Comp->SetCustomDepthStencilValue(StencilValue); // 외곽선을 위한 스텐실 값
       }
     }
   }

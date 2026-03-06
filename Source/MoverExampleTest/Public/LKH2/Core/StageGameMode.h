@@ -5,6 +5,8 @@
 #include "GameplayTagContainer.h"
 #include "StageGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCrossedFinishLineDelegate);
+
 /**
  * 게임의 스테이지 전반적인 흐름을 제어합니다.
  * - 카트에 담긴 물건/쏟아진 물건 확인
@@ -17,6 +19,10 @@ class MOVEREXAMPLETEST_API AStageGameMode : public AGameModeBase
 	
 public:
 	AStageGameMode();
+
+	/** 결승선을 통과했을 때 발생하는 이벤트 */
+	UPROPERTY(BlueprintAssignable, Category="Stage|Events")
+	FOnCrossedFinishLineDelegate OnCrossedFinishLineEvent;
 
 	virtual void BeginPlay() override;
 
