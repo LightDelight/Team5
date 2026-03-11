@@ -86,6 +86,9 @@ FGuid UItemManagerSubsystem::SpawnItemFromData(
   if (!World || !Data)
     return FGuid();
 
+  if (World->GetNetMode() == NM_Client)
+    return FGuid();
+
   UClass *SpawnClass = ResolveSpawnClass(Data, ClassOverride);
   if (!SpawnClass)
     return FGuid();

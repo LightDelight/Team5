@@ -25,7 +25,8 @@ bool UHoldingStepLogicModuleBase::PreInteractCheck(const FInteractionContext& Co
 	// 1. 취소 의도 (Release, Cancel)
 	if (CancelIntentTag.IsValid() && Context.InteractionTag == CancelIntentTag)
 	{
-		if (ContextComponent->GetTask(TaskTag) != nullptr) return true;
+		// CancelIntentTag가 유효하면 항상 취소 프로세스 허용
+		return true;
 	}
 
 	// 2. 시작 의도 (Hold/Press)

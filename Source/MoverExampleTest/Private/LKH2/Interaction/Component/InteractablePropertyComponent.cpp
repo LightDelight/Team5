@@ -39,15 +39,8 @@ void UInteractablePropertyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (ProgressWidgetComponent && GetOwner())
+	if (ProgressWidgetComponent)
 	{
-		// PropertyComponent(this)가 아닌 Owner의 RootComponent에 직접 Attach하여
-		// SpawnActorDeferred 흐름에서도 World Transform 추적을 보장합니다.
-		ProgressWidgetComponent->AttachToComponent(
-			GetOwner()->GetRootComponent(),
-			FAttachmentTransformRules::SnapToTargetNotIncludingScale
-		);
-		ProgressWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 		ProgressWidgetComponent->SetVisibility(false);
 	}
 }

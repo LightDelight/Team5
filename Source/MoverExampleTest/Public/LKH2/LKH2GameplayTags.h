@@ -43,6 +43,9 @@ public:
 	FGameplayTag Intent_Cart_Overturn;      // 전복 감지 시
 	FGameplayTag Intent_Cart_SpillCleanup;  // 정리 워크스테이션에 UID 등록 시
 
+	// ─── [Intents] 알림 (AnimNotify) 전용 ───
+	FGameplayTag Intent_Notify_Chop;
+
 private:
 	static FLKH2GameplayTags Instance;
 };

@@ -86,87 +86,13 @@ void UInteractorComponent::SetIsWorking(bool bWorking, AActor* InTargetActor, FG
     WorkingTargetActor = nullptr;
     WorkingCancelIntentTag = FGameplayTag();
   }
-
-  // 이동 차단/해제
-  if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
-  {
-    if (UCharacterMovementComponent* MoveComp = OwnerCharacter->GetCharacterMovement())
-    {
-      if (bWorking)
-      {
-        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] DisableMovement() 호출."));
-        MoveComp->DisableMovement();
-      }
-      else
-      {
-        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] SetMovementMode(MOVE_Walking) 호출."));
-        MoveComp->SetMovementMode(MOVE_Walking);
-      }
-    }
-    else
-    {
-      UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: CharacterMovementComponent를 찾을 수 없습니다!"));
-    }
-  }
-  else if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
-  {
-    if (UPawnMovementComponent* MoveComp = OwnerPawn->GetMovementComponent())
-    {
-      if (bWorking)
-      {
-        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] PawnMovementComponent Deactivate() 호출."));
-        MoveComp->StopActiveMovement();
-        MoveComp->Deactivate();
-      }
-      else
-      {
-        UE_LOG(LogTemp, Warning, TEXT("[InteractorComp] PawnMovementComponent Activate() 호출."));
-        MoveComp->Activate(true);
-      }
-    }
-    else
-    {
-      UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: PawnMovementComponent를 찾을 수 없습니다!"));
-    }
-  }
-  else
-  {
-    UE_LOG(LogTemp, Error, TEXT("[InteractorComp] SetIsWorking: Owner가 Character나 Pawn이 아닙니다!"));
-  }
 }
 
 // 클라이언트에서 복제된 bIsWorking에 따라 이동 상태를 동기화
 void UInteractorComponent::OnRep_IsWorking()
 {
-  if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
-  {
-    if (UCharacterMovementComponent* MoveComp = OwnerCharacter->GetCharacterMovement())
-    {
-      if (bIsWorking)
-      {
-        MoveComp->DisableMovement();
-      }
-      else
-      {
-        MoveComp->SetMovementMode(MOVE_Walking);
-      }
-    }
-  }
-  else if (APawn* OwnerPawn = Cast<APawn>(GetOwner()))
-  {
-    if (UPawnMovementComponent* MoveComp = OwnerPawn->GetMovementComponent())
-    {
-      if (bIsWorking)
-      {
-        MoveComp->StopActiveMovement();
-        MoveComp->Deactivate();
-      }
-      else
-      {
-        MoveComp->Activate(true);
-      }
-    }
-  }
+  // 이동 관련 로직은 Mover 플러그인(상태 기반 등)에서 제어하므로
+  // 이곳의 기본 캐릭터 이동 컴포넌트 비활성화 처리 코드는 제거되었습니다.
 }
 
 

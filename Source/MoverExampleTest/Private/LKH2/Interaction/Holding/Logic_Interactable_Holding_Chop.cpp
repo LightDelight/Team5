@@ -25,7 +25,7 @@ bool ULogic_Interactable_Holding_Chop::PreInteractCheck(const FInteractionContex
 		return false;
 	}
 
-	// 2. 시작 의도(RequiredIntentTag)일 때만 필수 아이템 검사 수행
+	// 2. 도마(Chop) 특화 조건: 지정된 도구가 손에 들려있는지 확인 (예: Knife)
 	if (Context.InteractionTag == RequiredIntentTag)
 	{
 		UInteractablePropertyComponent* TargetProp = Cast<UInteractablePropertyComponent>(Context.InteractablePropertyComp);

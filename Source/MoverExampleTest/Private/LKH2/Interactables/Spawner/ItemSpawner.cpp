@@ -25,6 +25,11 @@ void AItemSpawner::BeginPlay()
 
 void AItemSpawner::SpawnAllItems()
 {
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 	if (UWorld* World = GetWorld())
 	{
 		if (UItemManagerSubsystem* ItemManager = World->GetSubsystem<UItemManagerSubsystem>())
